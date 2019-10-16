@@ -16,7 +16,7 @@ public class HeightChange : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKey(KeyCode.Z)  && this.transform.position.y < maxHeight)
+        if(Input.GetKey(KeyCode.Z) && this.transform.position.y < maxHeight)
         {
             _rb.AddForce(Vector3.up * speed);            
         }

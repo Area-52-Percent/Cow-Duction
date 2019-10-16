@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 
 public class CowAbduction : MonoBehaviour
-{   
+{
     private Rigidbody _rb;
-
-    // Abduction
+    // Joint parameters
     public float maxCaptureLength = 50.0f;
     public float captureSpeed = 5.0f;
     [SerializeField] private float captureLength;
     [SerializeField] private ConfigurableJoint attachedObjectJoint;
+    // Line parameters
     public LineRenderer lineRenderer;
     public Color lineStartColor = Color.green;
     public Color lineEndColor = Color.white;
@@ -33,10 +33,8 @@ public class CowAbduction : MonoBehaviour
     // FixedUpdate is called in fixed intervals
     private void FixedUpdate()
     {
-        /* Left click casts a raycast in the direction of the cursor position.
-         * When the cursor hits a cow, the cow becomes attached 
-         * to my parent gameObject through a configurable joint.
-         */
+        // Left click casts a raycast in the direction of the cursor position.
+        // When it hits a cow, the cow becomes attached to my rigidbody through a configurable joint.
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
         {
             Ray preRay = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -44,10 +42,6 @@ public class CowAbduction : MonoBehaviour
 
             Vector3 rayOrigin = _rb.transform.position;
             Ray ray = new Ray(rayOrigin, preRay.direction);
-
-            Debug.Log("Camera position = " + Camera.main.transform.position);
-            Debug.Log("Ray origin = " + ray.origin);
-            ray.origin = Camera.main.transform.position;
             if (Physics.Raycast(ray, out hit, maxCaptureLength))
             {
                 Debug.DrawLine(transform.position, hit.point, Color.yellow);
@@ -94,9 +88,7 @@ public class CowAbduction : MonoBehaviour
                 }                
             }
         }
-        /* Releasing left click removes constant drive forces 
-         * from the currently attached object (if any).
-         */
+        // Releasing left click removes the joint from the currently attached object (if any).
         else if (Input.GetMouseButtonUp(0) || Input.GetKeyUp(KeyCode.Space))
         {
             if (attachedObjectJoint)
@@ -109,24 +101,21 @@ public class CowAbduction : MonoBehaviour
             }
         }
 
-        /* Holding left click applies a force on the currently attached object (if any),
-         * towards my gameObject.
-         */
+        // Holding left click applies a force on the currently attached object (if any), towards my position.
         if (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space)) 
         {
             if (attachedObjectJoint != null) 
             {
-                // Add drive forces pushing the attached object towards me
-                if (attachedObjectJoint.yDrive.maximumForce < 100.0f)
+                // Add drive forces pushing the attached object towards my y position
+                if (attachedObjectJoint.yDrive.positionSpring < 100.0f)
                 {
                     JointDrive yJointDrive = new JointDrive();
-                    yJointDrive.positionSpring = 2.0f;
-                    yJointDrive.maximumForce = attachedObjectJoint.yDrive.maximumForce + (Time.deltaTime * captureSpeed);
+                    yJointDrive.positionSpring = attachedObjectJoint.yDrive.positionSpring + (Time.deltaTime * captureSpeed * 10);
+                    // yJointDrive.maximumForce = attachedObjectJoint.yDrive.maximumForce + (Time.deltaTime * captureSpeed);
                     attachedObjectJoint.yDrive = yJointDrive;
                 }
                 if (captureLength > 0)
                 {
-                    // Debug.Log("Capture Length = " + captureLength);
                     captureLength -= Time.deltaTime * captureSpeed;
                     SoftJointLimit softJointLimit = new SoftJointLimit();
                     softJointLimit.limit = captureLength;
