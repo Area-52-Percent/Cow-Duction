@@ -3,6 +3,7 @@
 public class CowAbduction : MonoBehaviour
 {
     private Rigidbody _rb;
+    private UIManager uIManager;
     // Joint parameters
     public float maxCaptureLength = 50.0f;
     public float captureSpeed = 5.0f;
@@ -16,7 +17,9 @@ public class CowAbduction : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
+        // TO-DO: Error checking
         _rb = GetComponent<Rigidbody>();
+        uIManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         // Create a line renderer
         if (!lineRenderer)
         {
@@ -37,18 +40,20 @@ public class CowAbduction : MonoBehaviour
         // When it hits a cow, the cow becomes attached to my rigidbody through a configurable joint.
         if (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space))
         {
+            Debug.Log(Camera.main.transform.position);
             Ray preRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
-            Vector3 rayOrigin = _rb.transform.position;
+            Vector3 rayOrigin = gameObject.transform.position;
             Ray ray = new Ray(rayOrigin, preRay.direction);
+
             if (Physics.Raycast(ray, out hit, maxCaptureLength))
             {
                 Debug.DrawLine(transform.position, hit.point, Color.yellow);
-                Debug.Log("Ray cast hit " + hit.transform.gameObject.name);
+                // Debug.Log("Ray cast hit " + hit.transform.gameObject.name);
                 if (hit.collider.tag == "Cow")
                 {
-                    Debug.Log("Cow has been picked up");
+                    // Debug.Log("Cow has been picked up");
                     if (hit.rigidbody != null) 
                     {
                         if (!hit.transform.gameObject.GetComponent<ConfigurableJoint>())
@@ -145,6 +150,7 @@ public class CowAbduction : MonoBehaviour
             Debug.Log("Collision with cow detected");
             Destroy(col.gameObject);
             lineRenderer.enabled = false;
+            uIManager.IncreaseScore(1);
         }
     }
 }
