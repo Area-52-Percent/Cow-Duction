@@ -58,7 +58,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.043648157, g: 0.8679245, b: 0.020469915, a: 1}
+  m_Color: {r: 0.047837317, g: 0.9433962, b: 0.022249907, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -376,7 +376,6 @@ GameObject:
   - component: {fileID: 2175921359117653463}
   - component: {fileID: 2175921359117653462}
   - component: {fileID: 2175921359117653457}
-  - component: {fileID: 2175921359117653468}
   - component: {fileID: 2175921359117653451}
   - component: {fileID: 2175921359117653460}
   - component: {fileID: 2175921359117653461}
@@ -480,13 +479,13 @@ CharacterController:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Height: 0
-  m_Radius: 0
+  m_Height: 1
+  m_Radius: 0.25
   m_SlopeLimit: 45
   m_StepOffset: 0
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 1, z: 0}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!82 &2175921359117653462
 AudioSource:
   m_ObjectHideFlags: 0
@@ -687,19 +686,6 @@ MonoBehaviour:
   m_FootstepSounds: []
   m_JumpSound: {fileID: 0}
   m_LandSound: {fileID: 0}
---- !u!65 &2175921359117653468
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2175921359117653471}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Size: {x: 0.75, y: 2.5, z: 0.75}
-  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!135 &2175921359117653451
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -851,7 +837,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2175921360185048074}
   - component: {fileID: 2175921360185048072}
-  - component: {fileID: 2175921360185048075}
   m_Layer: 0
   m_Name: Top Down Camera
   m_TagString: MainCamera
@@ -916,14 +901,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &2175921360185048075
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2175921360185048085}
-  m_Enabled: 0
 --- !u!1 &2175921360350203767
 GameObject:
   m_ObjectHideFlags: 0
