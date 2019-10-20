@@ -461,12 +461,23 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1839238929}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 100
+  m_MaxValue: 200
   m_WholeNumbers: 1
-  m_Value: 20
+  m_Value: 50
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 963194227}
+        m_MethodName: set_fieldOfView
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Slider+SliderEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &251234107
@@ -571,6 +582,7 @@ GameObject:
   - component: {fileID: 353497687}
   - component: {fileID: 353497689}
   - component: {fileID: 353497688}
+  - component: {fileID: 353497690}
   m_Layer: 5
   m_Name: SpeedSelector
   m_TagString: Untagged
@@ -641,6 +653,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 353497686}
   m_CullTransparentMesh: 0
+--- !u!114 &353497690
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353497686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e7832eaac3f4d8d650cb1ca66887, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Slider: {fileID: 1651055238}
+  _Text: {fileID: 2101829381}
 --- !u!1 &384877987
 GameObject:
   m_ObjectHideFlags: 0
@@ -1063,6 +1089,7 @@ GameObject:
   - component: {fileID: 492648992}
   - component: {fileID: 492648994}
   - component: {fileID: 492648993}
+  - component: {fileID: 492648995}
   m_Layer: 5
   m_Name: SensitivitySelector
   m_TagString: Untagged
@@ -1133,6 +1160,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 492648991}
   m_CullTransparentMesh: 0
+--- !u!114 &492648995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 492648991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e7832eaac3f4d8d650cb1ca66887, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Slider: {fileID: 1052362299}
+  _Text: {fileID: 446844189}
 --- !u!1 &501296790
 GameObject:
   m_ObjectHideFlags: 0
@@ -1888,6 +1929,7 @@ GameObject:
   - component: {fileID: 884614376}
   - component: {fileID: 884614378}
   - component: {fileID: 884614377}
+  - component: {fileID: 884614379}
   m_Layer: 5
   m_Name: CowToMilkSelector
   m_TagString: Untagged
@@ -1958,6 +2000,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 884614375}
   m_CullTransparentMesh: 0
+--- !u!114 &884614379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 884614375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e7832eaac3f4d8d650cb1ca66887, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Slider: {fileID: 515914362}
+  _Text: {fileID: 1470399087}
 --- !u!1 &923542418
 GameObject:
   m_ObjectHideFlags: 0
@@ -2155,7 +2211,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 50
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -2360,7 +2416,7 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1522322672}
+      - m_Target: {fileID: 0}
         m_MethodName: SetSens
         m_Mode: 4
         m_Arguments:
@@ -2769,6 +2825,7 @@ GameObject:
   - component: {fileID: 1282070831}
   - component: {fileID: 1282070833}
   - component: {fileID: 1282070832}
+  - component: {fileID: 1282070834}
   m_Layer: 5
   m_Name: AbductionSpeedSelector
   m_TagString: Untagged
@@ -2839,6 +2896,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1282070830}
   m_CullTransparentMesh: 0
+--- !u!114 &1282070834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1282070830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e7832eaac3f4d8d650cb1ca66887, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Slider: {fileID: 1164314237}
+  _Text: {fileID: 580824380}
 --- !u!1 &1323961084
 GameObject:
   m_ObjectHideFlags: 0
@@ -2850,6 +2921,7 @@ GameObject:
   - component: {fileID: 1323961085}
   - component: {fileID: 1323961087}
   - component: {fileID: 1323961086}
+  - component: {fileID: 1323961088}
   m_Layer: 5
   m_Name: CowsSelector
   m_TagString: Untagged
@@ -2920,6 +2992,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1323961084}
   m_CullTransparentMesh: 0
+--- !u!114 &1323961088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1323961084}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e7832eaac3f4d8d650cb1ca66887, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Slider: {fileID: 251234109}
+  _Text: {fileID: 1490207418}
 --- !u!1 &1326114077
 GameObject:
   m_ObjectHideFlags: 0
@@ -3092,10 +3178,9 @@ Transform:
   m_LocalScale: {x: 3.7349, y: 0.33266, z: 3.2721176}
   m_Children:
   - {fileID: 963194228}
-  - {fileID: 1522322671}
   - {fileID: 1449247018}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1388540842
 MonoBehaviour:
@@ -3129,7 +3214,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IsWalking: 0
-  m_WalkSpeed: 10
   m_RunSpeed: 20
   m_RunstepLenghten: 0
   m_JumpSpeed: 10
@@ -3220,6 +3304,7 @@ MonoBehaviour:
   m_FootstepSounds: []
   m_JumpSound: {fileID: 0}
   m_LandSound: {fileID: 0}
+  SensSlider: {fileID: 1052362299}
 --- !u!82 &1388540844
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3497,7 +3582,7 @@ RectTransform:
   - {fileID: 427567374}
   - {fileID: 1924899441}
   m_Father: {fileID: 1388540841}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3880,7 +3965,6 @@ GameObject:
   - component: {fileID: 1522322670}
   - component: {fileID: 1522322669}
   - component: {fileID: 1522322668}
-  - component: {fileID: 1522322672}
   m_Layer: 5
   m_Name: Menu
   m_TagString: Untagged
@@ -3955,7 +4039,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1522322667}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
@@ -3967,30 +4051,14 @@ RectTransform:
   - {fileID: 2114628448}
   - {fileID: 1706630969}
   - {fileID: 884614376}
-  m_Father: {fileID: 1388540841}
-  m_RootOrder: 1
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1522322672
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1522322667}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03db8a40340617e46b98b60f8e5f7375, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SpeedSlider: {fileID: 1651055238}
-  SpeedText: {fileID: 2101829381}
-  SensitivitySlider: {fileID: 1052362299}
-  SensitivityText: {fileID: 2101829381}
 --- !u!1 &1523067845
 GameObject:
   m_ObjectHideFlags: 0
@@ -4222,15 +4290,15 @@ MonoBehaviour:
   m_HandleRect: {fileID: 2031093621}
   m_Direction: 0
   m_MinValue: 0
-  m_MaxValue: 100
+  m_MaxValue: 200
   m_WholeNumbers: 1
   m_Value: 10
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1522322672}
-        m_MethodName: SetSpeed
-        m_Mode: 4
+      - m_Target: {fileID: 1388540843}
+        m_MethodName: set_m_WalkSpeed
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4361,7 +4429,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: 25656b0b044772a46aba6631f57de4dd,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 25656b0b044772a46aba6631f57de4dd,
         type: 3}
@@ -4391,6 +4459,7 @@ GameObject:
   - component: {fileID: 1706630969}
   - component: {fileID: 1706630971}
   - component: {fileID: 1706630970}
+  - component: {fileID: 1706630972}
   m_Layer: 5
   m_Name: FuelDepletionSelector
   m_TagString: Untagged
@@ -4461,6 +4530,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1706630968}
   m_CullTransparentMesh: 0
+--- !u!114 &1706630972
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706630968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e7832eaac3f4d8d650cb1ca66887, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Slider: {fileID: 501296792}
+  _Text: {fileID: 558750708}
 --- !u!1 &1781515576
 GameObject:
   m_ObjectHideFlags: 0
@@ -4891,7 +4974,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2031093620
 GameObject:
@@ -5136,6 +5219,7 @@ GameObject:
   - component: {fileID: 2114628448}
   - component: {fileID: 2114628450}
   - component: {fileID: 2114628449}
+  - component: {fileID: 2114628451}
   m_Layer: 5
   m_Name: FocalLengthSelector
   m_TagString: Untagged
@@ -5206,6 +5290,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2114628447}
   m_CullTransparentMesh: 0
+--- !u!114 &2114628451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2114628447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3649e7832eaac3f4d8d650cb1ca66887, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _Slider: {fileID: 238810605}
+  _Text: {fileID: 2078743479}
 --- !u!1 &2117917881
 GameObject:
   m_ObjectHideFlags: 0
