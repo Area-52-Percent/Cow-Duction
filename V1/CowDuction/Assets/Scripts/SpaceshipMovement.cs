@@ -2,9 +2,9 @@
 
 public class SpaceshipMovement : MonoBehaviour
 {
-    [SerializeField] CowAbduction cowAbduction;
     [SerializeField] private Rigidbody _rb;
-    public float speed = 10.0f;
+    public float horizontalSpeed = 10.0f;
+    public float verticalSpeed = 10.0f;
     public float maxHeight = 15.0f;
     public float minHeight = 10.0f;
     public float rotationForce = 0.05f;
@@ -14,7 +14,6 @@ public class SpaceshipMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cowAbduction = GetComponent<CowAbduction>();
         _rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Confined;
     }
@@ -34,7 +33,7 @@ public class SpaceshipMovement : MonoBehaviour
             {
                 horizontalForce = transform.right;
                 horizontalForce.y = 0;
-                _rb.AddForce(horizontalForce * horizontalInput * speed, ForceMode.Acceleration);
+                _rb.AddForce(horizontalForce * horizontalInput * horizontalSpeed, ForceMode.Acceleration);
                 if (horizontalInput < 0 && (transform.eulerAngles.z < maxRotation || transform.eulerAngles.z > 350.0f - maxRotation) || horizontalInput > 0 && (transform.eulerAngles.z > 360.0f - maxRotation || transform.eulerAngles.z < maxRotation + 10.0f))
                 {
                     _rb.AddRelativeTorque(Vector3.back * horizontalInput * rotationForce, ForceMode.Acceleration);
@@ -63,7 +62,7 @@ public class SpaceshipMovement : MonoBehaviour
             {
                 horizontalForce = transform.forward;
                 horizontalForce.y = 0;
-                _rb.AddForce(horizontalForce * verticalInput * speed, ForceMode.Acceleration);
+                _rb.AddForce(horizontalForce * verticalInput * horizontalSpeed, ForceMode.Acceleration);
                 if (verticalInput > 0 && (transform.localEulerAngles.x < maxRotation || transform.localEulerAngles.x > 350.0f - maxRotation) || verticalInput < 0 && (transform.localEulerAngles.x > 360.0f - maxRotation || transform.localEulerAngles.x < maxRotation + 10.0f))
                 {
                     _rb.AddRelativeTorque(Vector3.right * verticalInput * rotationForce, ForceMode.Acceleration);
@@ -100,11 +99,11 @@ public class SpaceshipMovement : MonoBehaviour
         // Lift
         if (Input.GetKey(KeyCode.Z) && transform.position.y < maxHeight)
         {
-            _rb.AddForce(Vector3.up * speed, ForceMode.Acceleration);
+            _rb.AddForce(Vector3.up * verticalSpeed, ForceMode.Acceleration);
         }
         if (Input.GetKey(KeyCode.C) && transform.position.y > minHeight)
         {
-            _rb.AddForce(Vector3.down * speed, ForceMode.Acceleration);
+            _rb.AddForce(Vector3.down * verticalSpeed, ForceMode.Acceleration);
         }
 
         // Rotate the spaceship with mouse movement
@@ -118,9 +117,15 @@ public class SpaceshipMovement : MonoBehaviour
         // }
 
         // Constant upward force keeping the spaceship floating
-        // if (cowAbduction.attachedObject == null)
-            _rb.AddForce(Vector3.up * -Physics.gravity.y, ForceMode.Acceleration);
-        // else
-        //     _rb.AddForce(Vector3.up * -Physics.gravity.y * ((float)cowAbduction.numberOfJoints / 10.0f) * cowAbduction.attachedObject.GetComponent<Rigidbody>().mass , ForceMode.Acceleration);
+        _rb.AddForce(Vector3.up * -Physics.gravity.y, ForceMode.Acceleration);
+    }
+
+    // Toggles invert look for camera up and down rotation
+    public void ToggleInvertLook()
+    {
+        if (invertLook)
+            invertLook = false;
+        else
+            invertLook = true;
     }
 }

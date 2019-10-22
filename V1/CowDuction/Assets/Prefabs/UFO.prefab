@@ -302,9 +302,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d944ae84a93db194ba39b9f615b0be59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cowAbduction: {fileID: 0}
   _rb: {fileID: 0}
-  speed: 10
+  horizontalSpeed: 10
+  verticalSpeed: 10
   maxHeight: 80
   minHeight: 10
   rotationForce: 0.5
@@ -322,10 +322,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 032658b4fde3cf74eadbc683ee199f3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beamOrigin: {fileID: 0}
+  beamOrigin: {fileID: 8967025207825710538}
+  uiManager: {fileID: 0}
   maxCaptureLength: 50
   numberOfJoints: 3
   captureSpeed: 10
+  captureCooldown: 1
+  captureCooldownActive: 0
   captureLength: 0
   attachedObjectJoints: []
   attachedObject: {fileID: 0}
