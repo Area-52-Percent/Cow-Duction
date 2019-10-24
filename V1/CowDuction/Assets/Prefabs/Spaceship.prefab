@@ -230,7 +230,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 9049517417011827399}
+      - m_Target: {fileID: 0}
         m_MethodName: 
         m_Mode: 1
         m_Arguments:
@@ -1364,8 +1364,6 @@ MonoBehaviour:
   abilityReady: 0
   cooldownActive: 0
   cooldownRegenerationRate: 5
-  ufoSpeed: 0
-  ufoAltitude: 0
   timeRemaining: 0
   scoreText: {fileID: 5022070342421922805}
   speedText: {fileID: 5022070341150292805}
@@ -1376,15 +1374,6 @@ MonoBehaviour:
   endScreen: {fileID: 5022070343223876351}
   finalScoreText: {fileID: 5022070341555160703}
   parameterScreen: {fileID: 8915175551459237172}
-  horizontalSpeedSlider: {fileID: 9195843156624232294}
-  verticalSpeedSlider: {fileID: 0}
-  rotationForceSlider: {fileID: 0}
-  mainCameraFovSlider: {fileID: 0}
-  radarCameraFovSlider: {fileID: 0}
-  maxRotationSlider: {fileID: 0}
-  fuelDepletionRateSlider: {fileID: 0}
-  cooldownRegenerationRateSlider: {fileID: 0}
-  captureSpeedSlider: {fileID: 0}
 --- !u!1 &5022070341997956107
 GameObject:
   m_ObjectHideFlags: 0
@@ -2983,11 +2972,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9054455694774901084}
     m_Modifications:
-    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-        type: 3}
-      propertyPath: m_Name
-      value: MaxRotationSlider
-      objectReference: {fileID: 0}
     - target: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3133,6 +3117,11 @@ PrefabInstance:
       propertyPath: m_MinValue
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+        type: 3}
+      propertyPath: m_Name
+      value: MaxRotationSlider
+      objectReference: {fileID: 0}
     - target: {fileID: 7198394438973484458, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -3195,11 +3184,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9054455694774901084}
     m_Modifications:
-    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-        type: 3}
-      propertyPath: m_Name
-      value: VerticalSpeedSlider
-      objectReference: {fileID: 0}
     - target: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3325,6 +3309,11 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 3261792959819415235}
+    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+        type: 3}
+      propertyPath: m_Name
+      value: VerticalSpeedSlider
+      objectReference: {fileID: 0}
     - target: {fileID: 7198394438973484458, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -3357,12 +3346,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b57d55c6fe114f12ace9e5928f6bbb9, type: 3}
---- !u!224 &8725760507521691400 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-    type: 3}
-  m_PrefabInstance: {fileID: 2984929329185028001}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3261792959819415235 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 299680701875226978, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
@@ -3375,6 +3358,12 @@ MonoBehaviour:
   m_Script: {fileID: -113659843, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &8725760507521691400 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+    type: 3}
+  m_PrefabInstance: {fileID: 2984929329185028001}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3990253929704495093
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3382,11 +3371,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9054455694774901084}
     m_Modifications:
-    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-        type: 3}
-      propertyPath: m_Name
-      value: MainCameraFovSlider
-      objectReference: {fileID: 0}
     - target: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3532,6 +3516,11 @@ PrefabInstance:
       propertyPath: m_MinValue
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+        type: 3}
+      propertyPath: m_Name
+      value: MainCameraFovSlider
+      objectReference: {fileID: 0}
     - target: {fileID: 7198394438973484458, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -3569,12 +3558,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b57d55c6fe114f12ace9e5928f6bbb9, type: 3}
---- !u!224 &7427706088279314268 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-    type: 3}
-  m_PrefabInstance: {fileID: 3990253929704495093}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3695367100281691799 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 299680701875226978, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
@@ -3587,6 +3570,12 @@ MonoBehaviour:
   m_Script: {fileID: -113659843, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &7427706088279314268 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+    type: 3}
+  m_PrefabInstance: {fileID: 3990253929704495093}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4113179400937284661
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3594,11 +3583,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9054455694774901084}
     m_Modifications:
-    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-        type: 3}
-      propertyPath: m_Name
-      value: RotationForceSlider
-      objectReference: {fileID: 0}
     - target: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3737,12 +3721,17 @@ PrefabInstance:
     - target: {fileID: 299680701875226978, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 299680701875226978, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_MinValue
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+        type: 3}
+      propertyPath: m_Name
+      value: RotationForceSlider
       objectReference: {fileID: 0}
     - target: {fileID: 7198394438973484458, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
@@ -3777,16 +3766,10 @@ PrefabInstance:
     - target: {fileID: 994341616541669401, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_Text
-      value: 0.05
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b57d55c6fe114f12ace9e5928f6bbb9, type: 3}
---- !u!224 &7593151730633915548 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-    type: 3}
-  m_PrefabInstance: {fileID: 4113179400937284661}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4412503842781015383 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 299680701875226978, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
@@ -3799,6 +3782,12 @@ MonoBehaviour:
   m_Script: {fileID: -113659843, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &7593151730633915548 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+    type: 3}
+  m_PrefabInstance: {fileID: 4113179400937284661}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4421014571647872620
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3806,11 +3795,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9054455694774901084}
     m_Modifications:
-    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-        type: 3}
-      propertyPath: m_Name
-      value: RadarCameraFovSlider
-      objectReference: {fileID: 0}
     - target: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3956,6 +3940,11 @@ PrefabInstance:
       propertyPath: m_MinValue
       value: 30
       objectReference: {fileID: 0}
+    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+        type: 3}
+      propertyPath: m_Name
+      value: RadarCameraFovSlider
+      objectReference: {fileID: 0}
     - target: {fileID: 7198394438973484458, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -3993,12 +3982,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b57d55c6fe114f12ace9e5928f6bbb9, type: 3}
---- !u!224 &7867261676748551877 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-    type: 3}
-  m_PrefabInstance: {fileID: 4421014571647872620}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4139431853850732302 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 299680701875226978, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
@@ -4011,6 +3994,12 @@ MonoBehaviour:
   m_Script: {fileID: -113659843, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &7867261676748551877 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+    type: 3}
+  m_PrefabInstance: {fileID: 4421014571647872620}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5738908515619095800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4018,11 +4007,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9054455694774901084}
     m_Modifications:
-    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-        type: 3}
-      propertyPath: m_Name
-      value: CaptureSpeedSlider
-      objectReference: {fileID: 0}
     - target: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4168,6 +4152,11 @@ PrefabInstance:
       propertyPath: m_MinValue
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+        type: 3}
+      propertyPath: m_Name
+      value: CaptureSpeedSlider
+      objectReference: {fileID: 0}
     - target: {fileID: 7198394438973484458, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -4205,12 +4194,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b57d55c6fe114f12ace9e5928f6bbb9, type: 3}
---- !u!224 &2292344820954389585 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-    type: 3}
-  m_PrefabInstance: {fileID: 5738908515619095800}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5443757803260923290 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 299680701875226978, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
@@ -4223,6 +4206,12 @@ MonoBehaviour:
   m_Script: {fileID: -113659843, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &2292344820954389585 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+    type: 3}
+  m_PrefabInstance: {fileID: 5738908515619095800}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6694140883473953691
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4230,11 +4219,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9054455694774901084}
     m_Modifications:
-    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-        type: 3}
-      propertyPath: m_Name
-      value: CooldownRegenSlider
-      objectReference: {fileID: 0}
     - target: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4380,6 +4364,11 @@ PrefabInstance:
       propertyPath: m_MinValue
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+        type: 3}
+      propertyPath: m_Name
+      value: CooldownRegenSlider
+      objectReference: {fileID: 0}
     - target: {fileID: 7198394438973484458, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -4417,12 +4406,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b57d55c6fe114f12ace9e5928f6bbb9, type: 3}
---- !u!224 &906037375092910898 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-    type: 3}
-  m_PrefabInstance: {fileID: 6694140883473953691}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &6399320024203557625 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 299680701875226978, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
@@ -4435,6 +4418,12 @@ MonoBehaviour:
   m_Script: {fileID: -113659843, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!224 &906037375092910898 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6694140883473953691}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7142426956131211769
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4442,11 +4431,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9054455694774901084}
     m_Modifications:
-    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-        type: 3}
-      propertyPath: m_Name
-      value: ScoreToFuelRatioSlider
-      objectReference: {fileID: 0}
     - target: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4577,6 +4561,11 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 7437221426713596059}
+    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+        type: 3}
+      propertyPath: m_Name
+      value: ScoreToFuelRatioSlider
+      objectReference: {fileID: 0}
     - target: {fileID: 7198394438973484458, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -4869,18 +4858,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b2add2a7e5d8469fa4010267fe935e4, type: 3}
---- !u!114 &9049517417011827399 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2175921359117653461, guid: 7b2add2a7e5d8469fa4010267fe935e4,
-    type: 3}
-  m_PrefabInstance: {fileID: 7179921801287812882}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d944ae84a93db194ba39b9f615b0be59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &9049517417011827393 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2175921359117653459, guid: 7b2add2a7e5d8469fa4010267fe935e4,
@@ -4894,11 +4871,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9054455694774901084}
     m_Modifications:
-    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-        type: 3}
-      propertyPath: m_Name
-      value: FuelDepletionSlider
-      objectReference: {fileID: 0}
     - target: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5044,6 +5016,11 @@ PrefabInstance:
       propertyPath: m_MinValue
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+        type: 3}
+      propertyPath: m_Name
+      value: FuelDepletionSlider
+      objectReference: {fileID: 0}
     - target: {fileID: 7198394438973484458, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -5106,11 +5083,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9054455694774901084}
     m_Modifications:
-    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
-        type: 3}
-      propertyPath: m_Name
-      value: HorizontalSpeedSlider
-      objectReference: {fileID: 0}
     - target: {fileID: 5797462698593720489, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5236,6 +5208,11 @@ PrefabInstance:
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgument
       value: 
       objectReference: {fileID: 9195843156624232294}
+    - target: {fileID: 5764540190390400736, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
+        type: 3}
+      propertyPath: m_Name
+      value: HorizontalSpeedSlider
+      objectReference: {fileID: 0}
     - target: {fileID: 7198394438973484458, guid: 4b57d55c6fe114f12ace9e5928f6bbb9,
         type: 3}
       propertyPath: m_AnchorMax.x

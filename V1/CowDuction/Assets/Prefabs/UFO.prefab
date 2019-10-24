@@ -63,8 +63,8 @@ GameObject:
   - component: {fileID: 2175921359117653451}
   - component: {fileID: 7080483277278456700}
   - component: {fileID: 2175921359117653460}
-  - component: {fileID: 2175921359117653461}
   - component: {fileID: 2175921359117653450}
+  - component: {fileID: 1246842189641550114}
   m_Layer: 13
   m_Name: UFO
   m_TagString: UFO
@@ -290,26 +290,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &2175921359117653461
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2175921359117653471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d944ae84a93db194ba39b9f615b0be59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _rb: {fileID: 0}
-  horizontalSpeed: 10
-  verticalSpeed: 10
-  maxHeight: 80
-  minHeight: 10
-  rotationForce: 0.5
-  maxRotation: 20
-  invertLook: 0
 --- !u!114 &2175921359117653450
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -335,6 +315,26 @@ MonoBehaviour:
   lineRenderer: {fileID: 0}
   lineStartColor: {r: 0.78431374, g: 1, b: 0.7607843, a: 0.5882353}
   lineEndColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!114 &1246842189641550114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2175921359117653471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d944ae84a93db194ba39b9f615b0be59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rb: {fileID: 0}
+  horizontalSpeed: 10
+  verticalSpeed: 10
+  maxHeight: 15
+  minHeight: 10
+  rotationForce: 0.5
+  maxRotation: 20
+  invertLook: 0
 --- !u!1 &2175921360886221579
 GameObject:
   m_ObjectHideFlags: 0
