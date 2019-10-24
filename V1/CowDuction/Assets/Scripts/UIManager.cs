@@ -85,7 +85,7 @@ public class UIManager : MonoBehaviour
         }
 
         // Update time display
-        if (timeRemaining > 0.0f)
+        if (timeRemaining > 0.0f && !endScreen.activeSelf)
         {
             timeRemaining -= Time.fixedDeltaTime;
             int minutes = Mathf.FloorToInt(timeRemaining / 60.0f);
@@ -134,12 +134,10 @@ public class UIManager : MonoBehaviour
     {
         if (parameterScreen.activeSelf)
         {
-            Time.timeScale = 1;
             parameterScreen.SetActive(false);
         }
         else
         {
-            Time.timeScale = 0;
             parameterScreen.SetActive(true);
         }
     }
