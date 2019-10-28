@@ -1,4 +1,13 @@
-﻿using UnityEngine;
+﻿/* GameManager.cs
+   
+   Handles loading scenes and resetting game.
+
+   Assumptions:
+     There is a GameObject in the scene called "UFO" with a Rigidbody component.
+     There is a GameObject in the scene with the "UIManager" tag and UIManager component.
+ */
+
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
@@ -25,8 +34,7 @@ public class GameManager : MonoBehaviour
         CowAbduction ufoCa = ufo.GetComponent<CowAbduction>();
         ufoCa.ResetGame();
 
-        Rigidbody ufoRb = ufo.GetComponent<Rigidbody>();
-        ufoRb.MovePosition(Vector3.up * 10.0f);
-        ufoRb.MoveRotation(Quaternion.identity);
+        SpaceshipMovement ufoSM = ufo.GetComponent<SpaceshipMovement>();
+        ufoSM.ResetGame();
     }
 }

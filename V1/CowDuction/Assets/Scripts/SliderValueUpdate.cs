@@ -18,6 +18,6 @@ public class SliderValueUpdate : MonoBehaviour
         if(mySlider.wholeNumbers)
             myText.text = mySlider.value.ToString();
         else
-            myText.text = mySlider.value.ToString("F1");
+            myText.text = mySlider.value.ToString("F2");
     }
 }
