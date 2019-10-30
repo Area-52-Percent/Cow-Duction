@@ -19,7 +19,7 @@ public class SpaceshipMovement : MonoBehaviour
     public float rotationForce = 0.05f;
     public float maxRotation = 20.0f;
     public bool invertLook = false;
-    [SerializeField] private float carryMass;
+    [SerializeField] private float movementPenaltyFactor = 1f;
     [SerializeField] private bool movementEnabled;
 
     // Start is called before the first frame update
@@ -46,10 +46,10 @@ public class SpaceshipMovement : MonoBehaviour
             {
                 horizontalForce = transform.right;
                 horizontalForce.y = 0;
-                _rb.AddForce(horizontalForce * horizontalInput * horizontalSpeed);
+                _rb.AddForce(horizontalForce * horizontalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
                 if (horizontalInput < 0 && (transform.eulerAngles.z < maxRotation || transform.eulerAngles.z > 350.0f - maxRotation) || horizontalInput > 0 && (transform.eulerAngles.z > 360.0f - maxRotation || transform.eulerAngles.z < maxRotation + 10.0f))
                 {
-                    _rb.AddRelativeTorque(Vector3.back * horizontalInput * rotationForce);
+                    _rb.AddRelativeTorque(Vector3.back * horizontalInput * rotationForce, ForceMode.Acceleration);
                 }
             }
             // Turn left and right
@@ -78,13 +78,13 @@ public class SpaceshipMovement : MonoBehaviour
             {
                 horizontalForce = transform.forward;
                 horizontalForce.y = 0;
-                _rb.AddForce(horizontalForce * verticalInput * horizontalSpeed);
+                _rb.AddForce(horizontalForce * verticalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
                 if (verticalInput > 0 && (transform.localEulerAngles.x < maxRotation || transform.localEulerAngles.x > 350.0f - maxRotation) || verticalInput < 0 && (transform.localEulerAngles.x > 360.0f - maxRotation || transform.localEulerAngles.x < maxRotation + 10.0f))
                 {
-                    _rb.AddRelativeTorque(Vector3.right * verticalInput * rotationForce);
+                    _rb.AddRelativeTorque(Vector3.right * verticalInput * rotationForce, ForceMode.Acceleration);
                 }
             }
-            // Turn forward and backward
+            // Roll forward and backward
             if ((Input.GetKey(KeyCode.UpArrow) && (transform.localEulerAngles.x > 280.0f || transform.localEulerAngles.x < 90.0f)) || 
                 (Input.GetKey(KeyCode.DownArrow) && (transform.localEulerAngles.x < 80.0f || transform.localEulerAngles.x > 270.0f)))
             {
@@ -131,15 +131,15 @@ public class SpaceshipMovement : MonoBehaviour
         // Lift
         if (Input.GetKey(KeyCode.Z) && transform.position.y < maxHeight)
         {
-            _rb.AddForce(Vector3.up * verticalSpeed);
+            _rb.AddForce(Vector3.up * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
         }
         if (Input.GetKey(KeyCode.C) && transform.position.y > minHeight)
         {
-            _rb.AddForce(Vector3.down * verticalSpeed);
+            _rb.AddForce(Vector3.down * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
         }
 
         // Constant upward force keeping the spaceship floating        
-        _rb.AddForce(Vector3.up * -Physics.gravity.y);
+        _rb.AddForce(Vector3.up * -Physics.gravity.y, ForceMode.Acceleration);
     }
 
     // Toggles invert look for camera up and down rotation
@@ -151,20 +151,23 @@ public class SpaceshipMovement : MonoBehaviour
             invertLook = true;
     }
     
-    public void AddCarryMass(float amount)
+    public void SetMovementPenaltyFactor(float factor)
     {
-        carryMass += amount;
+        movementPenaltyFactor = factor;
     }
 
-    public void ResetCarryMass()
+    public void ResetMovementPenaltyFactor()
     {
-        carryMass = 0f;
+        movementPenaltyFactor = 1f;
     }
 
     // Disable translational movement 
-    public void DisableMovement()
+    public void AllowMovement(bool allow)
     {
-        movementEnabled = false;
+        if (allow)
+            movementEnabled = true;
+        else
+            movementEnabled = false;
     }
 
     // Reset spaceship to starting position and enable movement

@@ -40,10 +40,10 @@ public class UIManager : MonoBehaviour
     public Image fuelMeterFill;
     public Slider cooldownMeter;
     public Image cooldownMeterFill;
-    // EndScreen UI Elements
+    // Non Gameplay UI Elements
     public GameObject endScreen;
     public Text finalScoreText;
-    // ParameterScreen UI Elements
+    public GameObject helpScreen;
     public GameObject parameterScreen;
 
     // Awake is called after all objects are initialized
@@ -67,6 +67,7 @@ public class UIManager : MonoBehaviour
         // Deactivate non-gameplay menus
         endScreen.SetActive(false);
         parameterScreen.SetActive(false);
+        helpScreen.SetActive(false);
     }
 
     // Update is called once per frame
@@ -80,7 +81,10 @@ public class UIManager : MonoBehaviour
         if (fuel > 0.0f)
         {
             if (!fuelWarnText.enabled && fuel < fuelWarnAmount)
+            {
+                fuelWarnText.text = "FUEL LOW";
                 fuelWarnText.enabled = true;
+            }
             else if (fuel > fuelWarnAmount)
                 fuelWarnText.enabled = false;
             fuel -= Time.fixedDeltaTime * fuelDepletionRate;
@@ -91,7 +95,7 @@ public class UIManager : MonoBehaviour
         {
             fuel = 0.0f;
             fuelWarnText.text = "OUT OF FUEL";
-            _rbUFO.GetComponent<SpaceshipMovement>().DisableMovement();
+            _rbUFO.GetComponent<SpaceshipMovement>().AllowMovement(false);
         }
 
         // Update cooldown meter display
@@ -141,10 +145,14 @@ public class UIManager : MonoBehaviour
     public void IncreaseScore(int amount)
     {
         score += amount;
+        if (fuel <= 0.0f)
+            fuelWarnText.enabled = false;
         fuel += amount * scoreToFuelRatio;
         if (fuel > 100.0f)
             fuel = 100.0f;
         scoreText.text = score.ToString("D2");
+        if (_rbUFO.GetComponent<SpaceshipMovement>())
+            _rbUFO.GetComponent<SpaceshipMovement>().AllowMovement(true);
     }
 
     // Put ability on cooldown and disable ufo mesh
@@ -192,6 +200,20 @@ public class UIManager : MonoBehaviour
         endScreen.SetActive(true);
     }
 
+    // Toggle the help screen
+    public void ToggleHelpScreen()
+    {
+        if (helpScreen.activeSelf)
+        {
+            helpScreen.SetActive(false);
+        }
+        else
+        {
+            Time.timeScale = 0;
+            helpScreen.SetActive(true);
+        }
+    }
+
     // Toggle the parameter screen
     public void ToggleParameterScreen()
     {
@@ -207,6 +229,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // Sets parameter based on input slider name
     public void SetParameter(Slider slider)
     {
         float value = slider.value;

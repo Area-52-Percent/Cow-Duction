@@ -113,7 +113,8 @@ public class CowAbduction : MonoBehaviour
                 attachedObject = null;
 
                 // Reset carry mass
-                _rb.GetComponent<SpaceshipMovement>().ResetCarryMass();
+                if (_rb.GetComponent<SpaceshipMovement>())
+                    _rb.GetComponent<SpaceshipMovement>().ResetMovementPenaltyFactor();
             }
         }
 
@@ -266,10 +267,7 @@ public class CowAbduction : MonoBehaviour
 
                     goRigidbody.mass = _rb.mass / 10.0f;
                     goRigidbody.drag = 1.0f;
-                    goRigidbody.angularDrag = 1.0f;
-
-                    // Add mass to spaceship
-                    _rb.GetComponent<SpaceshipMovement>().AddCarryMass(goRigidbody.mass);
+                    goRigidbody.angularDrag = 1.0f;                    
 
                     go.transform.position = (j + 1) * (transform.position - hit.transform.position) / (float)numberOfJoints;
 
@@ -296,8 +294,9 @@ public class CowAbduction : MonoBehaviour
             }
             attachedObject = hit.transform.gameObject;
 
-            // Add mass to spaceship
-                _rb.GetComponent<SpaceshipMovement>().AddCarryMass(attachedObject.GetComponent<Rigidbody>().mass);
+            // Set spaceship movement penalty (TO DO: set based on cow mass)
+            if (_rb.GetComponent<SpaceshipMovement>())
+                _rb.GetComponent<SpaceshipMovement>().SetMovementPenaltyFactor(0.5f);
 
             if (probeClone != null)
             {
@@ -332,7 +331,7 @@ public class CowAbduction : MonoBehaviour
             // Apply small upward force for physical feedback
             _rb.AddRelativeForce(_rb.transform.up * _rb.mass, ForceMode.Impulse);
             // Reset carry mass
-            _rb.GetComponent<SpaceshipMovement>().ResetCarryMass();
+            _rb.GetComponent<SpaceshipMovement>().ResetMovementPenaltyFactor();
         }
     }
 
