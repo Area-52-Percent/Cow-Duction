@@ -36,6 +36,10 @@ public class CowBrain : MonoBehaviour
             SetPlayerControlled(false);
             cowAgent.destination = new Vector3(Random.Range(minX, maxX), 0f, Random.Range(minZ, maxZ));
         }
+        else
+        {
+            SetPlayerControlled(true);
+        }
         maxWanderTime = 10f;
     }
 
