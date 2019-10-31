@@ -196,7 +196,7 @@ public class UIManager : MonoBehaviour
     public void DisplayEndScreen()
     {
         finalScoreText.text = "" + score;
-        Time.timeScale = 0;
+        Time.timeScale = Mathf.Epsilon;
         endScreen.SetActive(true);
     }
 
@@ -209,7 +209,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 0;
+            // Time.timeScale = Mathf.Epsilon;
             helpScreen.SetActive(true);
         }
     }
@@ -224,7 +224,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 0;
+            Time.timeScale = Mathf.Epsilon;
             parameterScreen.SetActive(true);
         }
     }
