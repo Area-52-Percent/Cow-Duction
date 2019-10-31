@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
     // Referenced objects
     [SerializeField] private Rigidbody _rbUFO;
     [SerializeField] private MeshRenderer[] ufoMesh;
+    [SerializeField] public GameObject CowSpawner;
     // Variables
     [SerializeField] private int score;
     public float scoreToFuelRatio = 10.0f;
@@ -52,6 +53,7 @@ public class UIManager : MonoBehaviour
         // Retrieve UFO rigidbody
         _rbUFO = GameObject.Find("UFO").GetComponent<Rigidbody>();
         ufoMesh = _rbUFO.GetComponentsInChildren<MeshRenderer>();
+        CowSpawner = GameObject.Find("CowSpawner");
     }
 
     // Start is called before the first frame update
@@ -68,6 +70,7 @@ public class UIManager : MonoBehaviour
         endScreen.SetActive(false);
         parameterScreen.SetActive(false);
         helpScreen.SetActive(false);
+
     }
 
     // Update is called once per frame
@@ -288,6 +291,12 @@ public class UIManager : MonoBehaviour
                 break;
             case "TimeScaleSlider":
                 timeScaleFactor = value;
+                break;
+            case "MaxCowAmountSlider":
+                CowSpawner.GetComponent<CowSpawner>().maxCowAmount = (int)value;
+                break;
+            case "CowSpawnRateSlider":
+                CowSpawner.GetComponent<CowSpawner>().spawnRate = (int)value;
                 break;
             default:
                 break;
