@@ -17,10 +17,10 @@ public class SC_CowBrain : MonoBehaviour
     [SerializeField] private NavMeshAgent cowAgent;
     [SerializeField] private Camera cowCam;
     [SerializeField] private RigidbodyFirstPersonController rbFpController;
-    [SerializeField] private int minX = 0;
-    [SerializeField] private int maxX = 0;
-    [SerializeField] private int minZ = 0;
-    [SerializeField] private int maxZ = 0;
+    [SerializeField] private int minX = -100;
+    [SerializeField] private int maxX = 100;
+    [SerializeField] private int minZ = -100;
+    [SerializeField] private int maxZ = 100;
     [SerializeField] private float wanderTime;
     [SerializeField] private float maxWanderTime;
     [SerializeField] private bool aiControlled;
@@ -34,7 +34,8 @@ public class SC_CowBrain : MonoBehaviour
         if (aiControlled)
         {
             SetPlayerControlled(false);
-            cowAgent.destination = new Vector3(Random.Range(minX, maxX), 0f, Random.Range(minZ, maxZ));
+            // cowAgent.destination = new Vector3(Random.Range(minX, maxX), 0f, Random.Range(minZ, maxZ));
+            cowAgent.destination = Random.insideUnitSphere * maxX;
         }
         else
         {
@@ -54,7 +55,8 @@ public class SC_CowBrain : MonoBehaviour
             }
             if (cowAgent.enabled && (cowAgent.remainingDistance < 1f || wanderTime >= maxWanderTime))
             {
-                cowAgent.destination = new Vector3(Random.Range(minX, maxX), 0f, Random.Range(minZ, maxZ));
+                // cowAgent.destination = new Vector3(Random.Range(minX, maxX), 0f, Random.Range(minZ, maxZ));
+                cowAgent.destination = Random.insideUnitSphere * maxX;
                 wanderTime = 0f;
             }
         }

@@ -33,6 +33,7 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private float timeScaleFactor;
     // Gameplay UI Elements
     public Image hudDisplay;
+    public Image cowIcon;
     public Text scoreText;
     public Text speedText;
     public Text altitudeText;
@@ -61,6 +62,8 @@ public class SC_AlienUIManager : MonoBehaviour
     {
         // Initialize values for private variables
         score = 0;
+        scoreText.text = score.ToString("D2");
+        cowIcon.enabled = false;
         fuel = 100.0f;
         abilityCooldown = 100.0f;
         cooldownActive = false;
@@ -70,7 +73,6 @@ public class SC_AlienUIManager : MonoBehaviour
         endScreen.SetActive(false);
         parameterScreen.SetActive(false);
         helpScreen.SetActive(false);
-
     }
 
     // Update is called once per frame
@@ -144,9 +146,35 @@ public class SC_AlienUIManager : MonoBehaviour
         }
     }
 
+    // Enable or disable cow icon
+    public void ToggleCowIcon()
+    {
+        if (cowIcon.enabled)
+            cowIcon.enabled = false;
+        else
+            cowIcon.enabled = true;
+    }
+
+    // Add visual flair to score increase (TO DO: Replace hard-coded values)
+    private IEnumerator AnimateIncreaseScore()
+    {
+        RectTransform cowIconTransform;
+        if (cowIconTransform = cowIcon.GetComponent<RectTransform>())
+        {
+            while (cowIconTransform.anchoredPosition.y > 20)
+            {
+                cowIconTransform.anchoredPosition += Vector2.down * 5;
+                yield return null;
+            }
+            ToggleCowIcon();
+            cowIconTransform.anchoredPosition = Vector2.up * 80;
+        }
+    }
+
     // Increase score and fuel
     public void IncreaseScore(int amount)
     {
+        StartCoroutine(AnimateIncreaseScore());
         score += amount;
         if (fuel <= 0.0f)
             fuelWarnText.enabled = false;

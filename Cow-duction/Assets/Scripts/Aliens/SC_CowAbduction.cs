@@ -66,7 +66,7 @@ public class SC_CowAbduction : MonoBehaviour
         // Left click casts a raycast in the direction of the cursor position.
         // If a cow is already attached, release it.
         // Otherwise if the raycast hits a cow, the cow becomes attached to my rigidbody through configurable joints.
-        if (Input.GetMouseButtonDown(0) && Time.timeScale > 0f)
+        if (Input.GetMouseButtonDown(0) && Time.timeScale > Mathf.Epsilon)
         {
             // Do not shoot ray if cow is already attached
             if (attachedObject == null && !grappling)
@@ -115,6 +115,12 @@ public class SC_CowAbduction : MonoBehaviour
                 // Reset carry mass
                 if (_rb.GetComponent<SC_SpaceshipMovement>())
                     _rb.GetComponent<SC_SpaceshipMovement>().ResetMovementPenaltyFactor();
+
+                // Toggle UI indicator
+                if (uiManager.cowIcon.enabled)
+                {
+                    uiManager.ToggleCowIcon();
+                }
             }
         }
 
@@ -123,7 +129,7 @@ public class SC_CowAbduction : MonoBehaviour
         {
             if (attachedObject != null && attachedObject.tag == "Cow") 
             {
-                if (captureLength > 0f)
+                if (captureLength * numberOfJoints > Vector3.Distance(transform.position, attachedObject.transform.position))
                 {
                     // Decrease joint limits over time
                     captureLength -= Time.deltaTime * captureSpeed;
@@ -139,7 +145,7 @@ public class SC_CowAbduction : MonoBehaviour
                     foreach(ConfigurableJoint cj in attachedObjectJoints)
                     {
                         SoftJointLimit softJointLimit = new SoftJointLimit();
-                        softJointLimit.limit = 0f;
+                        softJointLimit.limit = Mathf.Epsilon;
                         softJointLimit.contactDistance = 0.1f;
                         cj.linearLimit = softJointLimit;
                     }
@@ -302,6 +308,12 @@ public class SC_CowAbduction : MonoBehaviour
             {
                 probeClone.transform.parent = attachedObject.transform;
                 probeClone.transform.position = attachedObject.transform.position;
+            }
+
+            // Toggle UI indicator
+            if (!uiManager.cowIcon.enabled)
+            {
+                uiManager.ToggleCowIcon();
             }
             return true;
         }

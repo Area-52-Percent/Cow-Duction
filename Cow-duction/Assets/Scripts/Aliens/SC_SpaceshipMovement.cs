@@ -16,6 +16,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public float verticalSpeed = 10.0f;
     public float maxHeight = 50.0f;
     public float minHeight = 10.0f;
+    public float hoverHeight = 5.0f;
     public float rotationForce = 0.05f;
     public float maxRotation = 20.0f;
     public bool invertLook = false;
@@ -136,6 +137,10 @@ public class SC_SpaceshipMovement : MonoBehaviour
         if (Input.GetKey(KeyCode.C) && transform.position.y > minHeight)
         {
             _rb.AddForce(Vector3.down * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
+        }
+        if (Physics.Raycast(transform.position, Vector3.down, hoverHeight))
+        {
+            _rb.AddForce(Vector3.up * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
         }
 
         // Constant upward force keeping the spaceship floating        
