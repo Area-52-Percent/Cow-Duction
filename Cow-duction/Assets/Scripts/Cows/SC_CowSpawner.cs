@@ -65,8 +65,8 @@ public class SC_CowSpawner : MonoBehaviour
     {
         for (int i = 0; i < Amount; i++)
         {
-            float xPos = spawnPoint.transform.position.x + Random.Range(0, radius);
-            float zPos = spawnPoint.transform.position.z + Random.Range(0, radius);
+            float xPos = spawnPoint.transform.position.x + Random.Range(-radius, radius);
+            float zPos = spawnPoint.transform.position.z + Random.Range(-radius, radius);
             GameObject cowClone = Instantiate(cowPrefab, new Vector3(xPos, spawnPoint.transform.position.y, zPos), Quaternion.identity);
             cowClone.transform.parent = this.transform;
         }
