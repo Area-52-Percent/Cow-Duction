@@ -21,11 +21,11 @@ public class SC_HudReticleFollowCursor : MonoBehaviour
             float vertical = Input.GetAxis("ReticleVertical");
             if (Mathf.Abs(horizontal) > 0f)
             {
-                transform.position += Vector3.right * horizontal;
+                transform.position += Vector3.right * horizontal * joystickSensitivity;
             }
             if (Mathf.Abs(vertical) > 0f)
             {
-                transform.position += Vector3.up * vertical;
+                transform.position += Vector3.up * vertical * joystickSensitivity;
             }
         }
         transform.position = Input.mousePosition;

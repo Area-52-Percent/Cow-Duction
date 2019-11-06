@@ -90,12 +90,10 @@ MonoBehaviour:
   cowAgent: {fileID: 0}
   cowCam: {fileID: 0}
   rbFpController: {fileID: 0}
-  minX: -125
-  maxX: 125
-  minZ: -125
-  maxZ: 125
+  wanderRadius: 100
   wanderTime: 0
-  maxWanderTime: 0
+  maxWanderTime: 20
+  wandering: 1
   aiControlled: 1
 --- !u!136 &8363444690370700327
 CapsuleCollider:

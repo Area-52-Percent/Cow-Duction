@@ -14,16 +14,14 @@ using UnityStandardAssets.Characters.FirstPerson;
 [RequireComponent(typeof(NavMeshAgent))]
 public class SC_CowBrain : MonoBehaviour
 {
-    [SerializeField] private NavMeshAgent cowAgent;
-    [SerializeField] private Camera cowCam;
+    [SerializeField] protected NavMeshAgent cowAgent;
+    [SerializeField] protected Camera cowCam;
     [SerializeField] private RigidbodyFirstPersonController rbFpController;
-    [SerializeField] private int minX = -100;
-    [SerializeField] private int maxX = 100;
-    [SerializeField] private int minZ = -100;
-    [SerializeField] private int maxZ = 100;
-    [SerializeField] private float wanderTime;
-    [SerializeField] private float maxWanderTime;
-    [SerializeField] private bool aiControlled;
+    [SerializeField] private int wanderRadius = 100;
+    [SerializeField] private float wanderTime = 0.0f;
+    [SerializeField] private float maxWanderTime = 10.0f;
+    [SerializeField] protected bool wandering = true;
+    [SerializeField] private bool aiControlled = true;
 
     // Start is called before the first frame update
     void Start()
@@ -34,20 +32,18 @@ public class SC_CowBrain : MonoBehaviour
         if (aiControlled)
         {
             SetPlayerControlled(false);
-            // cowAgent.destination = new Vector3(Random.Range(minX, maxX), 0f, Random.Range(minZ, maxZ));
-            cowAgent.destination = Random.insideUnitSphere * maxX;
+            cowAgent.destination = Random.insideUnitSphere * wanderRadius;
         }
         else
         {
             SetPlayerControlled(true);
         }
-        maxWanderTime = 10f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (aiControlled)
+        if (aiControlled && wandering)
         {
             if (wanderTime < maxWanderTime)
             {
@@ -55,8 +51,7 @@ public class SC_CowBrain : MonoBehaviour
             }
             if (cowAgent.enabled && (cowAgent.remainingDistance < 1f || wanderTime >= maxWanderTime))
             {
-                // cowAgent.destination = new Vector3(Random.Range(minX, maxX), 0f, Random.Range(minZ, maxZ));
-                cowAgent.destination = Random.insideUnitSphere * maxX;
+                cowAgent.destination = Random.insideUnitSphere * wanderRadius;
                 wanderTime = 0f;
             }
         }

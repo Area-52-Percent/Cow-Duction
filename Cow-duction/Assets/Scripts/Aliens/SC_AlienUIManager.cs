@@ -186,7 +186,7 @@ public class SC_AlienUIManager : MonoBehaviour
             _rbUFO.GetComponent<SC_SpaceshipMovement>().AllowMovement(true);
     }
 
-    // Put ability on cooldown and disable ufo mesh
+    // Put ability on cooldown and disable mesh
     public void UseAbility()
     {
         abilityCooldown = 0.0f;        
@@ -206,6 +206,7 @@ public class SC_AlienUIManager : MonoBehaviour
         StartCoroutine(EndAbility());
     }
 
+    // Fade HUD back in and re-enable mesh
     public IEnumerator EndAbility()
     {        
         yield return new WaitForSeconds(abilityActiveTime);
@@ -221,6 +222,12 @@ public class SC_AlienUIManager : MonoBehaviour
         {
             mr.enabled = true;
         }
+    }
+
+    // Subtract fuel by amount of damage taken
+    public void TakeDamage(float amount)
+    {
+        fuel -= amount;
     }
 
     // Show the endscreen
