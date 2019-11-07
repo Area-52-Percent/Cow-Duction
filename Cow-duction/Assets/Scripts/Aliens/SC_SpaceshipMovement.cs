@@ -36,26 +36,53 @@ public class SC_SpaceshipMovement : MonoBehaviour
         Vector3 horizontalForce = Vector3.zero;
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
+        float jHorizontalInput = Input.GetAxis("J_MainHorizontal");
+        float jVerticalInput = Input.GetAxis("J_MainVertical");
+        float jRHorizontalInput = Input.GetAxis("R_MainHorizontal");
+        float jRVerticalInput = Input.GetAxis("R_MainVertical");
+        float rise = Input.GetAxis("Rise");
+        float fall = Input.GetAxis("Fall");
+        bool LeftBumper = Input.GetButton("RollLeft");
+        bool RightBumper = Input.GetButton("RollRight");
         // float mouseXInput = Input.GetAxis("Mouse X");
         // float mouseYInput = Input.GetAxis("Mouse Y");
 
-        if (Mathf.Abs(horizontalInput) > 0.0f)
+        if (Mathf.Abs(horizontalInput) > 0.0f || Mathf.Abs(jHorizontalInput) > 0.0f || Mathf.Abs(jRHorizontalInput) > 0.0f)
         {
             // Move left and right
-            if (movementEnabled && (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)))
+            if (movementEnabled && ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) || Mathf.Abs(jHorizontalInput) > 0.0f ))
             {
                 horizontalForce = transform.right;
                 horizontalForce.y = 0;
-                _rb.AddForce(horizontalForce * horizontalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
+                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
+                {
+                    _rb.AddForce(horizontalForce * horizontalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
+                }
+                else
+                {
+                    _rb.AddForce(horizontalForce * jHorizontalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
+                }
+
                 if (horizontalInput < 0 && (transform.eulerAngles.z < maxRotation || transform.eulerAngles.z > 350.0f - maxRotation) || horizontalInput > 0 && (transform.eulerAngles.z > 360.0f - maxRotation || transform.eulerAngles.z < maxRotation + 10.0f))
+                {
+                    _rb.AddRelativeTorque(Vector3.back * horizontalInput * rotationForce, ForceMode.Acceleration);
+                }
+                else if (jHorizontalInput < 0 && (transform.eulerAngles.z < maxRotation || transform.eulerAngles.z > 350.0f - maxRotation) || jHorizontalInput > 0 && (transform.eulerAngles.z > 360.0f - maxRotation || transform.eulerAngles.z < maxRotation + 10.0f))
                 {
                     _rb.AddRelativeTorque(Vector3.back * horizontalInput * rotationForce, ForceMode.Acceleration);
                 }
             }
             // Turn left and right
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
+            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) || Mathf.Abs(jRHorizontalInput) > 0.0f)
             {
-                _rb.AddRelativeTorque(Vector3.up * horizontalInput * rotationForce * 2, ForceMode.Acceleration);
+                if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
+                {
+                    _rb.AddRelativeTorque(Vector3.up * horizontalInput * rotationForce * 2, ForceMode.Acceleration);
+                }
+                else if (Mathf.Abs(jRHorizontalInput) > 0.0f)
+                {
+                    _rb.AddRelativeTorque(Vector3.up * jRHorizontalInput * rotationForce * 2, ForceMode.Acceleration);
+                }
             }
         }
         else
@@ -71,10 +98,10 @@ public class SC_SpaceshipMovement : MonoBehaviour
             }
         }
 
-        if (Mathf.Abs(verticalInput) > 0.0f)
+        if (Mathf.Abs(verticalInput) > 0.0f || Mathf.Abs(jVerticalInput) > 0.0f || Mathf.Abs(jRVerticalInput) > 0.0f)
         {
             // Move forward and backward
-            if (movementEnabled && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S)))
+            if (movementEnabled && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S)) || Mathf.Abs(jVerticalInput) > 0.0f)
             {
                 horizontalForce = transform.forward;
                 horizontalForce.y = 0;
@@ -86,9 +113,17 @@ public class SC_SpaceshipMovement : MonoBehaviour
             }
             // Roll forward and backward
             if ((Input.GetKey(KeyCode.UpArrow) && (transform.localEulerAngles.x > 280.0f || transform.localEulerAngles.x < 90.0f)) || 
-                (Input.GetKey(KeyCode.DownArrow) && (transform.localEulerAngles.x < 80.0f || transform.localEulerAngles.x > 270.0f)))
+                (Input.GetKey(KeyCode.DownArrow) && (transform.localEulerAngles.x < 80.0f || transform.localEulerAngles.x > 270.0f)) || 
+                (Mathf.Abs(jRVerticalInput) > 0.0f && (transform.localEulerAngles.x > 280.0f || transform.localEulerAngles.x < 90.0f)))
             {
-                _rb.AddRelativeTorque((invertLook ? Vector3.right : Vector3.left) * verticalInput * rotationForce * 2, ForceMode.Acceleration);
+                if (Mathf.Abs(jRVerticalInput) > 0.0f)
+                {
+                    _rb.AddRelativeTorque((invertLook ? Vector3.right : Vector3.left) * jRVerticalInput * rotationForce * 2, ForceMode.Acceleration);
+                }
+                else
+                {
+                    _rb.AddRelativeTorque((invertLook ? Vector3.right : Vector3.left) * verticalInput * rotationForce * 2, ForceMode.Acceleration);
+                }
             }
         }
         else
@@ -105,11 +140,11 @@ public class SC_SpaceshipMovement : MonoBehaviour
         }
 
         // Roll left and right
-        if (Input.GetKey(KeyCode.Q))
+        if (Input.GetKey(KeyCode.Q) || LeftBumper)
         {
             _rb.AddRelativeTorque(Vector3.forward * rotationForce * 2, ForceMode.Acceleration);
         }
-        if (Input.GetKey(KeyCode.E))
+        if (Input.GetKey(KeyCode.E) || RightBumper)
         {
             _rb.AddRelativeTorque(Vector3.back * rotationForce * 2, ForceMode.Acceleration);
         }
@@ -129,11 +164,11 @@ public class SC_SpaceshipMovement : MonoBehaviour
             return;
 
         // Lift
-        if (Input.GetKey(KeyCode.Z) && transform.position.y < maxHeight)
+        if ((Input.GetKey(KeyCode.Z) || Mathf.Abs(rise) > 0.0f)&& transform.position.y < maxHeight)
         {
             _rb.AddForce(Vector3.up * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
         }
-        if (Input.GetKey(KeyCode.C) && transform.position.y > minHeight)
+        if ((Input.GetKey(KeyCode.C) || Mathf.Abs(fall) > 0.0f)&& transform.position.y > minHeight)
         {
             _rb.AddForce(Vector3.down * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
         }
