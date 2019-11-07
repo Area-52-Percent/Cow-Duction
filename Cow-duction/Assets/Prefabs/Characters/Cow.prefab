@@ -45,8 +45,8 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5314257958602278042}
   serializedVersion: 2
-  m_Mass: 10
-  m_Drag: 1
+  m_Mass: 20
+  m_Drag: 0.5
   m_AngularDrag: 1
   m_UseGravity: 1
   m_IsKinematic: 0
@@ -90,12 +90,10 @@ MonoBehaviour:
   cowAgent: {fileID: 0}
   cowCam: {fileID: 0}
   rbFpController: {fileID: 0}
-  minX: -125
-  maxX: 125
-  minZ: -125
-  maxZ: 125
+  wanderRadius: 100
   wanderTime: 0
-  maxWanderTime: 0
+  maxWanderTime: 20
+  wandering: 1
   aiControlled: 1
 --- !u!136 &8363444690370700327
 CapsuleCollider:
