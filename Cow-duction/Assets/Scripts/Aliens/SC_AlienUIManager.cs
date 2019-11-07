@@ -228,6 +228,22 @@ public class SC_AlienUIManager : MonoBehaviour
     public void TakeDamage(float amount)
     {
         fuel -= amount;
+        fuelMeter.value = fuel;
+        StartCoroutine(AnimateDamage());
+    }
+
+    // Visual indicator of taking damage
+    private IEnumerator AnimateDamage()
+    {
+        foreach (Image image in fuelMeter.GetComponentsInChildren<Image>())
+        {
+            image.color = new Color(Mathf.Lerp(1f, 0f, Time.deltaTime), 0, 0);
+        }
+        yield return new WaitForEndOfFrame();
+        foreach (Image image in fuelMeter.GetComponentsInChildren<Image>())
+        {
+            image.color = new Color(Mathf.Lerp(1f, 0f, Time.deltaTime), 1, 1);
+        }
     }
 
     // Show the endscreen

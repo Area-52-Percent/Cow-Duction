@@ -36,23 +36,26 @@ public class SC_FarmerBrain : SC_CowBrain
     // Update is called once per frame
     void Update()
     {
-        if (fireCooldown < fireRate)
+        if (cowAgent.enabled)
         {
-            fireCooldown += Time.deltaTime;
-        }
-        if (!lockedOn)
-        {
-            if (Vector3.Distance(transform.position, targetTransform.position) <= lockOnDistance)
-                LockOn();
-        }
-        else 
-        {
-            cowAgent.destination = targetTransform.position;
-            cowCam.transform.LookAt(targetTransform);
-            if (Vector3.Distance(transform.position, targetTransform.position) > lockOnDistance)
-                Disengage();
-            else if (fireCooldown >= fireRate)
-                FireWeapon();
+            if (fireCooldown < fireRate)
+            {
+                fireCooldown += Time.deltaTime;
+            }
+            if (!lockedOn)
+            {
+                if (Vector3.Distance(transform.position, targetTransform.position) <= lockOnDistance)
+                    LockOn();
+            }
+            else 
+            {
+                cowAgent.destination = targetTransform.position;
+                cowCam.transform.LookAt(targetTransform);
+                if (Vector3.Distance(transform.position, targetTransform.position) > lockOnDistance)
+                    Disengage();
+                else if (fireCooldown >= fireRate)
+                    FireWeapon();
+            }
         }
     }
 

@@ -313,7 +313,7 @@ public class SC_CowAbduction : MonoBehaviour
     {
         if (attachedObject != null && attachedObject.tag == "Cow") 
         {
-            if (captureLength * numberOfJoints > Vector3.Distance(transform.position, attachedObject.transform.position))
+            if (captureLength * numberOfJoints >= Vector3.Distance(transform.position, attachedObject.transform.position))
             {
                 // Decrease joint limits over time
                 captureLength -= Time.deltaTime * captureSpeed;
