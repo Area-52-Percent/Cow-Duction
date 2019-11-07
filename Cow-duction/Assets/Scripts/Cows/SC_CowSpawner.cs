@@ -18,15 +18,15 @@ public class SC_CowSpawner : MonoBehaviour
     public float spawnRate = 5f;
     public int intialSpawnAmount = 9;
     public List<GameObject> spawnPoints;
+    public Transform UFOLoc;
 
     [SerializeField] private int cowAmount = 0;
-    [SerializeField] private float elapsedTime = 0.0f;
-    [SerializeField] private int nextSpawnLoc = 0;
 
     // Awake is called after all objects are initialized
     void Awake()
     {
         GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>().CowSpawner = this.gameObject;
+        UFOLoc = GameObject.FindWithTag("UFO").transform;
     }
 
     // Start is called before the first frame update
@@ -50,13 +50,24 @@ public class SC_CowSpawner : MonoBehaviour
     void Update()
     {
         cowAmount = GameObject.FindGameObjectsWithTag("Cow").Length;
-        elapsedTime += Time.deltaTime;
-        //Debug.Log(cowAmount + "/" + maxCowAmount + "/" + elapsedTime + "/" + spawnRate);
-        if(cowAmount < maxCowAmount && elapsedTime > spawnRate)
+        if (cowAmount < maxCowAmount)
         {
-            SpawnCows(spawnPoints[nextSpawnLoc], 1);
-            nextSpawnLoc = ((nextSpawnLoc + 1) % spawnPoints.Count);
-            elapsedTime = 0.0f;
+            //Compare spawnpoints elapsed time
+            float[] ElapsedTimes = new float[spawnPoints.Count];
+            for (int i = 0; i < spawnPoints.Count; i++)
+            {
+                float fx = Mathf.Pow(1 + (1 / Vector3.Distance(spawnPoints[i].transform.position, UFOLoc.position)), Vector3.Distance(spawnPoints[i].transform.position, UFOLoc.position));
+                ElapsedTimes[i] = spawnPoints[i].GetComponent<SpawnPointTimer>().elapsedTime * ((100 * (fx / Mathf.Exp(1))) % 99);
+
+            }
+            float MaxSinceLastSpawn = Mathf.Max(ElapsedTimes);
+            if(MaxSinceLastSpawn > spawnRate)
+            {
+                int SpawnLoc = System.Array.IndexOf(ElapsedTimes, Mathf.Max(ElapsedTimes));
+                spawnPoints[SpawnLoc].GetComponent<SpawnPointTimer>().elapsedTime = 0.0f;
+                SpawnCows(spawnPoints[SpawnLoc], 1) ;
+            }
+
         }
     }
 
@@ -65,8 +76,8 @@ public class SC_CowSpawner : MonoBehaviour
     {
         for (int i = 0; i < Amount; i++)
         {
-            float xPos = spawnPoint.transform.position.x + Random.Range(0, radius);
-            float zPos = spawnPoint.transform.position.z + Random.Range(0, radius);
+            float xPos = spawnPoint.transform.position.x + Random.Range(-radius, radius);
+            float zPos = spawnPoint.transform.position.z + Random.Range(-radius, radius);
             GameObject cowClone = Instantiate(cowPrefab, new Vector3(xPos, spawnPoint.transform.position.y, zPos), Quaternion.identity);
             cowClone.transform.parent = this.transform;
         }
