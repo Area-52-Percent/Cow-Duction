@@ -26,7 +26,7 @@ public class SC_CowSpawner : MonoBehaviour
     void Awake()
     {
         GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>().CowSpawner = this.gameObject;
-        UFOLoc = GameObject.FindWithTag("UFO").transform;
+        UFOLoc = GameObject.Find("UFO").transform;
     }
 
     // Start is called before the first frame update

@@ -97,7 +97,8 @@ public class SC_SpaceshipMovement : MonoBehaviour
         }
 
         // Roll left and right
-        if (Mathf.Abs(rollInput) > 0.0f && (transform.localEulerAngles.z < maxRotation || transform.localEulerAngles.z > 360.0f - maxRotation))
+        if ((rollInput < 0.0f && (transform.localEulerAngles.z < maxRotation || transform.localEulerAngles.z > 270.0f)) || 
+            (rollInput > 0.0f && (transform.localEulerAngles.z > 360.0f - maxRotation || transform.localEulerAngles.z < 90.0f)))
         {
             _rb.AddRelativeTorque(Vector3.back * rollInput * rotationForce * 2, ForceMode.Acceleration);
         }
@@ -119,7 +120,8 @@ public class SC_SpaceshipMovement : MonoBehaviour
             return;
 
         // Lift        
-        if (Mathf.Abs(liftInput) > 0.0f && transform.position.y > minHeight && transform.position.y < maxHeight)
+        if ((liftInput > 0.0f && transform.position.y < maxHeight) || 
+            (liftInput < 0.0f && transform.position.y > minHeight))
         {
             _rb.AddForce(Vector3.up * liftInput * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
         }
@@ -140,6 +142,11 @@ public class SC_SpaceshipMovement : MonoBehaviour
             invertLook = false;
         else
             invertLook = true;
+    }
+
+    public void AddImpulseForce(float force)
+    {
+        _rb.AddRelativeForce(_rb.transform.up * _rb.mass * force, ForceMode.Impulse);
     }
     
     // Set movement multiplier (should be between 0 and 1)

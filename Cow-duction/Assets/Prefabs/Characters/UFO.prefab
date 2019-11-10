@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 2175921359117653456}
   - component: {fileID: 2175921359117653462}
   - component: {fileID: 2175921359117653451}
+  - component: {fileID: 5957952916082837744}
   - component: {fileID: 2175921359117653460}
   - component: {fileID: 2175921359117653450}
   - component: {fileID: 1246842189641550114}
@@ -213,6 +214,19 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
+  m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!135 &5957952916082837744
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2175921359117653471}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25
   m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &2175921359117653460
 Rigidbody:
@@ -448,7 +462,7 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8029819290521376005}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Convex: 1
@@ -541,7 +555,7 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9166099641043612676}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Convex: 1

@@ -14,8 +14,11 @@ using UnityEngine.AI;
 public class SC_FarmerBrain : SC_CowBrain
 {
     [SerializeField] private Transform targetTransform;
-    [SerializeField] private Transform gunShotOrigin;
-    [SerializeField] private GameObject projectile;    
+    [SerializeField] private AudioSource farmerAudioSource;
+    [SerializeField] private AudioClip shotgunPump = null;
+    [SerializeField] private AudioClip shotgunShot = null;
+    [SerializeField] private Transform gunShotOrigin = null; // Set up in inspector
+    [SerializeField] private GameObject projectile = null; // Set up in inspector
     [SerializeField] private float lockOnDistance = 20.0f;
     [SerializeField] private bool lockedOn = false;
     [SerializeField] private float normalSpeed = 10.0f;
@@ -25,12 +28,16 @@ public class SC_FarmerBrain : SC_CowBrain
     [SerializeField] private float fireCooldown = 3.0f;
     [SerializeField] private float fireRate = 3.0f;
 
+    [SerializeField] private Animator farmerAnimator;
+
     // Start is called before the first frame update
     void Start()
     {
         cowAgent = GetComponent<NavMeshAgent>();
         cowCam = GetComponentInChildren<Camera>();
         targetTransform = GameObject.Find("UFO").transform;
+        farmerAnimator = GetComponentInChildren<Animator>();
+        farmerAudioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -49,9 +56,11 @@ public class SC_FarmerBrain : SC_CowBrain
             }
             else 
             {
-                cowAgent.destination = targetTransform.position;
+                cowAgent.destination = new Vector3(targetTransform.position.x, 0, targetTransform.position.z);                                
                 cowCam.transform.LookAt(targetTransform);
-                if (Vector3.Distance(transform.position, targetTransform.position) > lockOnDistance)
+                farmerAnimator.transform.forward = new Vector3(cowCam.transform.forward.x, 0, cowCam.transform.forward.z);
+                if ((Vector3.Distance(transform.position, targetTransform.position) > lockOnDistance) ||
+                    (!targetTransform.GetComponentInChildren<MeshRenderer>().enabled))
                     Disengage();
                 else if (fireCooldown >= fireRate)
                     FireWeapon();
@@ -62,10 +71,16 @@ public class SC_FarmerBrain : SC_CowBrain
     // Move towards and aim at target
     private void LockOn()
     {
+        if (!targetTransform.GetComponentInChildren<MeshRenderer>().enabled)
+            return;
         lockedOn = true;
         wandering = false;
         cowAgent.speed = aimSpeed;
-        fireCooldown = 0.0f;     
+        fireCooldown = 0.0f;
+        if (farmerAnimator)
+            farmerAnimator.SetBool("lockedOn", lockedOn);
+        if (farmerAudioSource)
+            farmerAudioSource.PlayOneShot(shotgunPump);
     }
 
     // Go back to wandering state
@@ -74,15 +89,23 @@ public class SC_FarmerBrain : SC_CowBrain
         lockedOn = false;
         wandering = true;
         cowAgent.speed = normalSpeed;
+        cowCam.transform.forward = transform.forward;
+        farmerAnimator.transform.forward = transform.forward;
+        if (farmerAnimator)
+            farmerAnimator.SetBool("lockedOn", lockedOn);
     }
 
     // Shoot a projectile from gunShotOrigin
     private void FireWeapon()
     {
         GameObject projectileClone = Instantiate(projectile, gunShotOrigin);
+        projectileClone.transform.parent = null;
         projectileClone.GetComponent<Rigidbody>().AddForce(gunShotOrigin.forward * projectileSpeed, ForceMode.Impulse);
 
         fireCooldown = 0.0f;
+
+        if (farmerAudioSource)
+            farmerAudioSource.PlayOneShot(shotgunShot);
 
         StartCoroutine(DestroyClone(projectileClone));
     }

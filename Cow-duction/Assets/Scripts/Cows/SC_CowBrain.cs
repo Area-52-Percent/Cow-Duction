@@ -16,6 +16,8 @@ public class SC_CowBrain : MonoBehaviour
 {
     [SerializeField] protected NavMeshAgent cowAgent;
     [SerializeField] protected Camera cowCam;
+    [SerializeField] private AudioSource cowAudioSource = null;
+    [SerializeField] private AudioClip cowMoo = null; // Set up in inspector
     [SerializeField] private RigidbodyFirstPersonController rbFpController;
     [SerializeField] private int wanderRadius = 100;
     [SerializeField] private float wanderTime = 0.0f;
@@ -28,6 +30,7 @@ public class SC_CowBrain : MonoBehaviour
     {
         cowAgent = GetComponent<NavMeshAgent>();
         cowCam = GetComponentInChildren<Camera>();
+        cowAudioSource = GetComponent<AudioSource>();
         rbFpController = GetComponent<RigidbodyFirstPersonController>();
         if (aiControlled)
         {
@@ -53,6 +56,8 @@ public class SC_CowBrain : MonoBehaviour
             {
                 cowAgent.destination = Random.insideUnitSphere * wanderRadius;
                 wanderTime = 0f;
+                if (cowAudioSource)
+                    cowAudioSource.Play();
             }
         }
     }

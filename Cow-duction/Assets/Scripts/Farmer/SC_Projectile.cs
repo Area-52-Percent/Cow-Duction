@@ -13,16 +13,33 @@ using UnityEngine;
 
 public class SC_Projectile : MonoBehaviour
 {
-    [SerializeField] private SC_AlienUIManager uIManager;
-    [SerializeField] private GameObject targetObject;
-    [SerializeField] private GameObject milkLeak;
+    [SerializeField] private SC_AlienUIManager uIManager = null;
+    [SerializeField] private GameObject targetObject = null;
+    [SerializeField] private GameObject milkLeak = null;
     [SerializeField] private float projectileDamage = 5.0f;
+    [SerializeField] private AudioClip projectileHit = null; // Set up in inspector
 
     // Start is called before the first frame update
     void Start()
     {
         uIManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
         targetObject = GameObject.Find("UFO");
+    }
+
+    // Destroy projectile on collision
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.gameObject.layer == 13 && collider.gameObject.GetComponent<MeshCollider>()) // 13 = UFO
+        {
+            if (uIManager)
+            {
+                uIManager.TakeDamage(projectileDamage);
+                GameObject milkLeakClone = Instantiate(milkLeak, transform.position, Quaternion.identity);
+                milkLeakClone.transform.parent = targetObject.transform;      
+                milkLeakClone.AddComponent<AudioSource>().PlayOneShot(projectileHit, 0.25f);
+                Destroy(gameObject);
+            }
+        }
     }
 
     // Destroy projectile on collision
@@ -34,10 +51,10 @@ public class SC_Projectile : MonoBehaviour
             {
                 uIManager.TakeDamage(projectileDamage);
                 GameObject milkLeakClone = Instantiate(milkLeak, collision.GetContact(0).point, Quaternion.identity);
-                milkLeakClone.transform.parent = targetObject.transform;
+                milkLeakClone.transform.parent = targetObject.transform;      
+                milkLeakClone.AddComponent<AudioSource>().PlayOneShot(projectileHit, 0.25f);
+                Destroy(gameObject);
             }
         }
-        if (collision.gameObject.layer != 12) // 12 = Farmer
-            Destroy(this.gameObject);
-    }    
+    }
 }
