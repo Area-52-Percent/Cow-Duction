@@ -14,28 +14,28 @@ using UnityStandardAssets.Characters.FirstPerson;
 [RequireComponent(typeof(NavMeshAgent))]
 public class SC_CowBrain : MonoBehaviour
 {
-    [SerializeField] protected NavMeshAgent cowAgent;
-    [SerializeField] protected Camera cowCam;
-    [SerializeField] private AudioSource cowAudioSource = null;
+    protected NavMeshAgent m_Agent;
+    protected Camera m_Cam;
+    protected AudioSource m_AudioSource = null;
     [SerializeField] private AudioClip cowMoo = null; // Set up in inspector
-    [SerializeField] private RigidbodyFirstPersonController rbFpController;
-    [SerializeField] private int wanderRadius = 100;
-    [SerializeField] private float wanderTime = 0.0f;
-    [SerializeField] private float maxWanderTime = 10.0f;
-    [SerializeField] protected bool wandering = true;
-    [SerializeField] private bool aiControlled = true;
+    protected RigidbodyFirstPersonController rbFpController;
+    [SerializeField] protected int wanderRadius = 100;
+    protected float wanderTime = 0.0f;
+    [SerializeField] protected float maxWanderTime = 10.0f;
+    protected bool wandering = true;
+    [SerializeField] protected bool aiControlled = true;
 
     // Start is called before the first frame update
     void Start()
     {
-        cowAgent = GetComponent<NavMeshAgent>();
-        cowCam = GetComponentInChildren<Camera>();
-        cowAudioSource = GetComponent<AudioSource>();
+        m_Agent = GetComponent<NavMeshAgent>();
+        m_Cam = GetComponentInChildren<Camera>();
+        m_AudioSource = GetComponent<AudioSource>();
         rbFpController = GetComponent<RigidbodyFirstPersonController>();
         if (aiControlled)
         {
             SetPlayerControlled(false);
-            cowAgent.destination = Random.insideUnitSphere * wanderRadius;
+            m_Agent.destination = Random.insideUnitSphere * wanderRadius;
         }
         else
         {
@@ -52,12 +52,12 @@ public class SC_CowBrain : MonoBehaviour
             {
                 wanderTime += Time.deltaTime;
             }
-            if (cowAgent.enabled && (cowAgent.remainingDistance < 1f || wanderTime >= maxWanderTime))
+            if (m_Agent.enabled && (m_Agent.remainingDistance < 1f || wanderTime >= maxWanderTime))
             {
-                cowAgent.destination = Random.insideUnitSphere * wanderRadius;
+                m_Agent.destination = Random.insideUnitSphere * wanderRadius;
                 wanderTime = 0f;
-                if (cowAudioSource)
-                    cowAudioSource.Play();
+                if (m_AudioSource && cowMoo)
+                    m_AudioSource.PlayOneShot(cowMoo);
             }
         }
     }
@@ -68,16 +68,16 @@ public class SC_CowBrain : MonoBehaviour
         if (control)
         {
             aiControlled = false;
-            if (cowCam)
-                cowCam.enabled = true;
+            if (m_Cam)
+                m_Cam.enabled = true;
             if (rbFpController)
                 rbFpController.enabled = true;
         }
         else
         {
             aiControlled = true;
-            if (cowCam)
-                cowCam.enabled = false;
+            if (m_Cam)
+                m_Cam.enabled = false;
             if (rbFpController)
                 rbFpController.enabled = false;
         }

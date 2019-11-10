@@ -13,9 +13,9 @@ using UnityEngine;
 
 public class SC_Projectile : MonoBehaviour
 {
-    [SerializeField] private SC_AlienUIManager uIManager = null;
-    [SerializeField] private GameObject targetObject = null;
-    [SerializeField] private GameObject milkLeak = null;
+    private SC_AlienUIManager uIManager;
+    private GameObject targetObject;
+    [SerializeField] private GameObject milkLeak = null; // Set up in inspector
     [SerializeField] private float projectileDamage = 5.0f;
     [SerializeField] private AudioClip projectileHit = null; // Set up in inspector
 

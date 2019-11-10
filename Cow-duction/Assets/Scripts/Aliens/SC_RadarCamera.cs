@@ -11,7 +11,7 @@ using UnityEngine;
 
 public class SC_RadarCamera : MonoBehaviour
 {
-    [SerializeField] private GameObject followObject;
+    private GameObject followObject;
     [SerializeField] private float height = 15.0f;
 
     // Awake is called after all objects are initialized
@@ -29,9 +29,6 @@ public class SC_RadarCamera : MonoBehaviour
             followPosition.y += height;
             transform.position = followPosition;
 
-            // Vector3 followForward = followObject.transform.forward;
-            // followForward = new Vector3(followForward.x, 0, followForward.z);
-            // transform.up = followForward;
             transform.localEulerAngles = new Vector3(90f, 0, -followObject.transform.localEulerAngles.y);
         }
     }

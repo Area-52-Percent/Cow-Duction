@@ -20,22 +20,21 @@ using System.Collections;
 [RequireComponent(typeof(Collider))]
 public class SC_CowAbduction : MonoBehaviour
 {
-    // [SerializeField] private Rigidbody _rb;
-    [SerializeField] private SC_SpaceshipMovement spaceshipMovement;
+    private SC_SpaceshipMovement spaceshipMovement;
     public Rigidbody beamOrigin;
-    [SerializeField] private SC_AlienUIManager uiManager;
+    private SC_AlienUIManager uiManager;
     // Joint parameters
     public float maxCaptureLength = 50.0f;
     public int numberOfJoints = 3;
     public float captureSpeed = 5.0f;
-    [SerializeField] private float captureLength;
-    [SerializeField] private ConfigurableJoint[] attachedObjectJoints;    
+    private float captureLength;
+    private ConfigurableJoint[] attachedObjectJoints;    
     public GameObject attachedObject;
     // Grapple parameters
     public float grappleTime = 0.5f;
-    [SerializeField] private bool grappling;
-    public GameObject probe;
-    [SerializeField] private GameObject probeClone;
+    private bool grappling;
+    [SerializeField] private GameObject probe = null; // Set up in inspector
+    private GameObject probeClone;
     [SerializeField] private AudioClip grappleShot = null; // Set up in inspector
     [SerializeField] private AudioClip cowSuction = null; // Set up in inspector
     // Line parameters
@@ -44,7 +43,6 @@ public class SC_CowAbduction : MonoBehaviour
     // Awake is called after all objects are initialized
     private void Awake()
     {
-        // _rb = GetComponent<Rigidbody>();
         spaceshipMovement = GetComponent<SC_SpaceshipMovement>();
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
     }
@@ -240,8 +238,6 @@ public class SC_CowAbduction : MonoBehaviour
             attachedObject = hit.transform.gameObject;
 
             // Set spaceship movement penalty (TO DO: set based on cow mass)
-            // if (_rb.GetComponent<SC_SpaceshipMovement>())
-                // _rb.GetComponent<SC_SpaceshipMovement>().SetMovementPenaltyFactor(0.5f);
             spaceshipMovement.SetMovementPenaltyFactor(0.5f);
 
             if (probeClone != null)
@@ -283,15 +279,13 @@ public class SC_CowAbduction : MonoBehaviour
 
             if (lineRenderer.enabled)
                 lineRenderer.enabled = false;
-            
+
             if (probeClone != null)
                 Destroy(probeClone);
 
             attachedObject = null;
 
             // Reset carry mass
-            // if (_rb.GetComponent<SC_SpaceshipMovement>())
-                // _rb.GetComponent<SC_SpaceshipMovement>().ResetMovementPenaltyFactor();
             spaceshipMovement.ResetMovementPenaltyFactor();
 
             // Toggle UI indicator
@@ -370,12 +364,10 @@ public class SC_CowAbduction : MonoBehaviour
                 uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
             uiManager.IncreaseScore(1);
             // Apply small upward force for physical feedback
-            // _rb.AddRelativeForce(_rb.transform.up * _rb.mass, ForceMode.Impulse);
-            spaceshipMovement.AddImpulseForce(2.0f);
+            spaceshipMovement.AddUpwardImpulse(2.0f);
             // Reset carry mass
-            // _rb.GetComponent<SC_SpaceshipMovement>().ResetMovementPenaltyFactor();
             spaceshipMovement.ResetMovementPenaltyFactor();
-
+            // Play suction audio
             GetComponent<AudioSource>().PlayOneShot(cowSuction, 0.5f);
         }
     }

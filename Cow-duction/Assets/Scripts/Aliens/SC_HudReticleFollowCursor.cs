@@ -28,6 +28,9 @@ public class SC_HudReticleFollowCursor : MonoBehaviour
                 transform.position += Vector3.up * vertical * joystickSensitivity;
             }
         }
-        transform.position = Input.mousePosition;
+        else
+        {
+            transform.position = Input.mousePosition;
+        }
     }
 }

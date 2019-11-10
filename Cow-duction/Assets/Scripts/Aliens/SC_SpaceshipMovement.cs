@@ -11,7 +11,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class SC_SpaceshipMovement : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _rb;
+    private Rigidbody _rb;
     public float horizontalSpeed = 10.0f;
     public float verticalSpeed = 10.0f;
     public float maxHeight = 50.0f;
@@ -20,8 +20,8 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public float rotationForce = 0.05f;
     public float maxRotation = 20.0f;
     public bool invertLook = false;
-    [SerializeField] private float movementPenaltyFactor = 1f;
-    [SerializeField] private bool movementEnabled;
+    private float movementPenaltyFactor = 1f;
+    private bool movementEnabled;
 
     // Start is called before the first frame update
     void Start()
@@ -144,7 +144,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
             invertLook = true;
     }
 
-    public void AddImpulseForce(float force)
+    public void AddUpwardImpulse(float force)
     {
         _rb.AddRelativeForce(_rb.transform.up * _rb.mass * force, ForceMode.Impulse);
     }

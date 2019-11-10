@@ -87,15 +87,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03a387b2a29bf41da99eacb38836ec71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cowAgent: {fileID: 0}
-  cowCam: {fileID: 0}
-  cowAudioSource: {fileID: 0}
-  cowMoo: {fileID: 0}
-  rbFpController: {fileID: 0}
+  cowMoo: {fileID: 8300000, guid: dd4141b9b87034b34b09ed67110fc272, type: 3}
   wanderRadius: 100
-  wanderTime: 0
   maxWanderTime: 20
-  wandering: 1
   aiControlled: 1
 --- !u!136 &8363444690370700327
 CapsuleCollider:
@@ -145,7 +139,7 @@ AudioSource:
   Priority: 256
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 100
+  MaxDistance: 50
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
