@@ -18,6 +18,7 @@ using System.Collections;
 [RequireComponent(typeof(SC_SpaceshipMovement))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(AudioSource))]
 public class SC_CowAbduction : MonoBehaviour
 {
     private SC_SpaceshipMovement spaceshipMovement;
@@ -319,8 +320,13 @@ public class SC_CowAbduction : MonoBehaviour
             }
             else
             {
+                // Disable attached object colliders
+                foreach (Collider col in attachedObject.GetComponents<Collider>())
+                {
+                    col.isTrigger = true;
+                }
                 // Force joint limits to zero
-                foreach(ConfigurableJoint cj in attachedObjectJoints)
+                foreach (ConfigurableJoint cj in attachedObjectJoints)
                 {
                     SoftJointLimit softJointLimit = new SoftJointLimit();
                     softJointLimit.limit = 0;
@@ -370,7 +376,7 @@ public class SC_CowAbduction : MonoBehaviour
                 uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
             uiManager.IncreaseScore(1);
             // Apply small upward force for physical feedback
-            spaceshipMovement.AddUpwardImpulse(2.0f);
+            spaceshipMovement.AddUpwardImpulse(5.0f);
             // Reset carry mass
             spaceshipMovement.ResetMovementPenaltyFactor();
             // Play suction audio

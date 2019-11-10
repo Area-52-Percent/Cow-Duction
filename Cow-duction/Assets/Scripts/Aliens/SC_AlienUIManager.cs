@@ -19,6 +19,7 @@ public class SC_AlienUIManager : MonoBehaviour
     private TransformWrapper transformWrapper;
     private Rigidbody _rbUFO;
     private MeshRenderer[] ufoMesh;
+    private AudioSource ufoAudioSource;
     [SerializeField] private Camera topDownCamera = null; // Set up in inspector
     public GameObject CowSpawner;
     // Variables
@@ -29,6 +30,7 @@ public class SC_AlienUIManager : MonoBehaviour
     private float fuelWarnAmount = 25.0f;
     [SerializeField] private Color fuelStartColor = Color.white;
     [SerializeField] private Color fuelDepletedColor = Color.red;
+    [SerializeField] private AudioClip activateAbility = null; // Set up in inspector
     private float abilityActiveTime = 3.0f;
     private float abilityCooldown; // Percentage
     private bool cooldownActive;
@@ -60,6 +62,7 @@ public class SC_AlienUIManager : MonoBehaviour
         // Retrieve UFO rigidbody
         _rbUFO = GameObject.Find("UFO").GetComponent<Rigidbody>();
         ufoMesh = _rbUFO.GetComponentsInChildren<MeshRenderer>();
+        ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
         transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
     }
 
@@ -197,12 +200,15 @@ public class SC_AlienUIManager : MonoBehaviour
 
     // Fade out HUD and disable mesh for <abilityActiveTime> seconds then fade HUD back in and re-enable mesh
     public IEnumerator UseAbility()
-    {        
+    {
         abilityCooldown = 0.0f;
         topDownCamera.enabled = false;
         cooldownActive = true;
         if (cooldownReadyText)
             cooldownReadyText.enabled = false;
+
+        ufoAudioSource.PlayOneShot(activateAbility, 0.5f);
+
         // Fade out HUD elements
         hudDisplay.CrossFadeAlpha(0f, abilityActiveTime / 10f, false);
         scoreText.enabled = false;
@@ -217,6 +223,8 @@ public class SC_AlienUIManager : MonoBehaviour
 
         yield return new WaitForSeconds(abilityActiveTime);
         
+        ufoAudioSource.PlayOneShot(activateAbility, 0.3f);
+
         // Fade in HUD elements
         topDownCamera.enabled = true;
         hudDisplay.CrossFadeAlpha(1f, abilityActiveTime / 10f, false);
