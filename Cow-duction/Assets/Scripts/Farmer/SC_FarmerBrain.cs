@@ -4,7 +4,6 @@
 
     Assumptions:
         There is a GameObject in the scene named "UFO".
-        This component goes with SC_CowBrain on the same object.
  */
 
 using System.Collections;

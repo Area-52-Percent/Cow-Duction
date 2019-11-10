@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class SliderValueUpdate : MonoBehaviour
 {
     private Text myText;
-    [SerializeField] private Slider mySlider;
+    [SerializeField] private Slider mySlider = null; // Set up in inspector
 
     // Start is called before the first frame update
     void Start()

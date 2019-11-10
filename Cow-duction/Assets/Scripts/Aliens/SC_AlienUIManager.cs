@@ -151,8 +151,7 @@ public class SC_AlienUIManager : MonoBehaviour
         {
             timeRemaining = 0.0f;
             timeText.text = "0:00";
-            if (transformWrapper.kill)
-                DisplayEndScreen();
+            DisplayEndScreen();
         }
     }
 
@@ -254,10 +253,23 @@ public class SC_AlienUIManager : MonoBehaviour
         }
     }
 
-    // Show the endscreen
+    // Show the endscreen (TO-DO: Replace hard-coded values)
     public void DisplayEndScreen()
     {
-        finalScoreText.text = "" + score;
+        string rating = "";
+        if (score < 10)
+            rating = "F";
+        else if (score < 13)
+            rating = "C";
+        else if (score < 16)
+            rating = "B";
+        else if (score < 20)
+            rating = "A";
+        else if (score < 25)
+            rating = "S";
+        else
+            rating = "SS";
+        finalScoreText.text = score + "\n\nRating: " + rating;
         Time.timeScale = Mathf.Epsilon;
         endScreen.SetActive(true);
     }

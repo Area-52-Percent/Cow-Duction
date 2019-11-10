@@ -36,6 +36,7 @@ public class SC_CowAbduction : MonoBehaviour
     [SerializeField] private GameObject probe = null; // Set up in inspector
     private GameObject probeClone;
     [SerializeField] private AudioClip grappleShot = null; // Set up in inspector
+    [SerializeField] private AudioClip grappleHit = null; // Set up in inspector
     [SerializeField] private AudioClip cowSuction = null; // Set up in inspector
     // Line parameters
     [SerializeField] private LineRenderer lineRenderer;
@@ -182,7 +183,7 @@ public class SC_CowAbduction : MonoBehaviour
     // Attach to an object through a series of joints
     private bool AttachBody(RaycastHit hit)
     {
-        Debug.Log("Ray cast hit " + hit.transform.gameObject.name);
+        // Debug.Log("Ray cast hit " + hit.transform.gameObject.name);
         if ((hit.collider.tag == "Cow" || hit.collider.tag == "Farmer") && hit.rigidbody != null)
         {
             // Disable AI while attached
@@ -250,6 +251,11 @@ public class SC_CowAbduction : MonoBehaviour
             if (!uiManager.cowIcon.enabled)
             {
                 uiManager.ToggleCowIcon();
+            }
+
+            if (probeClone.GetComponent<AudioSource>())
+            {
+                probeClone.GetComponent<AudioSource>().PlayOneShot(grappleHit);
             }
             return true;
         }
