@@ -77,8 +77,9 @@ public class SC_CowAbduction : MonoBehaviour
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 RaycastHit hit;                    
+                int layerMask = ~(1 << gameObject.layer);
                 
-                if (Physics.Raycast(ray, out hit, maxCaptureLength))
+                if (Physics.Raycast(ray, out hit, maxCaptureLength, layerMask))
                 {
                     captureLength = Vector3.Distance(transform.position, hit.transform.position);
 

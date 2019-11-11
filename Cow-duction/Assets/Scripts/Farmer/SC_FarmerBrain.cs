@@ -90,6 +90,8 @@ public class SC_FarmerBrain : SC_CowBrain
                 }
             }
         }
+         if (farmerAnimator)
+            farmerAnimator.SetFloat("speed", m_Agent.velocity.magnitude);
     }
 
     // Move towards and aim at target
