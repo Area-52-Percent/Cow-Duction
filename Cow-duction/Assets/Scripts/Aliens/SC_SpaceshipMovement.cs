@@ -173,7 +173,9 @@ public class SC_SpaceshipMovement : MonoBehaviour
     // Reset spaceship to starting position and enable movement
     public void ResetGame()
     {
-        _rb.MovePosition(Vector3.up * 10.0f);
+        _rb.MovePosition(Vector3.up * 5.0f);
+        _rb.velocity = Vector3.zero;
+        _rb.AddForce((Vector3.up * 5.0f) * _rb.mass, ForceMode.Impulse);
         _rb.MoveRotation(Quaternion.identity);
         movementEnabled = true;
     }

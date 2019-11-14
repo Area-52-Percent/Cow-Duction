@@ -33,7 +33,9 @@ public class SC_CowAbduction : MonoBehaviour
     public GameObject attachedObject;
     // Grapple parameters
     public float grappleTime = 0.5f;
+    public float grappleCooldown = 0.5f;
     private bool grappling;
+    [SerializeField] private GameObject reticle = null; // Set up in inspector
     [SerializeField] private GameObject probe = null; // Set up in inspector
     private GameObject probeClone;
     [SerializeField] private AudioClip grappleShot = null; // Set up in inspector
@@ -75,8 +77,11 @@ public class SC_CowAbduction : MonoBehaviour
             // Do not shoot ray if cow is already attached
             if (attachedObject == null && !grappling)
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;                    
+                // Convert reticle world coordinates to screen coordinates
+                Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, reticle.GetComponent<RectTransform>().position);                
+                Ray ray = Camera.main.ScreenPointToRay(reticlePoint);
+                RaycastHit hit;
+                // Ignore UFO layer
                 int layerMask = ~(1 << gameObject.layer);
                 
                 if (Physics.Raycast(ray, out hit, maxCaptureLength, layerMask))
@@ -168,6 +173,15 @@ public class SC_CowAbduction : MonoBehaviour
                
         if (!AttachBody(hit))
         {
+            // Hang at hit position briefly
+            counter = 0.0f;
+            while (counter < grappleCooldown)
+            {
+                counter += Time.fixedDeltaTime / grappleTime;
+                RenderLine(probeClone);
+                yield return null;
+            }
+           
             // Retract the grapple if it did not attach to a cow or farmer
             counter = 0.0f;
             while (counter < grappleTime)
@@ -249,11 +263,9 @@ public class SC_CowAbduction : MonoBehaviour
                 probeClone.transform.position = attachedObject.transform.position;
             }
 
-            // Toggle UI indicator
-            if (!uiManager.cowIcon.enabled)
-            {
-                uiManager.ToggleCowIcon();
-            }
+            // Toggle UI indicators
+            uiManager.ToggleCowIcon();
+            uiManager.ToggleReticle();
 
             if (probeClone.GetComponent<AudioSource>())
             {
@@ -296,11 +308,9 @@ public class SC_CowAbduction : MonoBehaviour
             // Reset carry mass
             spaceshipMovement.ResetMovementPenaltyFactor();
 
-            // Toggle UI indicator
-            if (uiManager.cowIcon.enabled)
-            {
-                uiManager.ToggleCowIcon();
-            }
+            // Toggle UI indicators
+            uiManager.ToggleCowIcon();
+            uiManager.ToggleReticle();
         }
     }
 
@@ -326,14 +336,8 @@ public class SC_CowAbduction : MonoBehaviour
                 {
                     col.isTrigger = true;
                 }
-                // Force joint limits to zero
-                foreach (ConfigurableJoint cj in attachedObjectJoints)
-                {
-                    SoftJointLimit softJointLimit = new SoftJointLimit();
-                    softJointLimit.limit = 0;
-                    softJointLimit.contactDistance = 0.1f;
-                    cj.linearLimit = softJointLimit;
-                }
+                // Apply force on attached body towards UFO
+                attachedObject.GetComponent<Rigidbody>().AddForce((transform.position - attachedObject.transform.position) * attachedObject.GetComponent<Rigidbody>().mass, ForceMode.Impulse);
             }
         }
     }
@@ -376,6 +380,7 @@ public class SC_CowAbduction : MonoBehaviour
             if(uiManager == null)
                 uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
             uiManager.IncreaseScore(1);
+            uiManager.ToggleReticle();
             // Apply small upward force for physical feedback
             spaceshipMovement.AddUpwardImpulse(5.0f);
             // Reset carry mass

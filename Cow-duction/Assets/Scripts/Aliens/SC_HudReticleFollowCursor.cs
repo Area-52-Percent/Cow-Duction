@@ -10,7 +10,7 @@ using UnityEngine;
 
 public class SC_HudReticleFollowCursor : MonoBehaviour
 {
-    [SerializeField] private float joystickSensitivity = 1.0f;
+    public float joystickSensitivity = 5.0f;
 
     // Update is called once per frame
     void Update()
@@ -19,13 +19,16 @@ public class SC_HudReticleFollowCursor : MonoBehaviour
         {
             float horizontal = Input.GetAxis("ReticleHorizontal");
             float vertical = Input.GetAxis("ReticleVertical");
-            if (Mathf.Abs(horizontal) > 0f)
+            
+            if (horizontal > 0 && transform.position.x < Screen.width ||
+                horizontal < 0 && transform.position.x > 0)
             {
                 transform.position += Vector3.right * horizontal * joystickSensitivity;
             }
-            if (Mathf.Abs(vertical) > 0f)
+            if (vertical < 0 && transform.position.y < Screen.height ||
+                vertical > 0 && transform.position.y > 0)
             {
-                transform.position += Vector3.up * vertical * joystickSensitivity;
+                transform.position += Vector3.down * vertical * joystickSensitivity;
             }
         }
         else

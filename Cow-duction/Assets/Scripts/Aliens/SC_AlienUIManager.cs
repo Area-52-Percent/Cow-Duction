@@ -16,6 +16,7 @@ using UnityEngine.UI;
 public class SC_AlienUIManager : MonoBehaviour
 {
     // Referenced objects
+    private SC_HudReticleFollowCursor reticleFollowCursor;
     private TransformWrapper transformWrapper;
     private Rigidbody _rbUFO;
     private MeshRenderer[] ufoMesh;
@@ -39,7 +40,10 @@ public class SC_AlienUIManager : MonoBehaviour
     private float timeScaleFactor;
     // Gameplay UI Elements
     [SerializeField] private Image hudDisplay = null; // Set up in inspector
-    public Image cowIcon;
+    [SerializeField] private Image cowIcon = null; // Set up in inspector
+    [SerializeField] private Image reticle = null; // Set up in inspector
+    [SerializeField] private Sprite normalReticle = null; // Set up in inspector
+    [SerializeField] private Sprite disabledReticle = null; // Set up in inspector
     [SerializeField] private Text scoreText = null; // Set up in inspector
     [SerializeField] private Text speedText = null; // Set up in inspector
     [SerializeField] private Text altitudeText = null; // Set up in inspector
@@ -64,6 +68,8 @@ public class SC_AlienUIManager : MonoBehaviour
         ufoMesh = _rbUFO.GetComponentsInChildren<MeshRenderer>();
         ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
         transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
+        reticleFollowCursor = reticle.GetComponent<SC_HudReticleFollowCursor>();
+        reticle.sprite = normalReticle;
     }
 
     // Start is called before the first frame update
@@ -132,7 +138,7 @@ public class SC_AlienUIManager : MonoBehaviour
     void Update()
     {
         // Activate ability
-        if (Input.GetKeyDown(KeyCode.F) && !cooldownActive)
+        if (Input.GetButtonDown("Ability") && !cooldownActive)
         {
             StartCoroutine(UseAbility());
         }
@@ -156,6 +162,15 @@ public class SC_AlienUIManager : MonoBehaviour
             timeText.text = "0:00";
             DisplayEndScreen();
         }
+    }
+
+    // Swap reticle sprites
+    public void ToggleReticle()
+    {
+        if (reticle.sprite == normalReticle)
+            reticle.sprite = disabledReticle;
+        else
+            reticle.sprite = normalReticle;
     }
 
     // Enable or disable cow icon
@@ -371,6 +386,9 @@ public class SC_AlienUIManager : MonoBehaviour
                 break;
             case "CowSpawnRateSlider":
                 CowSpawner.GetComponent<SC_CowSpawner>().spawnRate = (int)value;
+                break;
+            case "ReticleAimSensitivitySlider":
+                reticleFollowCursor.joystickSensitivity = value;
                 break;
             default:
                 break;

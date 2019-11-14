@@ -19,6 +19,7 @@ public class SC_FarmerBrain : SC_CowBrain
     [SerializeField] private Transform gunShotOrigin = null; // Set up in inspector
     [SerializeField] private GameObject projectile = null; // Set up in inspector
     [SerializeField] private float lockOnDistance = 20.0f;
+    [SerializeField] private float lockOnSpeed = 5.0f;
     private bool lockedOn = false;
     [SerializeField] private float normalSpeed = 10.0f;
     [SerializeField] private float aimSpeed = 5.0f;
@@ -60,6 +61,9 @@ public class SC_FarmerBrain : SC_CowBrain
             }
             if (!lockedOn)
             {
+                m_Cam.transform.rotation = Quaternion.Slerp(m_Cam.transform.rotation, transform.rotation, lockOnSpeed * Time.deltaTime);
+                farmerAnimator.transform.rotation = Quaternion.Slerp(farmerAnimator.transform.rotation, transform.rotation, lockOnSpeed * Time.deltaTime);
+
                 if (wanderTime < maxWanderTime)
                 {
                     wanderTime += Time.deltaTime;
@@ -77,8 +81,13 @@ public class SC_FarmerBrain : SC_CowBrain
             else 
             {
                 m_Agent.destination = new Vector3(targetTransform.position.x, 0, targetTransform.position.z);                                
-                m_Cam.transform.LookAt(targetTransform);
-                farmerAnimator.transform.forward = new Vector3(m_Cam.transform.forward.x, 0, m_Cam.transform.forward.z);
+                // m_Cam.transform.LookAt(targetTransform);
+                Quaternion targetRotation = Quaternion.LookRotation(targetTransform.position - m_Cam.transform.position);
+                m_Cam.transform.rotation = Quaternion.Slerp(m_Cam.transform.rotation, targetRotation, lockOnSpeed * Time.deltaTime);
+                
+                Vector3 farmerForward = new Vector3(m_Cam.transform.forward.x, 0, m_Cam.transform.forward.z);
+                farmerAnimator.transform.forward = Vector3.Lerp(farmerForward, farmerAnimator.transform.forward, lockOnSpeed * Time.deltaTime);
+
                 if ((Vector3.Distance(transform.position, targetTransform.position) > lockOnDistance) ||
                     (!targetTransform.GetComponentInChildren<MeshRenderer>().enabled))
                 {
@@ -115,8 +124,8 @@ public class SC_FarmerBrain : SC_CowBrain
         lockedOn = false;
         wandering = true;
         m_Agent.speed = normalSpeed;
-        m_Cam.transform.forward = transform.forward;
-        farmerAnimator.transform.forward = transform.forward;
+        // m_Cam.transform.forward = transform.forward;
+        // farmerAnimator.transform.forward = transform.forward;
         if (farmerAnimator)
             farmerAnimator.SetBool("lockedOn", lockedOn);
     }
