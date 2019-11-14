@@ -13,12 +13,23 @@ Cow-duction is being developed in **Unity 2019.1.8**. To build an executable, yo
 Note: The data folder *must* be in the same folder as the executable in order for it to run!
 
 ### How to Play
+<details>
+  <summary> Xbox Controller </summary>
+  <br>
 
+    ![Xbox 360 Controller Bindings](./Images/joystick-controls.png)
+
+</details>
+
+<details>
+  <summary> Keyboard/Mouse </summary>
+  <br>
+  
 * `W` Move forward
 * `A` Move left
 * `S` Move backward
 * `D` Move right
-  
+
 * `Z` Move upward
 * `C` Move downward
   
@@ -36,5 +47,6 @@ Note: The data folder *must* be in the same folder as the executable in order fo
 * `Mouse0` Shoot grappling hook
   
 * `Space`  Release cow or farmer (if grappled)
-* `,`      Pull cow (if grappled)
-* `.`      Push cow (if grappled)
+* `V`      Pull cow (if grappled)
+* `B`      Push cow (if grappled)
+</details>
