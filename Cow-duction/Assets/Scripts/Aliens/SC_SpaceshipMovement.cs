@@ -1,6 +1,6 @@
 ﻿/* SC_SpaceshipMovement.cs
 
-   Physics based movement scheme simulating spaceship flight. 
+   Physics based movement scheme simulating spaceship flight.
    
    Assumptions:
      This component is attached to a GameObject with a Rigidbody component.
@@ -11,16 +11,17 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class SC_SpaceshipMovement : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _rb;
+    private Rigidbody _rb;
     public float horizontalSpeed = 10.0f;
     public float verticalSpeed = 10.0f;
     public float maxHeight = 50.0f;
     public float minHeight = 10.0f;
+    public float hoverHeight = 5.0f;
     public float rotationForce = 0.05f;
     public float maxRotation = 20.0f;
     public bool invertLook = false;
-    [SerializeField] private float movementPenaltyFactor = 1f;
-    [SerializeField] private bool movementEnabled;
+    private float movementPenaltyFactor = 1f;
+    private bool movementEnabled;
 
     // Start is called before the first frame update
     void Start()
@@ -36,99 +37,55 @@ public class SC_SpaceshipMovement : MonoBehaviour
         Vector3 horizontalForce = Vector3.zero;
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-        float jHorizontalInput = Input.GetAxis("J_MainHorizontal");
-        float jVerticalInput = Input.GetAxis("J_MainVertical");
-        float jRHorizontalInput = Input.GetAxis("R_MainHorizontal");
-        float jRVerticalInput = Input.GetAxis("R_MainVertical");
-        float rise = Input.GetAxis("Rise");
-        float fall = Input.GetAxis("Fall");
-        bool LeftBumper = Input.GetButton("RollLeft");
-        bool RightBumper = Input.GetButton("RollRight");
-        // float mouseXInput = Input.GetAxis("Mouse X");
-        // float mouseYInput = Input.GetAxis("Mouse Y");
+        float turnHorizontalInput = Input.GetAxis("TurnHorizontal");
+        float turnVerticalInput = Input.GetAxis("TurnVertical");
+        float rollInput = Input.GetAxis("Roll");
+        float liftInput = Input.GetAxis("Lift");
 
-        if (Mathf.Abs(horizontalInput) > 0.0f || Mathf.Abs(jHorizontalInput) > 0.0f || Mathf.Abs(jRHorizontalInput) > 0.0f)
+        // Move left and right
+        if (movementEnabled && Mathf.Abs(horizontalInput) > 0.0f)
         {
-            // Move left and right
-            if (movementEnabled && ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D)) || Mathf.Abs(jHorizontalInput) > 0.0f ))
-            {
-                horizontalForce = transform.right;
-                horizontalForce.y = 0;
-                if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-                {
-                    _rb.AddForce(horizontalForce * horizontalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
-                }
-                else
-                {
-                    _rb.AddForce(horizontalForce * jHorizontalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
-                }
+            horizontalForce = transform.right;
+            horizontalForce.y = 0;
+            horizontalForce.Normalize();
+            _rb.AddForce(horizontalForce * horizontalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
 
-                if (horizontalInput < 0 && (transform.eulerAngles.z < maxRotation || transform.eulerAngles.z > 350.0f - maxRotation) || horizontalInput > 0 && (transform.eulerAngles.z > 360.0f - maxRotation || transform.eulerAngles.z < maxRotation + 10.0f))
-                {
-                    _rb.AddRelativeTorque(Vector3.back * horizontalInput * rotationForce, ForceMode.Acceleration);
-                }
-                else if (jHorizontalInput < 0 && (transform.eulerAngles.z < maxRotation || transform.eulerAngles.z > 350.0f - maxRotation) || jHorizontalInput > 0 && (transform.eulerAngles.z > 360.0f - maxRotation || transform.eulerAngles.z < maxRotation + 10.0f))
-                {
-                    _rb.AddRelativeTorque(Vector3.back * horizontalInput * rotationForce, ForceMode.Acceleration);
-                }
-            }
-            // Turn left and right
-            if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow) || Mathf.Abs(jRHorizontalInput) > 0.0f)
+            if ((horizontalInput < 0 && (transform.eulerAngles.z < maxRotation || transform.eulerAngles.z > 360.0f - maxRotation)) || 
+                (horizontalInput > 0 && (transform.eulerAngles.z > 360.0f - maxRotation || transform.eulerAngles.z < maxRotation)))
             {
-                if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.RightArrow))
-                {
-                    _rb.AddRelativeTorque(Vector3.up * horizontalInput * rotationForce * 2, ForceMode.Acceleration);
-                }
-                else if (Mathf.Abs(jRHorizontalInput) > 0.0f)
-                {
-                    _rb.AddRelativeTorque(Vector3.up * jRHorizontalInput * rotationForce * 2, ForceMode.Acceleration);
-                }
-            }
-        }
-        else
-        { 
-            // Rotate z axis back upright
-            if (transform.localEulerAngles.z > maxRotation && transform.localEulerAngles.z < 180.0f)
-            {
-                _rb.AddRelativeTorque(Vector3.back * rotationForce, ForceMode.Acceleration);
-            }
-            else if (transform.localEulerAngles.z < 360.0f - maxRotation && transform.localEulerAngles.z > 180.0f)
-            {
-                _rb.AddRelativeTorque(Vector3.forward * rotationForce, ForceMode.Acceleration);
+                _rb.AddRelativeTorque(Vector3.back * horizontalInput * rotationForce, ForceMode.Acceleration);
             }
         }
 
-        if (Mathf.Abs(verticalInput) > 0.0f || Mathf.Abs(jVerticalInput) > 0.0f || Mathf.Abs(jRVerticalInput) > 0.0f)
+        // Move forward and backward
+        if (movementEnabled && Mathf.Abs(verticalInput) > 0.0f)
         {
-            // Move forward and backward
-            if (movementEnabled && (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.S)) || Mathf.Abs(jVerticalInput) > 0.0f)
+            horizontalForce = transform.forward;
+            horizontalForce.y = 0;
+            horizontalForce.Normalize();
+            _rb.AddForce(horizontalForce * verticalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
+
+            if ((verticalInput > 0 && (transform.localEulerAngles.x < maxRotation || transform.localEulerAngles.x > 360.0f - maxRotation)) || 
+                (verticalInput < 0 && (transform.localEulerAngles.x > 360.0f - maxRotation || transform.localEulerAngles.x < maxRotation)))
             {
-                horizontalForce = transform.forward;
-                horizontalForce.y = 0;
-                _rb.AddForce(horizontalForce * verticalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
-                if (verticalInput > 0 && (transform.localEulerAngles.x < maxRotation || transform.localEulerAngles.x > 350.0f - maxRotation) || verticalInput < 0 && (transform.localEulerAngles.x > 360.0f - maxRotation || transform.localEulerAngles.x < maxRotation + 10.0f))
-                {
-                    _rb.AddRelativeTorque(Vector3.right * verticalInput * rotationForce, ForceMode.Acceleration);
-                }
-            }
-            // Roll forward and backward
-            if ((Input.GetKey(KeyCode.UpArrow) && (transform.localEulerAngles.x > 280.0f || transform.localEulerAngles.x < 90.0f)) || 
-                (Input.GetKey(KeyCode.DownArrow) && (transform.localEulerAngles.x < 80.0f || transform.localEulerAngles.x > 270.0f)) || 
-                (Mathf.Abs(jRVerticalInput) > 0.0f && (transform.localEulerAngles.x > 280.0f || transform.localEulerAngles.x < 90.0f)))
-            {
-                if (Mathf.Abs(jRVerticalInput) > 0.0f)
-                {
-                    _rb.AddRelativeTorque((invertLook ? Vector3.right : Vector3.left) * jRVerticalInput * rotationForce * 2, ForceMode.Acceleration);
-                }
-                else
-                {
-                    _rb.AddRelativeTorque((invertLook ? Vector3.right : Vector3.left) * verticalInput * rotationForce * 2, ForceMode.Acceleration);
-                }
+                _rb.AddRelativeTorque(Vector3.right * verticalInput * rotationForce, ForceMode.Acceleration);
             }
         }
+
+        // Turn left and right
+        if (Mathf.Abs(turnHorizontalInput) > 0.0f)
+        {
+            _rb.AddRelativeTorque(Vector3.up * turnHorizontalInput * rotationForce * 2, ForceMode.Acceleration);        
+        }        
+
+        // Tilt forward and backward
+        if (Mathf.Abs(turnVerticalInput) > 0.0f)
+        {            
+            _rb.AddRelativeTorque((invertLook ? Vector3.right : Vector3.left) * turnVerticalInput * rotationForce * 2, ForceMode.Acceleration);
+        }
+        // Rotate x axis back upright
         else
-        { 
-            // Rotate x axis back upright 
+        {            
             if (transform.localEulerAngles.x > maxRotation && transform.localEulerAngles.x < 180.0f)
             {
                 _rb.AddRelativeTorque(Vector3.left * rotationForce, ForceMode.Acceleration);
@@ -140,37 +97,38 @@ public class SC_SpaceshipMovement : MonoBehaviour
         }
 
         // Roll left and right
-        if (Input.GetKey(KeyCode.Q) || LeftBumper)
+        if ((rollInput < 0.0f && (transform.localEulerAngles.z < maxRotation || transform.localEulerAngles.z > 270.0f)) || 
+            (rollInput > 0.0f && (transform.localEulerAngles.z > 360.0f - maxRotation || transform.localEulerAngles.z < 90.0f)))
         {
-            _rb.AddRelativeTorque(Vector3.forward * rotationForce * 2, ForceMode.Acceleration);
+            _rb.AddRelativeTorque(Vector3.back * rollInput * rotationForce * 2, ForceMode.Acceleration);
         }
-        if (Input.GetKey(KeyCode.E) || RightBumper)
+        // Rotate z axis back upright
+        else
         {
-            _rb.AddRelativeTorque(Vector3.back * rotationForce * 2, ForceMode.Acceleration);
+            if (transform.localEulerAngles.z > maxRotation && transform.localEulerAngles.z < 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.back * rotationForce, ForceMode.Acceleration);
+            }
+            else if (transform.localEulerAngles.z < 360.0f - maxRotation && transform.localEulerAngles.z > 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.forward * rotationForce, ForceMode.Acceleration);
+            }
         }
-
-        // Rotate the spaceship with mouse movement
-        // if (Mathf.Abs(mouseXInput) > 0.0f)
-        // {
-        //     _rb.AddRelativeTorque(Vector3.up * mouseXInput * rotationForce, ForceMode.Acceleration);
-        // }
-        // if (Mathf.Abs(mouseYInput) > 0.0f)
-        // {
-        //     _rb.AddRelativeTorque(Vector3.left * mouseYInput * rotationForce, ForceMode.Acceleration);
-        // }
 
         // Disable all controls past this if movement not enabled
         if (!movementEnabled)
             return;
 
-        // Lift
-        if ((Input.GetKey(KeyCode.Z) || Mathf.Abs(rise) > 0.0f)&& transform.position.y < maxHeight)
+        // Lift        
+        if ((liftInput > 0.0f && transform.position.y < maxHeight) || 
+            (liftInput < 0.0f && transform.position.y > minHeight))
+        {
+            _rb.AddForce(Vector3.up * liftInput * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
+        }
+
+        if (Physics.Raycast(transform.position, Vector3.down, hoverHeight))
         {
             _rb.AddForce(Vector3.up * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
-        }
-        if ((Input.GetKey(KeyCode.C) || Mathf.Abs(fall) > 0.0f)&& transform.position.y > minHeight)
-        {
-            _rb.AddForce(Vector3.down * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
         }
 
         // Constant upward force keeping the spaceship floating        
@@ -185,18 +143,25 @@ public class SC_SpaceshipMovement : MonoBehaviour
         else
             invertLook = true;
     }
+
+    public void AddUpwardImpulse(float force)
+    {
+        _rb.AddRelativeForce(_rb.transform.up * _rb.mass * force, ForceMode.Impulse);
+    }
     
+    // Set movement multiplier (should be between 0 and 1)
     public void SetMovementPenaltyFactor(float factor)
     {
         movementPenaltyFactor = factor;
     }
 
+    // Reset movement multiplier to 1
     public void ResetMovementPenaltyFactor()
     {
         movementPenaltyFactor = 1f;
     }
 
-    // Disable translational movement 
+    // Disable translational movement
     public void AllowMovement(bool allow)
     {
         if (allow)
@@ -208,7 +173,9 @@ public class SC_SpaceshipMovement : MonoBehaviour
     // Reset spaceship to starting position and enable movement
     public void ResetGame()
     {
-        _rb.MovePosition(Vector3.up * 10.0f);
+        _rb.MovePosition(Vector3.up * 5.0f);
+        _rb.velocity = Vector3.zero;
+        _rb.AddForce((Vector3.up * 5.0f) * _rb.mass, ForceMode.Impulse);
         _rb.MoveRotation(Quaternion.identity);
         movementEnabled = true;
     }

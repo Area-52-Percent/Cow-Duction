@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿/*  ResetButton.cs
+
+    Placed on a UI button to call ResetGame.
+*/
+
+using UnityEngine;
 
 public class ResetButton : MonoBehaviour
 {

@@ -16,44 +16,60 @@ using UnityEngine.UI;
 public class SC_AlienUIManager : MonoBehaviour
 {
     // Referenced objects
-    [SerializeField] private Rigidbody _rbUFO;
-    [SerializeField] private MeshRenderer[] ufoMesh;
-    [SerializeField] public GameObject CowSpawner;
+    private SC_HudReticleFollowCursor reticleFollowCursor;
+    private TransformWrapper transformWrapper;
+    private Rigidbody _rbUFO;
+    private MeshRenderer[] ufoMesh;
+    private AudioSource ufoAudioSource;
+    [SerializeField] private Camera topDownCamera = null; // Set up in inspector
+    public GameObject CowSpawner;
     // Variables
-    [SerializeField] private int score;
+    private int score;
     public float scoreToFuelRatio = 10.0f;
-    [SerializeField] private float fuel; // Percentage
-    public float fuelDepletionRate = 1.0f;
-    public float fuelWarnAmount = 25.0f;
-    public float abilityActiveTime = 3.0f;
-    [SerializeField] private float abilityCooldown; // Percentage
-    [SerializeField] private bool cooldownActive;
+    private float fuel; // Percentage
+    private float fuelDepletionRate = 1.0f;
+    private float fuelWarnAmount = 25.0f;
+    [SerializeField] private Color fuelStartColor = Color.white;
+    [SerializeField] private Color fuelDepletedColor = Color.red;
+    [SerializeField] private AudioClip activateAbility = null; // Set up in inspector
+    private float abilityActiveTime = 3.0f;
+    private float abilityCooldown; // Percentage
+    private bool cooldownActive;
     public float cooldownRegenerationRate = 5.0f;
-    [SerializeField] private float timeRemaining; // Seconds
-    [SerializeField] private float timeScaleFactor;
+    private float timeRemaining; // Seconds
+    private float timeScaleFactor;
     // Gameplay UI Elements
-    public Image hudDisplay;
-    public Text scoreText;
-    public Text speedText;
-    public Text altitudeText;
-    public Text timeText;
-    public Text fuelWarnText;
-    public Slider fuelMeter;
-    public Image fuelMeterFill;
-    public Slider cooldownMeter;
-    public Image cooldownMeterFill;
+    [SerializeField] private Image hudDisplay = null; // Set up in inspector
+    [SerializeField] private Image cowIcon = null; // Set up in inspector
+    [SerializeField] private Image reticle = null; // Set up in inspector
+    [SerializeField] private Sprite normalReticle = null; // Set up in inspector
+    [SerializeField] private Sprite disabledReticle = null; // Set up in inspector
+    [SerializeField] private Text scoreText = null; // Set up in inspector
+    [SerializeField] private Text speedText = null; // Set up in inspector
+    [SerializeField] private Text altitudeText = null; // Set up in inspector
+    [SerializeField] private Text timeText = null; // Set up in inspector
+    [SerializeField] private Text fuelWarnText = null; // Set up in inspector
+    [SerializeField] private Slider fuelMeter = null; // Set up in inspector
+    [SerializeField] private Image fuelMeterFill = null; // Set up in inspector
+    [SerializeField] private Slider cooldownMeter = null; // Set up in inspector
+    [SerializeField] private Image cooldownMeterFill;
+    [SerializeField] private Text cooldownReadyText = null; // Set up in inspector
     // Non Gameplay UI Elements
-    public GameObject endScreen;
-    public Text finalScoreText;
-    public GameObject helpScreen;
-    public GameObject parameterScreen;
+    [SerializeField] private GameObject endScreen = null; // Set up in inspector
+    [SerializeField] private Text finalScoreText = null; // Set up in inspector
+    [SerializeField] private GameObject helpScreen = null; // Set up in inspector
+    [SerializeField] private GameObject parameterScreen = null; // Set up in inspector
 
     // Awake is called after all objects are initialized
     void Awake()
-    {
+    {        
         // Retrieve UFO rigidbody
         _rbUFO = GameObject.Find("UFO").GetComponent<Rigidbody>();
         ufoMesh = _rbUFO.GetComponentsInChildren<MeshRenderer>();
+        ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
+        transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
+        reticleFollowCursor = reticle.GetComponent<SC_HudReticleFollowCursor>();
+        reticle.sprite = normalReticle;
     }
 
     // Start is called before the first frame update
@@ -61,6 +77,9 @@ public class SC_AlienUIManager : MonoBehaviour
     {
         // Initialize values for private variables
         score = 0;
+        scoreText.text = score.ToString("D2");
+        if (cowIcon)
+            cowIcon.enabled = false;
         fuel = 100.0f;
         abilityCooldown = 100.0f;
         cooldownActive = false;
@@ -70,7 +89,6 @@ public class SC_AlienUIManager : MonoBehaviour
         endScreen.SetActive(false);
         parameterScreen.SetActive(false);
         helpScreen.SetActive(false);
-
     }
 
     // Update is called once per frame
@@ -85,19 +103,19 @@ public class SC_AlienUIManager : MonoBehaviour
         {
             if (!fuelWarnText.enabled && fuel < fuelWarnAmount)
             {
-                fuelWarnText.text = "FUEL LOW";
+                fuelWarnText.text = "LOW";
                 fuelWarnText.enabled = true;
             }
             else if (fuel > fuelWarnAmount)
                 fuelWarnText.enabled = false;
             fuel -= Time.fixedDeltaTime * fuelDepletionRate;
-            fuelMeterFill.color = new Color(Mathf.Lerp(1f, 0f, fuel / 100f), Mathf.Lerp(0f, 1f, fuel / fuelWarnAmount), 0);
+            fuelMeterFill.color = Color.Lerp(fuelDepletedColor, fuelStartColor, fuel / 100f);
             fuelMeter.value = fuel;
         }
         else
         {
             fuel = 0.0f;
-            fuelWarnText.text = "OUT OF FUEL";
+            fuelWarnText.text = "OUT";
             _rbUFO.GetComponent<SC_SpaceshipMovement>().AllowMovement(false);
         }
 
@@ -111,12 +129,29 @@ public class SC_AlienUIManager : MonoBehaviour
         {
             abilityCooldown = 100.0f;
             cooldownActive = false;
+            if (cooldownReadyText)
+                cooldownReadyText.enabled = true;
+        }        
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        // Activate ability
+        if (Input.GetButtonDown("Ability") && !cooldownActive)
+        {
+            StartCoroutine(UseAbility());
+        }
+        // Toggle parameter screen
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ToggleParameterScreen();
         }
 
-        // Update time display
+        // Update time display (Unscaled)
         if (timeRemaining > 0.0f && !endScreen.activeSelf)
         {
-            timeRemaining -= Time.fixedDeltaTime;
+            timeRemaining -= Time.unscaledDeltaTime;
             int minutes = Mathf.FloorToInt(timeRemaining / 60.0f);
             int seconds = Mathf.FloorToInt(timeRemaining % 60.0f);
             timeText.text = minutes + ":" + seconds.ToString("D2");
@@ -129,24 +164,44 @@ public class SC_AlienUIManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    // Swap reticle sprites
+    public void ToggleReticle()
     {
-        // Activate ability
-        if (Input.GetKeyDown(KeyCode.F) && !cooldownActive)
+        if (reticle.sprite == normalReticle)
+            reticle.sprite = disabledReticle;
+        else
+            reticle.sprite = normalReticle;
+    }
+
+    // Enable or disable cow icon
+    public void ToggleCowIcon()
+    {
+        if (cowIcon.enabled)
+            cowIcon.enabled = false;
+        else
+            cowIcon.enabled = true;
+    }
+
+    // Add visual flair to score increase (TO DO: Replace hard-coded values)
+    private IEnumerator AnimateIncreaseScore()
+    {
+        RectTransform cowIconTransform;
+        if (cowIconTransform = cowIcon.GetComponent<RectTransform>())
         {
-            UseAbility();
-        }
-        // Toggle parameter screen
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            ToggleParameterScreen();
+            while (cowIconTransform.anchoredPosition.y > 20)
+            {
+                cowIconTransform.anchoredPosition += Vector2.down * 5;
+                yield return null;
+            }
+            ToggleCowIcon();
+            cowIconTransform.anchoredPosition = Vector2.up * 80;
         }
     }
 
     // Increase score and fuel
     public void IncreaseScore(int amount)
     {
+        StartCoroutine(AnimateIncreaseScore());
         score += amount;
         if (fuel <= 0.0f)
             fuelWarnText.enabled = false;
@@ -156,13 +211,19 @@ public class SC_AlienUIManager : MonoBehaviour
         scoreText.text = score.ToString("D2");
         if (_rbUFO.GetComponent<SC_SpaceshipMovement>())
             _rbUFO.GetComponent<SC_SpaceshipMovement>().AllowMovement(true);
-    }
+    }  
 
-    // Put ability on cooldown and disable ufo mesh
-    public void UseAbility()
+    // Fade out HUD and disable mesh for <abilityActiveTime> seconds then fade HUD back in and re-enable mesh
+    public IEnumerator UseAbility()
     {
-        abilityCooldown = 0.0f;        
-        cooldownActive = true;        
+        abilityCooldown = 0.0f;
+        topDownCamera.enabled = false;
+        cooldownActive = true;
+        if (cooldownReadyText)
+            cooldownReadyText.enabled = false;
+
+        ufoAudioSource.PlayOneShot(activateAbility, 0.5f);
+
         // Fade out HUD elements
         hudDisplay.CrossFadeAlpha(0f, abilityActiveTime / 10f, false);
         scoreText.enabled = false;
@@ -175,14 +236,12 @@ public class SC_AlienUIManager : MonoBehaviour
             mr.enabled = false;
         }
 
-        StartCoroutine(EndAbility());
-    }
-
-    public IEnumerator EndAbility()
-    {        
         yield return new WaitForSeconds(abilityActiveTime);
         
+        ufoAudioSource.PlayOneShot(activateAbility, 0.3f);
+
         // Fade in HUD elements
+        topDownCamera.enabled = true;
         hudDisplay.CrossFadeAlpha(1f, abilityActiveTime / 10f, false);
         scoreText.enabled = true;
         speedText.enabled = true;
@@ -195,10 +254,45 @@ public class SC_AlienUIManager : MonoBehaviour
         }
     }
 
-    // Show the endscreen
+    // Subtract fuel by amount of damage taken
+    public void TakeDamage(float amount)
+    {
+        fuel -= amount;
+        fuelMeter.value = fuel;
+        StartCoroutine(AnimateDamage());
+    }
+
+    // Visual indicator of taking damage
+    private IEnumerator AnimateDamage()
+    {
+        foreach (Image image in fuelMeter.GetComponentsInChildren<Image>())
+        {
+            image.color = Color.Lerp(Color.red, Color.white, Time.deltaTime);
+        }
+        yield return new WaitForEndOfFrame();
+        foreach (Image image in fuelMeter.GetComponentsInChildren<Image>())
+        {
+            image.color = Color.Lerp(Color.white, Color.red, Time.deltaTime);
+        }
+    }
+
+    // Show the endscreen (TO-DO: Replace hard-coded values)
     public void DisplayEndScreen()
     {
-        finalScoreText.text = "" + score;
+        string rating = "";
+        if (score < 10)
+            rating = "F";
+        else if (score < 13)
+            rating = "C";
+        else if (score < 16)
+            rating = "B";
+        else if (score < 20)
+            rating = "A";
+        else if (score < 25)
+            rating = "S";
+        else
+            rating = "SS";
+        finalScoreText.text = score + "\n\nRating: " + rating;
         Time.timeScale = Mathf.Epsilon;
         endScreen.SetActive(true);
     }
@@ -292,6 +386,9 @@ public class SC_AlienUIManager : MonoBehaviour
                 break;
             case "CowSpawnRateSlider":
                 CowSpawner.GetComponent<SC_CowSpawner>().spawnRate = (int)value;
+                break;
+            case "ReticleAimSensitivitySlider":
+                reticleFollowCursor.joystickSensitivity = value;
                 break;
             default:
                 break;

@@ -6,14 +6,34 @@
         This component belongs to a UI image.
  */
 
-
 using UnityEngine;
 
 public class SC_HudReticleFollowCursor : MonoBehaviour
 {
+    public float joystickSensitivity = 5.0f;
+
     // Update is called once per frame
     void Update()
     {
-        transform.position = Input.mousePosition;
+        if (Input.GetJoystickNames().Length > 1)
+        {
+            float horizontal = Input.GetAxis("ReticleHorizontal");
+            float vertical = Input.GetAxis("ReticleVertical");
+            
+            if (horizontal > 0 && transform.position.x < Screen.width ||
+                horizontal < 0 && transform.position.x > 0)
+            {
+                transform.position += Vector3.right * horizontal * joystickSensitivity;
+            }
+            if (vertical < 0 && transform.position.y < Screen.height ||
+                vertical > 0 && transform.position.y > 0)
+            {
+                transform.position += Vector3.down * vertical * joystickSensitivity;
+            }
+        }
+        else
+        {
+            transform.position = Input.mousePosition;
+        }
     }
 }

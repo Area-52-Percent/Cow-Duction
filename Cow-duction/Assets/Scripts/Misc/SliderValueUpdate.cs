@@ -1,10 +1,15 @@
-﻿using UnityEngine;
+﻿/*  SliderValueUpdate.cs
+
+    Updates text string to match slider value.
+*/
+
+using UnityEngine;
 using UnityEngine.UI;
 
 public class SliderValueUpdate : MonoBehaviour
 {
-    [SerializeField] private Text myText;
-    public Slider mySlider;
+    private Text myText;
+    [SerializeField] private Slider mySlider = null; // Set up in inspector
 
     // Start is called before the first frame update
     void Start()

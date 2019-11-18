@@ -15,32 +15,39 @@ using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 
+[RequireComponent(typeof(SC_SpaceshipMovement))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(AudioSource))]
 public class SC_CowAbduction : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _rb;
+    private SC_SpaceshipMovement spaceshipMovement;
     public Rigidbody beamOrigin;
-    [SerializeField] private SC_AlienUIManager uiManager;
+    private SC_AlienUIManager uiManager;
     // Joint parameters
     public float maxCaptureLength = 50.0f;
     public int numberOfJoints = 3;
     public float captureSpeed = 5.0f;
-    [SerializeField] private float captureLength;
-    [SerializeField] private ConfigurableJoint[] attachedObjectJoints;    
+    private float captureLength;
+    private ConfigurableJoint[] attachedObjectJoints;    
     public GameObject attachedObject;
     // Grapple parameters
     public float grappleTime = 0.5f;
-    [SerializeField] private bool grappling;
-    public GameObject probe;
-    [SerializeField] GameObject probeClone;
+    public float grappleCooldown = 0.5f;
+    private bool grappling;
+    [SerializeField] private GameObject reticle = null; // Set up in inspector
+    [SerializeField] private GameObject probe = null; // Set up in inspector
+    private GameObject probeClone;
+    [SerializeField] private AudioClip grappleShot = null; // Set up in inspector
+    [SerializeField] private AudioClip grappleHit = null; // Set up in inspector
+    [SerializeField] private AudioClip cowSuction = null; // Set up in inspector
     // Line parameters
     [SerializeField] private LineRenderer lineRenderer;
 
     // Awake is called after all objects are initialized
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody>();
+        spaceshipMovement = GetComponent<SC_SpaceshipMovement>();
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
     }
 
@@ -53,6 +60,7 @@ public class SC_CowAbduction : MonoBehaviour
             lineRenderer = gameObject.AddComponent<LineRenderer>();
             lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
             lineRenderer.widthMultiplier = 0.5f;
+            lineRenderer.positionCount = 0;
         }
         lineRenderer.enabled = false;
 
@@ -64,17 +72,19 @@ public class SC_CowAbduction : MonoBehaviour
     private void FixedUpdate()
     {
         // Left click casts a raycast in the direction of the cursor position.
-        // If a cow is already attached, release it.
-        // Otherwise if the raycast hits a cow, the cow becomes attached to my rigidbody through configurable joints.
-        if (Input.GetMouseButtonDown(0) && Time.timeScale > 0f)
+        if (Input.GetButtonDown("Fire1") && Time.timeScale > Mathf.Epsilon)
         {
             // Do not shoot ray if cow is already attached
             if (attachedObject == null && !grappling)
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;                    
+                // Convert reticle world coordinates to screen coordinates
+                Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, reticle.GetComponent<RectTransform>().position);                
+                Ray ray = Camera.main.ScreenPointToRay(reticlePoint);
+                RaycastHit hit;
+                // Ignore UFO layer
+                int layerMask = ~(1 << gameObject.layer);
                 
-                if (Physics.Raycast(ray, out hit, maxCaptureLength))
+                if (Physics.Raycast(ray, out hit, maxCaptureLength, layerMask))
                 {
                     captureLength = Vector3.Distance(transform.position, hit.transform.position);
 
@@ -83,96 +93,34 @@ public class SC_CowAbduction : MonoBehaviour
             }
         }
 
-        // Release the attached object
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetButtonDown("GrappleRelease"))
         {
-            if (attachedObject != null)
-            {
-                if (attachedObject.GetComponent<NavMeshAgent>())
-                    attachedObject.GetComponent<NavMeshAgent>().enabled = true;
-
-                attachedObject.GetComponent<Rigidbody>().drag = 1.0f;
-
-                foreach (ConfigurableJoint cj in attachedObjectJoints)
-                {
-                    if (cj != null)
-                    {
-                        if (cj.tag == "Cow" || cj.tag == "Farmer")
-                            Destroy(cj);
-                        else
-                            Destroy(cj.gameObject);
-                    }
-                }
-
-                if (lineRenderer.enabled)
-                    lineRenderer.enabled = false;
-                
-                if (probeClone != null)
-                    Destroy(probeClone);
-
-                attachedObject = null;
-
-                // Reset carry mass
-                if (_rb.GetComponent<SC_SpaceshipMovement>())
-                    _rb.GetComponent<SC_SpaceshipMovement>().ResetMovementPenaltyFactor();
-            }
+            GrappleRelease();
         }
-
-        // Holding comma pulls the attached cow towards the UFO
-        if (Input.GetKey(KeyCode.Comma)) 
+        if (Input.GetAxis("GrapplePushPull") > 0f)
         {
-            if (attachedObject != null && attachedObject.tag == "Cow") 
-            {
-                if (captureLength > 0f)
-                {
-                    // Decrease joint limits over time
-                    captureLength -= Time.deltaTime * captureSpeed;
-                    SoftJointLimit softJointLimit = new SoftJointLimit();
-                    softJointLimit.limit = captureLength / (float)numberOfJoints;
-                    softJointLimit.contactDistance = 0.1f;
-                    foreach(ConfigurableJoint cj in attachedObjectJoints)
-                        cj.linearLimit = softJointLimit;
-                }
-                else
-                {
-                    // Force joint limits to zero
-                    foreach(ConfigurableJoint cj in attachedObjectJoints)
-                    {
-                        SoftJointLimit softJointLimit = new SoftJointLimit();
-                        softJointLimit.limit = 0f;
-                        softJointLimit.contactDistance = 0.1f;
-                        cj.linearLimit = softJointLimit;
-                    }
-                }
-            }
+            GrapplePull();
         }
-
-        // Holding period pushes the attached cow away from the UFO
-        if (Input.GetKey(KeyCode.Period)) 
+        else if (Input.GetAxis("GrapplePushPull") < 0f)
         {
-            if (attachedObject != null && attachedObject.tag == "Cow") 
-            {
-                if (captureLength < maxCaptureLength)
-                {
-                    // Increase joint limits over time
-                    captureLength += Time.deltaTime * captureSpeed;
-                    SoftJointLimit softJointLimit = new SoftJointLimit();
-                    softJointLimit.limit = captureLength / (float)numberOfJoints;
-                    softJointLimit.contactDistance = 0.1f;
-                    foreach(ConfigurableJoint cj in attachedObjectJoints)
-                        cj.linearLimit = softJointLimit;
-                }
-            }
+            GrapplePush();
         }
 
         // Draw a line between me and the attached object
-        if (attachedObject != null && lineRenderer != null)
+        if (attachedObject != null)
         {
             RenderLine(attachedObject);
 
             Rigidbody attachedRigidboy = attachedObject.GetComponent<Rigidbody>();
             if (attachedRigidboy.velocity.magnitude > 1.0f)
                 attachedRigidboy.AddForce(-attachedRigidboy.velocity, ForceMode.Acceleration);
+        }
+        else
+        {
+            for (int pos = 0; pos < lineRenderer.positionCount; pos++)
+            {
+                lineRenderer.SetPosition(pos, transform.position);
+            }
         }
     }
 
@@ -183,7 +131,7 @@ public class SC_CowAbduction : MonoBehaviour
         {
             // Set up points along each joint
             var points = new Vector3[numberOfJoints + 1];
-            points[0] = transform.position - transform.up;
+            points[0] = transform.position;
             for (int j = 0; j < numberOfJoints; j++)
             {
                 points[j + 1] = attachedObjectJoints[j].transform.position;
@@ -195,7 +143,7 @@ public class SC_CowAbduction : MonoBehaviour
         {
             // Set up two points for a straight line
             var points = new Vector3[2];
-            points[0] = transform.position - transform.up;
+            points[0] = transform.position;
             points[1] = obj.transform.position;
             lineRenderer.positionCount = points.Length;
             lineRenderer.SetPositions(points);
@@ -210,25 +158,36 @@ public class SC_CowAbduction : MonoBehaviour
         if (probe != null)
             probeClone = Instantiate(probe, transform.position, Quaternion.identity);
         
+        GetComponent<AudioSource>().PlayOneShot(grappleShot, 0.5f);
+        
         grappling = true;
         // Extend the grapple
         float counter = 0.0f;
         while (counter < grappleTime)
         {            
             counter += Time.fixedDeltaTime / grappleTime;
-            probeClone.transform.position = Vector3.Lerp(transform.position - transform.up, hit.point, counter / grappleTime);
+            probeClone.transform.position = Vector3.Lerp(transform.position, hit.point, counter / grappleTime);
             RenderLine(probeClone);
             yield return null;
         }
                
         if (!AttachBody(hit))
         {
+            // Hang at hit position briefly
+            counter = 0.0f;
+            while (counter < grappleCooldown)
+            {
+                counter += Time.fixedDeltaTime / grappleTime;
+                RenderLine(probeClone);
+                yield return null;
+            }
+           
             // Retract the grapple if it did not attach to a cow or farmer
             counter = 0.0f;
             while (counter < grappleTime)
             {            
                 counter += Time.fixedDeltaTime / grappleTime;
-                probeClone.transform.position = Vector3.Lerp(hit.point, transform.position - transform.up, counter / grappleTime);
+                probeClone.transform.position = Vector3.Lerp(hit.point, transform.position, counter / grappleTime);
                 RenderLine(probeClone);
                 yield return null;                
             }
@@ -240,7 +199,7 @@ public class SC_CowAbduction : MonoBehaviour
     // Attach to an object through a series of joints
     private bool AttachBody(RaycastHit hit)
     {
-        Debug.Log("Ray cast hit " + hit.transform.gameObject.name);
+        // Debug.Log("Ray cast hit " + hit.transform.gameObject.name);
         if ((hit.collider.tag == "Cow" || hit.collider.tag == "Farmer") && hit.rigidbody != null)
         {
             // Disable AI while attached
@@ -265,7 +224,8 @@ public class SC_CowAbduction : MonoBehaviour
                     GameObject go = new GameObject("Joint");
                     Rigidbody goRigidbody = go.AddComponent<Rigidbody>();
 
-                    goRigidbody.mass = _rb.mass / 10.0f;
+                    // goRigidbody.mass = _rb.mass / 10.0f;
+                    goRigidbody.mass = beamOrigin.mass / 10.0f;
                     goRigidbody.drag = 1.0f;
                     goRigidbody.angularDrag = 1.0f;                    
 
@@ -295,23 +255,115 @@ public class SC_CowAbduction : MonoBehaviour
             attachedObject = hit.transform.gameObject;
 
             // Set spaceship movement penalty (TO DO: set based on cow mass)
-            if (_rb.GetComponent<SC_SpaceshipMovement>())
-                _rb.GetComponent<SC_SpaceshipMovement>().SetMovementPenaltyFactor(0.5f);
+            spaceshipMovement.SetMovementPenaltyFactor(0.5f);
 
             if (probeClone != null)
             {
                 probeClone.transform.parent = attachedObject.transform;
                 probeClone.transform.position = attachedObject.transform.position;
             }
+
+            // Toggle UI indicators
+            uiManager.ToggleCowIcon();
+            uiManager.ToggleReticle();
+
+            if (probeClone.GetComponent<AudioSource>())
+            {
+                probeClone.GetComponent<AudioSource>().PlayOneShot(grappleHit);
+            }
             return true;
         }
         return false;
     }
 
+    // Release the attached object
+    private void GrappleRelease()
+    {
+        if (attachedObject != null)
+        {
+            if (attachedObject.GetComponent<NavMeshAgent>())
+                attachedObject.GetComponent<NavMeshAgent>().enabled = true;
+
+            attachedObject.GetComponent<Rigidbody>().drag = 1.0f;
+
+            foreach (ConfigurableJoint cj in attachedObjectJoints)
+            {
+                if (cj != null)
+                {
+                    if (cj.tag == "Cow" || cj.tag == "Farmer")
+                        Destroy(cj);
+                    else
+                        Destroy(cj.gameObject);
+                }
+            }
+
+            if (lineRenderer.enabled)
+                lineRenderer.enabled = false;
+
+            if (probeClone != null)
+                Destroy(probeClone);
+
+            attachedObject = null;
+
+            // Reset carry mass
+            spaceshipMovement.ResetMovementPenaltyFactor();
+
+            // Toggle UI indicators
+            uiManager.ToggleCowIcon();
+            uiManager.ToggleReticle();
+        }
+    }
+
+    // Pull grapple rope 
+    private void GrapplePull()
+    {
+        if (attachedObject != null && attachedObject.tag == "Cow") 
+        {
+            if (captureLength > 0.0f)
+            {
+                // Decrease joint limits over time
+                captureLength -= Time.deltaTime * captureSpeed;
+                SoftJointLimit softJointLimit = new SoftJointLimit();
+                softJointLimit.limit = captureLength / (float)numberOfJoints;
+                softJointLimit.contactDistance = 0.1f;
+                foreach(ConfigurableJoint cj in attachedObjectJoints)
+                    cj.linearLimit = softJointLimit;
+            }
+            else
+            {
+                // Disable attached object colliders
+                foreach (Collider col in attachedObject.GetComponents<Collider>())
+                {
+                    col.isTrigger = true;
+                }
+                // Apply force on attached body towards UFO
+                attachedObject.GetComponent<Rigidbody>().AddForce((transform.position - attachedObject.transform.position) * attachedObject.GetComponent<Rigidbody>().mass, ForceMode.Impulse);
+            }
+        }
+    }
+
+    // Loosen grapple rope
+    private void GrapplePush()
+    {
+        if (attachedObject != null && attachedObject.tag == "Cow") 
+        {
+            if (captureLength < maxCaptureLength)
+            {
+                // Increase joint limits over time
+                captureLength += Time.deltaTime * captureSpeed;
+                SoftJointLimit softJointLimit = new SoftJointLimit();
+                softJointLimit.limit = captureLength / (float)numberOfJoints;
+                softJointLimit.contactDistance = 0.1f;
+                foreach(ConfigurableJoint cj in attachedObjectJoints)
+                    cj.linearLimit = softJointLimit;
+            }
+        }
+    }
+
     // OnTriggerEnter is called when a collision with another collider is detected
     private void OnTriggerEnter(Collider col) 
     {
-        if(col.gameObject.tag == "Cow" && attachedObject != null)
+        if(col.gameObject.tag == "Cow" && col.gameObject == attachedObject)
         {
             // Destroy grappling hook and cow
             Destroy(col.gameObject);
@@ -328,10 +380,13 @@ public class SC_CowAbduction : MonoBehaviour
             if(uiManager == null)
                 uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
             uiManager.IncreaseScore(1);
+            uiManager.ToggleReticle();
             // Apply small upward force for physical feedback
-            _rb.AddRelativeForce(_rb.transform.up * _rb.mass, ForceMode.Impulse);
+            spaceshipMovement.AddUpwardImpulse(5.0f);
             // Reset carry mass
-            _rb.GetComponent<SC_SpaceshipMovement>().ResetMovementPenaltyFactor();
+            spaceshipMovement.ResetMovementPenaltyFactor();
+            // Play suction audio
+            GetComponent<AudioSource>().PlayOneShot(cowSuction, 0.5f);
         }
     }
 

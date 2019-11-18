@@ -12,8 +12,8 @@ using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [SerializeField] GameObject ufo;
-    [SerializeField] SC_AlienUIManager uiManager;
+    private GameObject ufo;
+    private SC_AlienUIManager uiManager;
 
     // Awake is called after all objects are initialized
     void Awake()
