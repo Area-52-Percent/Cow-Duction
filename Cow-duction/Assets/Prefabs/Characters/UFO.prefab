@@ -59,7 +59,6 @@ GameObject:
   - component: {fileID: 2175921359117653456}
   - component: {fileID: 2175921359117653462}
   - component: {fileID: 2175921359117653451}
-  - component: {fileID: 7080483277278456700}
   - component: {fileID: 2175921359117653460}
   - component: {fileID: 2175921359117653450}
   - component: {fileID: 1246842189641550114}
@@ -215,19 +214,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!135 &7080483277278456700
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2175921359117653471}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.25
-  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &2175921359117653460
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -287,6 +273,7 @@ MonoBehaviour:
   verticalSpeed: 10
   maxHeight: 50
   minHeight: 10
+  hoverHeight: 3
   rotationForce: 0.2
   maxRotation: 20
   invertLook: 0
@@ -386,7 +373,7 @@ GameObject:
   - component: {fileID: 3111506861880082648}
   - component: {fileID: 8124702628517854686}
   - component: {fileID: 2833335169335150625}
-  - component: {fileID: 6669179762709756458}
+  - component: {fileID: 8449661751420105303}
   m_Layer: 13
   m_Name: Glass Dome
   m_TagString: Untagged
@@ -453,8 +440,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!135 &6669179762709756458
-SphereCollider:
+--- !u!64 &8449661751420105303
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -463,9 +450,10 @@ SphereCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &9166099641043612676
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,6 +465,7 @@ GameObject:
   - component: {fileID: 1009792947654107057}
   - component: {fileID: 3371492919365545595}
   - component: {fileID: 8042304921862338658}
+  - component: {fileID: 7597187411835418621}
   m_Layer: 13
   m_Name: UFO Mesh
   m_TagString: Untagged
@@ -544,3 +533,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &7597187411835418621
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9166099641043612676}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}

@@ -33,6 +33,7 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private float timeScaleFactor;
     // Gameplay UI Elements
     public Image hudDisplay;
+    public Image cowIcon;
     public Text scoreText;
     public Text speedText;
     public Text altitudeText;
@@ -61,6 +62,8 @@ public class SC_AlienUIManager : MonoBehaviour
     {
         // Initialize values for private variables
         score = 0;
+        scoreText.text = score.ToString("D2");
+        cowIcon.enabled = false;
         fuel = 100.0f;
         abilityCooldown = 100.0f;
         cooldownActive = false;
@@ -70,7 +73,6 @@ public class SC_AlienUIManager : MonoBehaviour
         endScreen.SetActive(false);
         parameterScreen.SetActive(false);
         helpScreen.SetActive(false);
-
     }
 
     // Update is called once per frame
@@ -144,9 +146,35 @@ public class SC_AlienUIManager : MonoBehaviour
         }
     }
 
+    // Enable or disable cow icon
+    public void ToggleCowIcon()
+    {
+        if (cowIcon.enabled)
+            cowIcon.enabled = false;
+        else
+            cowIcon.enabled = true;
+    }
+
+    // Add visual flair to score increase (TO DO: Replace hard-coded values)
+    private IEnumerator AnimateIncreaseScore()
+    {
+        RectTransform cowIconTransform;
+        if (cowIconTransform = cowIcon.GetComponent<RectTransform>())
+        {
+            while (cowIconTransform.anchoredPosition.y > 20)
+            {
+                cowIconTransform.anchoredPosition += Vector2.down * 5;
+                yield return null;
+            }
+            ToggleCowIcon();
+            cowIconTransform.anchoredPosition = Vector2.up * 80;
+        }
+    }
+
     // Increase score and fuel
     public void IncreaseScore(int amount)
     {
+        StartCoroutine(AnimateIncreaseScore());
         score += amount;
         if (fuel <= 0.0f)
             fuelWarnText.enabled = false;
@@ -158,7 +186,7 @@ public class SC_AlienUIManager : MonoBehaviour
             _rbUFO.GetComponent<SC_SpaceshipMovement>().AllowMovement(true);
     }
 
-    // Put ability on cooldown and disable ufo mesh
+    // Put ability on cooldown and disable mesh
     public void UseAbility()
     {
         abilityCooldown = 0.0f;        
@@ -178,6 +206,7 @@ public class SC_AlienUIManager : MonoBehaviour
         StartCoroutine(EndAbility());
     }
 
+    // Fade HUD back in and re-enable mesh
     public IEnumerator EndAbility()
     {        
         yield return new WaitForSeconds(abilityActiveTime);
@@ -192,6 +221,28 @@ public class SC_AlienUIManager : MonoBehaviour
         foreach(MeshRenderer mr in ufoMesh)
         {
             mr.enabled = true;
+        }
+    }
+
+    // Subtract fuel by amount of damage taken
+    public void TakeDamage(float amount)
+    {
+        fuel -= amount;
+        fuelMeter.value = fuel;
+        StartCoroutine(AnimateDamage());
+    }
+
+    // Visual indicator of taking damage
+    private IEnumerator AnimateDamage()
+    {
+        foreach (Image image in fuelMeter.GetComponentsInChildren<Image>())
+        {
+            image.color = new Color(Mathf.Lerp(1f, 0f, Time.deltaTime), 0, 0);
+        }
+        yield return new WaitForEndOfFrame();
+        foreach (Image image in fuelMeter.GetComponentsInChildren<Image>())
+        {
+            image.color = new Color(Mathf.Lerp(1f, 0f, Time.deltaTime), 1, 1);
         }
     }
 

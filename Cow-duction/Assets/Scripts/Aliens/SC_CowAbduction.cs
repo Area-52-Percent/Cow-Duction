@@ -64,9 +64,7 @@ public class SC_CowAbduction : MonoBehaviour
     private void FixedUpdate()
     {
         // Left click casts a raycast in the direction of the cursor position.
-        // If a cow is already attached, release it.
-        // Otherwise if the raycast hits a cow, the cow becomes attached to my rigidbody through configurable joints.
-        if (Input.GetMouseButtonDown(0) && Time.timeScale > 0f)
+        if (Input.GetButtonDown("Fire1") && Time.timeScale > Mathf.Epsilon)
         {
             // Do not shoot ray if cow is already attached
             if (attachedObject == null && !grappling)
@@ -84,86 +82,41 @@ public class SC_CowAbduction : MonoBehaviour
         }
 
         // Release the attached object
+        /*
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (attachedObject != null)
-            {
-                if (attachedObject.GetComponent<NavMeshAgent>())
-                    attachedObject.GetComponent<NavMeshAgent>().enabled = true;
-
-                attachedObject.GetComponent<Rigidbody>().drag = 1.0f;
-
-                foreach (ConfigurableJoint cj in attachedObjectJoints)
-                {
-                    if (cj != null)
-                    {
-                        if (cj.tag == "Cow" || cj.tag == "Farmer")
-                            Destroy(cj);
-                        else
-                            Destroy(cj.gameObject);
-                    }
-                }
-
-                if (lineRenderer.enabled)
-                    lineRenderer.enabled = false;
-                
-                if (probeClone != null)
-                    Destroy(probeClone);
-
-                attachedObject = null;
-
-                // Reset carry mass
-                if (_rb.GetComponent<SC_SpaceshipMovement>())
-                    _rb.GetComponent<SC_SpaceshipMovement>().ResetMovementPenaltyFactor();
-            }
+            GrappleRelease();
         }
 
         // Holding comma pulls the attached cow towards the UFO
-        if (Input.GetKey(KeyCode.Comma)) 
+        if (Input.GetKey(KeyCode.Comma))
         {
-            if (attachedObject != null && attachedObject.tag == "Cow") 
-            {
-                if (captureLength > 0f)
-                {
-                    // Decrease joint limits over time
-                    captureLength -= Time.deltaTime * captureSpeed;
-                    SoftJointLimit softJointLimit = new SoftJointLimit();
-                    softJointLimit.limit = captureLength / (float)numberOfJoints;
-                    softJointLimit.contactDistance = 0.1f;
-                    foreach(ConfigurableJoint cj in attachedObjectJoints)
-                        cj.linearLimit = softJointLimit;
-                }
-                else
-                {
-                    // Force joint limits to zero
-                    foreach(ConfigurableJoint cj in attachedObjectJoints)
-                    {
-                        SoftJointLimit softJointLimit = new SoftJointLimit();
-                        softJointLimit.limit = 0f;
-                        softJointLimit.contactDistance = 0.1f;
-                        cj.linearLimit = softJointLimit;
-                    }
-                }
-            }
+            GrapplePull();
         }
 
         // Holding period pushes the attached cow away from the UFO
         if (Input.GetKey(KeyCode.Period)) 
         {
-            if (attachedObject != null && attachedObject.tag == "Cow") 
-            {
-                if (captureLength < maxCaptureLength)
-                {
-                    // Increase joint limits over time
-                    captureLength += Time.deltaTime * captureSpeed;
-                    SoftJointLimit softJointLimit = new SoftJointLimit();
-                    softJointLimit.limit = captureLength / (float)numberOfJoints;
-                    softJointLimit.contactDistance = 0.1f;
-                    foreach(ConfigurableJoint cj in attachedObjectJoints)
-                        cj.linearLimit = softJointLimit;
-                }
-            }
+            GrapplePush();
         }
+        */
+
+        // JOYSTICK INPUT (TO DO: Test inputs with Xbox360 controllers)
+        // if (Input.GetJoystickNames().Length > 1)
+        // {
+            if (Input.GetButtonDown("GrappleRelease"))
+            {
+                GrappleRelease();
+            }
+            if (Input.GetAxis("GrapplePushPull") > 0f)
+            {
+                GrapplePull();
+            }
+            else if (Input.GetAxis("GrapplePushPull") < 0f)
+            {
+                GrapplePush();
+            }
+        // }
 
         // Draw a line between me and the attached object
         if (attachedObject != null && lineRenderer != null)
@@ -303,9 +256,103 @@ public class SC_CowAbduction : MonoBehaviour
                 probeClone.transform.parent = attachedObject.transform;
                 probeClone.transform.position = attachedObject.transform.position;
             }
+
+            // Toggle UI indicator
+            if (!uiManager.cowIcon.enabled)
+            {
+                uiManager.ToggleCowIcon();
+            }
             return true;
         }
         return false;
+    }
+
+    // Release the attached object
+    private void GrappleRelease()
+    {
+        if (attachedObject != null)
+        {
+            if (attachedObject.GetComponent<NavMeshAgent>())
+                attachedObject.GetComponent<NavMeshAgent>().enabled = true;
+
+            attachedObject.GetComponent<Rigidbody>().drag = 1.0f;
+
+            foreach (ConfigurableJoint cj in attachedObjectJoints)
+            {
+                if (cj != null)
+                {
+                    if (cj.tag == "Cow" || cj.tag == "Farmer")
+                        Destroy(cj);
+                    else
+                        Destroy(cj.gameObject);
+                }
+            }
+
+            if (lineRenderer.enabled)
+                lineRenderer.enabled = false;
+            
+            if (probeClone != null)
+                Destroy(probeClone);
+
+            attachedObject = null;
+
+            // Reset carry mass
+            if (_rb.GetComponent<SC_SpaceshipMovement>())
+                _rb.GetComponent<SC_SpaceshipMovement>().ResetMovementPenaltyFactor();
+
+            // Toggle UI indicator
+            if (uiManager.cowIcon.enabled)
+            {
+                uiManager.ToggleCowIcon();
+            }
+        }
+    }
+
+    // Pull grapple rope 
+    private void GrapplePull()
+    {
+        if (attachedObject != null && attachedObject.tag == "Cow") 
+        {
+            if (captureLength * numberOfJoints >= Vector3.Distance(transform.position, attachedObject.transform.position))
+            {
+                // Decrease joint limits over time
+                captureLength -= Time.deltaTime * captureSpeed;
+                SoftJointLimit softJointLimit = new SoftJointLimit();
+                softJointLimit.limit = captureLength / (float)numberOfJoints;
+                softJointLimit.contactDistance = 0.1f;
+                foreach(ConfigurableJoint cj in attachedObjectJoints)
+                    cj.linearLimit = softJointLimit;
+            }
+            else
+            {
+                // Force joint limits to zero
+                foreach(ConfigurableJoint cj in attachedObjectJoints)
+                {
+                    SoftJointLimit softJointLimit = new SoftJointLimit();
+                    softJointLimit.limit = Mathf.Epsilon;
+                    softJointLimit.contactDistance = 0.1f;
+                    cj.linearLimit = softJointLimit;
+                }
+            }
+        }
+    }
+
+    // Loosen grapple rope
+    private void GrapplePush()
+    {
+        if (attachedObject != null && attachedObject.tag == "Cow") 
+        {
+            if (captureLength < maxCaptureLength)
+            {
+                // Increase joint limits over time
+                captureLength += Time.deltaTime * captureSpeed;
+                SoftJointLimit softJointLimit = new SoftJointLimit();
+                softJointLimit.limit = captureLength / (float)numberOfJoints;
+                softJointLimit.contactDistance = 0.1f;
+                foreach(ConfigurableJoint cj in attachedObjectJoints)
+                    cj.linearLimit = softJointLimit;
+            }
+        }
     }
 
     // OnTriggerEnter is called when a collision with another collider is detected
