@@ -14,11 +14,19 @@ Note: The data folder *must* be in the same folder as the executable in order fo
 
 ### How to Play
 
+Xbox 360 Controllers
+
+![Xbox 360 Controller Bindings](./Images/joystick-controls.png)
+
+<details>
+  <summary> Keyboard/Mouse </summary>
+  <br>
+  
 * `W` Move forward
 * `A` Move left
 * `S` Move backward
 * `D` Move right
-  
+
 * `Z` Move upward
 * `C` Move downward
   
@@ -36,5 +44,6 @@ Note: The data folder *must* be in the same folder as the executable in order fo
 * `Mouse0` Shoot grappling hook
   
 * `Space`  Release cow or farmer (if grappled)
-* `,`      Pull cow (if grappled)
-* `.`      Push cow (if grappled)
+* `V`      Pull cow (if grappled)
+* `B`      Push cow (if grappled)
+</details>

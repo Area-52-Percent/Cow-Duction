@@ -59,6 +59,7 @@ GameObject:
   - component: {fileID: 2175921359117653456}
   - component: {fileID: 2175921359117653462}
   - component: {fileID: 2175921359117653451}
+  - component: {fileID: 5957952916082837744}
   - component: {fileID: 2175921359117653460}
   - component: {fileID: 2175921359117653450}
   - component: {fileID: 1246842189641550114}
@@ -116,8 +117,8 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
+  m_PlayOnAwake: 0
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -126,7 +127,7 @@ AudioSource:
   Priority: 128
   DopplerLevel: 1
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 200
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -161,7 +162,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -214,6 +215,19 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0.5, z: 0}
+--- !u!135 &5957952916082837744
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2175921359117653471}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.25
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!54 &2175921359117653460
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -242,19 +256,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 032658b4fde3cf74eadbc683ee199f3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rb: {fileID: 0}
   beamOrigin: {fileID: 8967025207825710538}
-  uiManager: {fileID: 0}
   maxCaptureLength: 50
   numberOfJoints: 5
   captureSpeed: 10
-  captureLength: 0
-  attachedObjectJoints: []
   attachedObject: {fileID: 0}
   grappleTime: 0.25
-  grappling: 0
   probe: {fileID: 2843867613009940456, guid: 3bc77f8716a4e42d3b2da8649fe1b6bb, type: 3}
-  probeClone: {fileID: 0}
+  grappleShot: {fileID: 0}
+  grappleHit: {fileID: 0}
+  cowSuction: {fileID: 0}
   lineRenderer: {fileID: 0}
 --- !u!114 &1246842189641550114
 MonoBehaviour:
@@ -268,7 +279,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d944ae84a93db194ba39b9f615b0be59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rb: {fileID: 0}
   horizontalSpeed: 20
   verticalSpeed: 10
   maxHeight: 50
@@ -277,8 +287,6 @@ MonoBehaviour:
   rotationForce: 0.2
   maxRotation: 20
   invertLook: 0
-  movementPenaltyFactor: 1
-  movementEnabled: 0
 --- !u!1 &2175921360886221579
 GameObject:
   m_ObjectHideFlags: 0
@@ -448,7 +456,7 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8029819290521376005}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Convex: 1
@@ -541,7 +549,7 @@ MeshCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9166099641043612676}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 3
   m_Convex: 1

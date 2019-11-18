@@ -11,7 +11,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class SC_SpaceshipMovement : MonoBehaviour
 {
-    [SerializeField] private Rigidbody _rb;
+    private Rigidbody _rb;
     public float horizontalSpeed = 10.0f;
     public float verticalSpeed = 10.0f;
     public float maxHeight = 50.0f;
@@ -20,8 +20,8 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public float rotationForce = 0.05f;
     public float maxRotation = 20.0f;
     public bool invertLook = false;
-    [SerializeField] private float movementPenaltyFactor = 1f;
-    [SerializeField] private bool movementEnabled;
+    private float movementPenaltyFactor = 1f;
+    private bool movementEnabled;
 
     // Start is called before the first frame update
     void Start()
@@ -97,7 +97,8 @@ public class SC_SpaceshipMovement : MonoBehaviour
         }
 
         // Roll left and right
-        if (Mathf.Abs(rollInput) > 0.0f && (transform.localEulerAngles.z < maxRotation || transform.localEulerAngles.z > 360.0f - maxRotation))
+        if ((rollInput < 0.0f && (transform.localEulerAngles.z < maxRotation || transform.localEulerAngles.z > 270.0f)) || 
+            (rollInput > 0.0f && (transform.localEulerAngles.z > 360.0f - maxRotation || transform.localEulerAngles.z < 90.0f)))
         {
             _rb.AddRelativeTorque(Vector3.back * rollInput * rotationForce * 2, ForceMode.Acceleration);
         }
@@ -119,7 +120,8 @@ public class SC_SpaceshipMovement : MonoBehaviour
             return;
 
         // Lift        
-        if (Mathf.Abs(liftInput) > 0.0f && transform.position.y > minHeight && transform.position.y < maxHeight)
+        if ((liftInput > 0.0f && transform.position.y < maxHeight) || 
+            (liftInput < 0.0f && transform.position.y > minHeight))
         {
             _rb.AddForce(Vector3.up * liftInput * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
         }
@@ -140,6 +142,11 @@ public class SC_SpaceshipMovement : MonoBehaviour
             invertLook = false;
         else
             invertLook = true;
+    }
+
+    public void AddUpwardImpulse(float force)
+    {
+        _rb.AddRelativeForce(_rb.transform.up * _rb.mass * force, ForceMode.Impulse);
     }
     
     // Set movement multiplier (should be between 0 and 1)
@@ -166,7 +173,9 @@ public class SC_SpaceshipMovement : MonoBehaviour
     // Reset spaceship to starting position and enable movement
     public void ResetGame()
     {
-        _rb.MovePosition(Vector3.up * 10.0f);
+        _rb.MovePosition(Vector3.up * 5.0f);
+        _rb.velocity = Vector3.zero;
+        _rb.AddForce((Vector3.up * 5.0f) * _rb.mass, ForceMode.Impulse);
         _rb.MoveRotation(Quaternion.identity);
         movementEnabled = true;
     }

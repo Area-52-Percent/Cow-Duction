@@ -1,4 +1,12 @@
-﻿using UnityEngine;
+﻿/*  DontDestroy.cs
+
+    Prevents an object from being destroyed on scene change.
+
+    Assumptions:
+        The GameObject has a unique tag in the scene.
+*/
+
+using UnityEngine;
 
 public class DontDestroy : MonoBehaviour
 {

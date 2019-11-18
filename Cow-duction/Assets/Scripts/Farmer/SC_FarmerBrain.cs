@@ -4,20 +4,23 @@
 
     Assumptions:
         There is a GameObject in the scene named "UFO".
-        This component goes with SC_CowBrain on the same object.
  */
 
 using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityStandardAssets.Characters.FirstPerson;
 
 public class SC_FarmerBrain : SC_CowBrain
 {
-    [SerializeField] private Transform targetTransform;
-    [SerializeField] private Transform gunShotOrigin;
-    [SerializeField] private GameObject projectile;    
+    private Transform targetTransform;
+    [SerializeField] private AudioClip shotgunPump = null; // Set up in inspector
+    [SerializeField] private AudioClip shotgunShot = null; // Set up in inspector
+    [SerializeField] private Transform gunShotOrigin = null; // Set up in inspector
+    [SerializeField] private GameObject projectile = null; // Set up in inspector
     [SerializeField] private float lockOnDistance = 20.0f;
-    [SerializeField] private bool lockedOn = false;
+    [SerializeField] private float lockOnSpeed = 5.0f;
+    private bool lockedOn = false;
     [SerializeField] private float normalSpeed = 10.0f;
     [SerializeField] private float aimSpeed = 5.0f;
     [SerializeField] private float projectileSpeed = 100.0f;
@@ -25,18 +28,32 @@ public class SC_FarmerBrain : SC_CowBrain
     [SerializeField] private float fireCooldown = 3.0f;
     [SerializeField] private float fireRate = 3.0f;
 
+    private Animator farmerAnimator;
+
     // Start is called before the first frame update
     void Start()
     {
-        cowAgent = GetComponent<NavMeshAgent>();
-        cowCam = GetComponentInChildren<Camera>();
+        m_Agent = GetComponent<NavMeshAgent>();
+        m_Cam = GetComponentInChildren<Camera>();
+        rbFpController = GetComponent<RigidbodyFirstPersonController>();
         targetTransform = GameObject.Find("UFO").transform;
+        farmerAnimator = GetComponentInChildren<Animator>();
+        m_AudioSource = GetComponent<AudioSource>();
+        if (aiControlled)
+        {
+            SetPlayerControlled(false);
+            m_Agent.destination = Random.insideUnitSphere * wanderRadius;
+        }
+        else
+        {
+            SetPlayerControlled(true);
+        }
     }
 
     // Update is called once per frame
     void Update()
-    {
-        if (cowAgent.enabled)
+    {        
+        if (m_Agent.enabled && aiControlled)
         {
             if (fireCooldown < fireRate)
             {
@@ -44,28 +61,61 @@ public class SC_FarmerBrain : SC_CowBrain
             }
             if (!lockedOn)
             {
+                m_Cam.transform.rotation = Quaternion.Slerp(m_Cam.transform.rotation, transform.rotation, lockOnSpeed * Time.deltaTime);
+                farmerAnimator.transform.rotation = Quaternion.Slerp(farmerAnimator.transform.rotation, transform.rotation, lockOnSpeed * Time.deltaTime);
+
+                if (wanderTime < maxWanderTime)
+                {
+                    wanderTime += Time.deltaTime;
+                }
+                if (m_Agent.enabled && (m_Agent.remainingDistance < 1f || wanderTime >= maxWanderTime))
+                {
+                    m_Agent.destination = Random.insideUnitSphere * wanderRadius;
+                    wanderTime = 0f;
+                }
                 if (Vector3.Distance(transform.position, targetTransform.position) <= lockOnDistance)
+                {
                     LockOn();
+                }
             }
             else 
             {
-                cowAgent.destination = targetTransform.position;
-                cowCam.transform.LookAt(targetTransform);
-                if (Vector3.Distance(transform.position, targetTransform.position) > lockOnDistance)
+                m_Agent.destination = new Vector3(targetTransform.position.x, 0, targetTransform.position.z);                                
+                // m_Cam.transform.LookAt(targetTransform);
+                Quaternion targetRotation = Quaternion.LookRotation(targetTransform.position - m_Cam.transform.position);
+                m_Cam.transform.rotation = Quaternion.Slerp(m_Cam.transform.rotation, targetRotation, lockOnSpeed * Time.deltaTime);
+                
+                Vector3 farmerForward = new Vector3(m_Cam.transform.forward.x, 0, m_Cam.transform.forward.z);
+                farmerAnimator.transform.forward = Vector3.Lerp(farmerForward, farmerAnimator.transform.forward, lockOnSpeed * Time.deltaTime);
+
+                if ((Vector3.Distance(transform.position, targetTransform.position) > lockOnDistance) ||
+                    (!targetTransform.GetComponentInChildren<MeshRenderer>().enabled))
+                {
                     Disengage();
+                }
                 else if (fireCooldown >= fireRate)
+                {
                     FireWeapon();
+                }
             }
         }
+         if (farmerAnimator)
+            farmerAnimator.SetFloat("speed", m_Agent.velocity.magnitude);
     }
 
     // Move towards and aim at target
     private void LockOn()
     {
+        if (!targetTransform.GetComponentInChildren<MeshRenderer>().enabled)
+            return;
         lockedOn = true;
         wandering = false;
-        cowAgent.speed = aimSpeed;
-        fireCooldown = 0.0f;     
+        m_Agent.speed = aimSpeed;
+        fireCooldown = 0.0f;
+        if (farmerAnimator)
+            farmerAnimator.SetBool("lockedOn", lockedOn);
+        if (m_AudioSource)
+            m_AudioSource.PlayOneShot(shotgunPump);
     }
 
     // Go back to wandering state
@@ -73,16 +123,24 @@ public class SC_FarmerBrain : SC_CowBrain
     {
         lockedOn = false;
         wandering = true;
-        cowAgent.speed = normalSpeed;
+        m_Agent.speed = normalSpeed;
+        // m_Cam.transform.forward = transform.forward;
+        // farmerAnimator.transform.forward = transform.forward;
+        if (farmerAnimator)
+            farmerAnimator.SetBool("lockedOn", lockedOn);
     }
 
     // Shoot a projectile from gunShotOrigin
     private void FireWeapon()
     {
         GameObject projectileClone = Instantiate(projectile, gunShotOrigin);
+        projectileClone.transform.parent = null;
         projectileClone.GetComponent<Rigidbody>().AddForce(gunShotOrigin.forward * projectileSpeed, ForceMode.Impulse);
 
         fireCooldown = 0.0f;
+
+        if (m_AudioSource)
+            m_AudioSource.PlayOneShot(shotgunShot);
 
         StartCoroutine(DestroyClone(projectileClone));
     }

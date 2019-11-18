@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7443585058275148887}
   - component: {fileID: 8363444690370700327}
   - component: {fileID: 5082949308938345652}
-  - component: {fileID: 5046484259730243739}
+  - component: {fileID: 3718116117574583040}
   m_Layer: 11
   m_Name: Cow
   m_TagString: Cow
@@ -87,13 +87,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03a387b2a29bf41da99eacb38836ec71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cowAgent: {fileID: 0}
-  cowCam: {fileID: 0}
-  rbFpController: {fileID: 0}
-  wanderRadius: 100
-  wanderTime: 0
+  cowMoo: {fileID: 8300000, guid: dd4141b9b87034b34b09ed67110fc272, type: 3}
+  wanderRadius: 125
   maxWanderTime: 20
-  wandering: 1
   aiControlled: 1
 --- !u!136 &8363444690370700327
 CapsuleCollider:
@@ -105,10 +101,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.57378125
+  m_Radius: 1.0580666
   m_Height: 2.297275
   m_Direction: 2
-  m_Center: {x: 0, y: 0.56470656, z: -0.25907445}
+  m_Center: {x: 0, y: 1.0489919, z: -0.25907445}
 --- !u!135 &5082949308938345652
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -122,19 +118,102 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 2, z: 0.75}
---- !u!65 &5046484259730243739
-BoxCollider:
+--- !u!82 &3718116117574583040
+AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5314257958602278042}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1.4345763, y: 1.752151, z: 2.253789}
-  m_Center: {x: 0.016714483, y: 1.2452285, z: -0.25911665}
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: dd4141b9b87034b34b09ed67110fc272, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 256
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 50
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &5017035437591144534
 PrefabInstance:
   m_ObjectHideFlags: 0
