@@ -13,6 +13,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
 {
     private Rigidbody _rb;
     public float horizontalSpeed = 10.0f;
+    public float groundSpeed = 1.0f;
     public float verticalSpeed = 10.0f;
     public float maxHeight = 50.0f;
     public float minHeight = 10.0f;
@@ -22,6 +23,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public bool invertLook = false;
     private float movementPenaltyFactor = 1f;
     private bool movementEnabled;
+    private bool grounded;
 
     // Start is called before the first frame update
     void Start()
@@ -40,15 +42,18 @@ public class SC_SpaceshipMovement : MonoBehaviour
         float turnHorizontalInput = Input.GetAxis("TurnHorizontal");
         float turnVerticalInput = Input.GetAxis("TurnVertical");
         float rollInput = Input.GetAxis("Roll");
-        float liftInput = Input.GetAxis("Lift");
+        float liftInput = Input.GetAxis("Lift");        
 
         // Move left and right
-        if (movementEnabled && Mathf.Abs(horizontalInput) > 0.0f)
+        if (Mathf.Abs(horizontalInput) > 0.0f)
         {
             horizontalForce = transform.right;
             horizontalForce.y = 0;
-            horizontalForce.Normalize();
-            _rb.AddForce(horizontalForce * horizontalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
+
+            if (movementEnabled)
+                _rb.AddForce(horizontalForce.normalized * horizontalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
+            else if (grounded)
+                _rb.AddForce(horizontalForce.normalized * horizontalInput * groundSpeed * movementPenaltyFactor, ForceMode.Acceleration);
 
             if ((horizontalInput < 0 && (transform.eulerAngles.z < maxRotation || transform.eulerAngles.z > 360.0f - maxRotation)) || 
                 (horizontalInput > 0 && (transform.eulerAngles.z > 360.0f - maxRotation || transform.eulerAngles.z < maxRotation)))
@@ -58,12 +63,15 @@ public class SC_SpaceshipMovement : MonoBehaviour
         }
 
         // Move forward and backward
-        if (movementEnabled && Mathf.Abs(verticalInput) > 0.0f)
+        if (Mathf.Abs(verticalInput) > 0.0f)
         {
             horizontalForce = transform.forward;
             horizontalForce.y = 0;
-            horizontalForce.Normalize();
-            _rb.AddForce(horizontalForce * verticalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
+
+            if (movementEnabled)
+                _rb.AddForce(horizontalForce.normalized * verticalInput * horizontalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
+            else if (grounded)
+                _rb.AddForce(horizontalForce.normalized * verticalInput * groundSpeed * movementPenaltyFactor, ForceMode.Acceleration);
 
             if ((verticalInput > 0 && (transform.localEulerAngles.x < maxRotation || transform.localEulerAngles.x > 360.0f - maxRotation)) || 
                 (verticalInput < 0 && (transform.localEulerAngles.x > 360.0f - maxRotation || transform.localEulerAngles.x < maxRotation)))
@@ -117,7 +125,20 @@ public class SC_SpaceshipMovement : MonoBehaviour
 
         // Disable all controls past this if movement not enabled
         if (!movementEnabled)
+        {
+            // Check if grounded
+            int layerMask = ~(1 << gameObject.layer);
+            Debug.DrawRay(transform.position + (transform.up * 0.5f), -transform.up * 2.5f, Color.red);
+            if (Physics.Raycast(transform.position + (transform.up * 0.5f), -transform.up, 2.5f, layerMask))
+            {
+                grounded = true;
+            }
+            else
+            {
+                grounded = false;
+            }
             return;
+        }
 
         // Lift        
         if ((liftInput > 0.0f && transform.position.y < maxHeight) || 
@@ -144,9 +165,9 @@ public class SC_SpaceshipMovement : MonoBehaviour
             invertLook = true;
     }
 
-    public void AddUpwardImpulse(float force)
+    public void AddImpulseForce(Vector3 dir, float force)
     {
-        _rb.AddRelativeForce(_rb.transform.up * _rb.mass * force, ForceMode.Impulse);
+        _rb.AddRelativeForce(dir * force * _rb.mass, ForceMode.Impulse);
     }
     
     // Set movement multiplier (should be between 0 and 1)
@@ -165,9 +186,15 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public void AllowMovement(bool allow)
     {
         if (allow)
+        {
             movementEnabled = true;
+            _rb.drag = 1f;
+        }
         else
+        {
             movementEnabled = false;
+            _rb.drag = 0f;
+        }
     }
 
     // Reset spaceship to starting position and enable movement
@@ -177,6 +204,6 @@ public class SC_SpaceshipMovement : MonoBehaviour
         _rb.velocity = Vector3.zero;
         _rb.AddForce((Vector3.up * 5.0f) * _rb.mass, ForceMode.Impulse);
         _rb.MoveRotation(Quaternion.identity);
-        movementEnabled = true;
+        AllowMovement(true);
     }
 }

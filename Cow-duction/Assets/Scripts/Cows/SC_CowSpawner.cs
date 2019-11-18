@@ -13,10 +13,13 @@ using System.Collections.Generic;
 public class SC_CowSpawner : MonoBehaviour
 {
     public GameObject cowPrefab;
+    [SerializeField] private GameObject[] cows = null; // Set up in inspector
+    [SerializeField] private float[] cowSpawnRatios = null; // Set up in inspector (as decimal out of 1, last ratio should be 1 to guarantee something spawns)
     public int maxCowAmount = 10;
     public float radius = 10.0f;
     public float spawnRate = 5f;
-    public int intialSpawnAmount = 9;
+    public int intialSpawnAmount = 9;    
+    [SerializeField] private float randomFactor = 0.1f;
     public List<GameObject> spawnPoints;
     public GameObject UFOLoc;
 
@@ -35,6 +38,8 @@ public class SC_CowSpawner : MonoBehaviour
         // Error checking
         if (cowPrefab == null)
             Debug.LogError("Cow prefab not assigned");
+        if (cows.Length < 1)
+            Debug.LogError("No cows assigned");
         if (maxCowAmount < 1)
             maxCowAmount = 10;
         if (radius < 1)
@@ -80,8 +85,43 @@ public class SC_CowSpawner : MonoBehaviour
         {
             float xPos = spawnPoint.transform.position.x + Random.Range(-radius, radius);
             float zPos = spawnPoint.transform.position.z + Random.Range(-radius, radius);
-            GameObject cowClone = Instantiate(cowPrefab, new Vector3(xPos, spawnPoint.transform.position.y, zPos), Quaternion.identity);
-            cowClone.transform.parent = this.transform;
+            for (int c = 0; c < cows.Length; c++)
+            {
+                if (Random.value <= cowSpawnRatios[c])
+                {
+                    GameObject cowClone = Instantiate(cows[c], new Vector3(xPos, spawnPoint.transform.position.y, zPos), Quaternion.identity);
+                    RandomizeCow(cowClone);
+                    cowClone.transform.parent = this.transform;
+                    break;
+                }
+            }
+            // GameObject cowClone = Instantiate(cowPrefab, new Vector3(xPos, spawnPoint.transform.position.y, zPos), Quaternion.identity);
+            // RandomizeCow(cowClone);
+            // cowClone.transform.parent = this.transform;
         }
+    }
+
+    private void RandomizeCow(GameObject cow)
+    {
+        SC_CowBrain cowBrain = cow.GetComponent<SC_CowBrain>();
+        Rigidbody cowRigidbody = cow.GetComponent<Rigidbody>();
+
+        float mass = cowRigidbody.mass;
+        float size = cow.transform.localScale.x; // Assume scale is uniform
+        float milk = cowBrain.GetMilk();
+        float maxSpeed = cowBrain.GetMaxSpeed();
+        float maxWanderTime = cowBrain.GetMaxWanderTime();
+
+        size = Random.Range(size - (size * randomFactor), size + (size * randomFactor));
+        mass = Random.Range(mass - (mass * randomFactor), mass + (mass * randomFactor)) + size;
+        milk = Random.Range(milk - (milk * randomFactor), milk + (milk * randomFactor)) + size;
+        maxSpeed = Random.Range(maxSpeed - (maxSpeed * randomFactor), maxSpeed + (maxSpeed * randomFactor)) + size;
+        maxWanderTime = Random.Range(maxWanderTime - (maxWanderTime * randomFactor), maxWanderTime + (maxWanderTime * randomFactor)) - size;
+
+        cowRigidbody.mass = mass;
+        cow.transform.localScale *= size;
+        cowBrain.SetMilk(milk);
+        cowBrain.SetMaxSpeed(maxSpeed);
+        cowBrain.SetMaxWanderTime(maxWanderTime);
     }
 }
