@@ -18,7 +18,7 @@ public class SC_CowSpawner : MonoBehaviour
     public float spawnRate = 5f;
     public int intialSpawnAmount = 9;
     public List<GameObject> spawnPoints;
-    public Transform UFOLoc;
+    public GameObject UFOLoc;
 
     [SerializeField] private int cowAmount = 0;
 
@@ -26,7 +26,7 @@ public class SC_CowSpawner : MonoBehaviour
     void Awake()
     {
         GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>().CowSpawner = this.gameObject;
-        UFOLoc = GameObject.Find("UFO").transform;
+        UFOLoc = GameObject.Find("UFO");
     }
 
     // Start is called before the first frame update
@@ -50,6 +50,7 @@ public class SC_CowSpawner : MonoBehaviour
     void Update()
     {
         cowAmount = GameObject.FindGameObjectsWithTag("Cow").Length;
+        
         if (cowAmount < maxCowAmount)
         {
             //Compare spawnpoints elapsed time
@@ -58,9 +59,8 @@ public class SC_CowSpawner : MonoBehaviour
             {
                 // ((1 + (k/n)) ^ n) / e ^ k where n is the distance between the ufo a given spawn
                 float fx = ( (Mathf.Pow(1 + (5 / Vector3.Distance(spawnPoints[i].transform.position, UFOLoc.transform.position)), Vector3.Distance(spawnPoints[i].transform.position, UFOLoc.transform.position)) / Mathf.Exp(5)));
-                // Debug.Log(i + "?" + Vector3.Distance(spawnPoints[i].transform.position, UFOLoc.transform.position) + "-" + fx);
+                Debug.Log(i + "?" + Vector3.Distance(spawnPoints[i].transform.position, UFOLoc.transform.position) + "-" + fx);
                 ElapsedTimes[i] = spawnPoints[i].GetComponent<SpawnPointTimer>().elapsedTime * fx;
-
             }
             float MaxSinceLastSpawn = Mathf.Max(ElapsedTimes);
             if(MaxSinceLastSpawn > spawnRate)
