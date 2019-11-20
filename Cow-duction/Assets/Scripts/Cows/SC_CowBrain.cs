@@ -79,7 +79,7 @@ public class SC_CowBrain : MonoBehaviour
                     SeekFood();
                 }
             }
-            if (m_Agent.remainingDistance <= 1f || wanderTime >= maxWanderTime)
+            if (m_Agent.remainingDistance <= fieldRadius)
             {
                 Wander();
                 if (m_AudioSource && cowMoo)
