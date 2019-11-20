@@ -1,6 +1,6 @@
 ﻿/*  SC_HudReticleFollowCursor.cs
 
-    Causes an object to follow the cursor position. 
+    Causes an object to follow the cursor position, or move by input from controller 2.
 
     Assumptions:
         This component belongs to a UI image.
@@ -17,6 +17,7 @@ public class SC_HudReticleFollowCursor : MonoBehaviour
     {
         if (Input.GetJoystickNames().Length > 1)
         {
+            // Take input from controller 2
             float horizontal = Input.GetAxis("ReticleHorizontal");
             float vertical = Input.GetAxis("ReticleVertical");
             
@@ -33,6 +34,7 @@ public class SC_HudReticleFollowCursor : MonoBehaviour
         }
         else
         {
+            // Use input mouse position
             transform.position = Input.mousePosition;
         }
     }

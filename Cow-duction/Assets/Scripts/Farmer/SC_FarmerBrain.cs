@@ -13,28 +13,23 @@ using UnityStandardAssets.Characters.FirstPerson;
 
 public class SC_FarmerBrain : SC_CowBrain
 {
-    // Private component references
-    private Transform targetTransform;
-    private Animator farmerAnimator;
-
     // Private variables
+    private Transform targetTransform;
+    private Animator farmerAnimator;    
     private float fireCooldown;
     private int ammoCount;
     private bool lockedOn;
     private bool seekingAmmo;
     
 
-    // Serialized private component references
+    // Serialized private variables
     [SerializeField] private Transform gunShotOrigin = null; // Set up in inspector
     [SerializeField] private GameObject projectile = null; // Set up in inspector
     [SerializeField] private AudioClip shotgunPump = null; // Set up in inspector
-    [SerializeField] private AudioClip shotgunShot = null; // Set up in inspector
-
-    // Serialized private variables
+    [SerializeField] private AudioClip shotgunShot = null; // Set up in inspector    
     [Space]
     [SerializeField] private float lockOnDistance = 20.0f;
     [SerializeField] private float lockOnSpeed = 5.0f;
-    // [SerializeField] private float normalSpeed = 10.0f;
     [SerializeField] private float aimSpeed = 5.0f;
     [SerializeField] private float projectileSpeed = 100.0f;
     [SerializeField] private float projectileLife = 5.0f;
@@ -55,6 +50,7 @@ public class SC_FarmerBrain : SC_CowBrain
         {
             SetPlayerControlled(false);
             m_Agent.destination = Random.insideUnitSphere * wanderRadius;
+            currentDestination = m_Agent.destination;
         }
         else
         {
@@ -69,10 +65,12 @@ public class SC_FarmerBrain : SC_CowBrain
         seekingAmmo = false;
         fireCooldown = fireRate;
         ammoCount = startingAmmo;
+        wandering = true;
+        Wander();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (m_Agent.enabled && m_Agent.isOnNavMesh && aiControlled)
         {
@@ -87,11 +85,11 @@ public class SC_FarmerBrain : SC_CowBrain
 
                 if (!seekingAmmo)
                 {
-                    if (wanderTime < maxWanderTime)
+                    if (wandering && wanderTime < maxWanderTime)
                     {
                         wanderTime += Time.deltaTime;
                     }
-                    else if (m_Agent.remainingDistance <= 1f)
+                    if (m_Agent.remainingDistance <= 1f || wanderTime >= maxWanderTime)
                     {
                         Wander();
                     }
@@ -104,6 +102,7 @@ public class SC_FarmerBrain : SC_CowBrain
             else if (!seekingAmmo)
             {
                 m_Agent.destination = new Vector3(targetTransform.position.x, 0, targetTransform.position.z);
+                currentDestination = m_Agent.destination;
                 
                 Quaternion targetRotation = Quaternion.LookRotation(targetTransform.position - m_Cam.transform.position);
                 m_Cam.transform.rotation = Quaternion.Slerp(m_Cam.transform.rotation, targetRotation, lockOnSpeed * Time.deltaTime);
@@ -204,6 +203,7 @@ public class SC_FarmerBrain : SC_CowBrain
                 }
             }
             m_Agent.destination = targetArea;
+            currentDestination = m_Agent.destination;
             m_Agent.stoppingDistance = fieldRadius;
             seekingAmmo = true;
         }
