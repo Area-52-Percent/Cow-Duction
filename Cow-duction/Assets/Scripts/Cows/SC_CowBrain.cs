@@ -22,6 +22,7 @@ public class SC_CowBrain : MonoBehaviour
     protected NavMeshAgent m_Agent;
     protected Camera m_Cam;
     protected AudioSource m_AudioSource;
+    protected Animator m_Animator;
     protected Vector3 currentDestination; // Keeps track of destination while agent disabled
     protected float wanderTime = 0.0f;
     protected bool wandering = true;
@@ -48,6 +49,7 @@ public class SC_CowBrain : MonoBehaviour
         m_Agent = GetComponent<NavMeshAgent>();
         m_Cam = GetComponentInChildren<Camera>();
         m_AudioSource = GetComponent<AudioSource>();
+        m_Animator = GetComponentInChildren<Animator>();
         rbFpController = GetComponent<RigidbodyFirstPersonController>();
         fields = GameObject.FindGameObjectsWithTag("Field");
         if (aiControlled)
@@ -86,6 +88,8 @@ public class SC_CowBrain : MonoBehaviour
                     m_AudioSource.PlayOneShot(cowMoo);
             }
         }
+        if (m_Animator)
+            m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
     }
 
     // Satisfy hunger on contact with field

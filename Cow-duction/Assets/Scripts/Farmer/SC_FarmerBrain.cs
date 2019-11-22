@@ -15,7 +15,6 @@ public class SC_FarmerBrain : SC_CowBrain
 {
     // Private variables
     private Transform targetTransform;
-    private Animator farmerAnimator;    
     private float fireCooldown;
     private int ammoCount;
     private bool lockedOn;
@@ -43,7 +42,7 @@ public class SC_FarmerBrain : SC_CowBrain
         m_Cam = GetComponentInChildren<Camera>();
         rbFpController = GetComponent<RigidbodyFirstPersonController>();
         targetTransform = GameObject.Find("UFO").transform;
-        farmerAnimator = GetComponentInChildren<Animator>();
+        m_Animator = GetComponentInChildren<Animator>();
         m_AudioSource = GetComponent<AudioSource>();
         fields = GameObject.FindGameObjectsWithTag("Field");
         if (aiControlled)
@@ -81,7 +80,7 @@ public class SC_FarmerBrain : SC_CowBrain
             if (!lockedOn)
             {
                 m_Cam.transform.rotation = Quaternion.Slerp(m_Cam.transform.rotation, transform.rotation, lockOnSpeed * Time.deltaTime);
-                farmerAnimator.transform.rotation = Quaternion.Slerp(farmerAnimator.transform.rotation, transform.rotation, lockOnSpeed * Time.deltaTime);
+                m_Animator.transform.rotation = Quaternion.Slerp(m_Animator.transform.rotation, transform.rotation, lockOnSpeed * Time.deltaTime);
 
                 if (!seekingAmmo)
                 {
@@ -108,7 +107,7 @@ public class SC_FarmerBrain : SC_CowBrain
                 m_Cam.transform.rotation = Quaternion.Slerp(m_Cam.transform.rotation, targetRotation, lockOnSpeed * Time.deltaTime);
                 
                 Vector3 farmerForward = new Vector3(m_Cam.transform.forward.x, 0, m_Cam.transform.forward.z);
-                farmerAnimator.transform.forward = Vector3.Lerp(farmerForward, farmerAnimator.transform.forward, lockOnSpeed * Time.deltaTime);
+                m_Animator.transform.forward = Vector3.Lerp(farmerForward, m_Animator.transform.forward, lockOnSpeed * Time.deltaTime);
 
                 if ((Vector3.Distance(transform.position, targetTransform.position) > lockOnDistance) ||
                     (!targetTransform.GetComponentInChildren<MeshRenderer>().enabled))
@@ -121,8 +120,8 @@ public class SC_FarmerBrain : SC_CowBrain
                 }
             }
         }
-        if (farmerAnimator)
-            farmerAnimator.SetFloat("speed", m_Agent.velocity.magnitude);
+        if (m_Animator)
+            m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
     }
 
     // Refill ammo on collision with field
@@ -161,8 +160,8 @@ public class SC_FarmerBrain : SC_CowBrain
         wandering = false;
         m_Agent.speed = aimSpeed;
         fireCooldown = 0.0f;
-        if (farmerAnimator)
-            farmerAnimator.SetBool("lockedOn", lockedOn);
+        if (m_Animator)
+            m_Animator.SetBool("lockedOn", lockedOn);
         if (m_AudioSource)
             m_AudioSource.PlayOneShot(shotgunPump);
     }
@@ -174,8 +173,8 @@ public class SC_FarmerBrain : SC_CowBrain
         wandering = true;
         m_Agent.speed = maxSpeed;
 
-        if (farmerAnimator)
-            farmerAnimator.SetBool("lockedOn", lockedOn);
+        if (m_Animator)
+            m_Animator.SetBool("lockedOn", lockedOn);
     }
 
     // Shoot a projectile from gunShotOrigin

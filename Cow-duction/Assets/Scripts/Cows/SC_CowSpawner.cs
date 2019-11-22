@@ -18,7 +18,7 @@ public class SC_CowSpawner : MonoBehaviour
     public int maxCowAmount = 10;
     public float radius = 10.0f;
     public float spawnRate = 5f;
-    public int intialSpawnAmount = 9;    
+    public int intialSpawnAmount = 9;
     [SerializeField] private float randomFactor = 0.1f;
     private List<GameObject> spawnPoints;
     public GameObject UFOLoc;

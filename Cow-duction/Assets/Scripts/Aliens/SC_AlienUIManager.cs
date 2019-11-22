@@ -40,15 +40,15 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private Color fuelStartColor = Color.white; // (Optional) Set up in inspector
     [SerializeField] private Color fuelDepletedColor = Color.red; // (Optional) Set up in inspector
     [SerializeField] private AudioClip activateAbility = null; // Set up in inspector
-    [SerializeField] private Image hudDisplay = null; // Set up in inspector    
+    [SerializeField] private Image hudDisplay = null; // Set up in inspector
     [Space] // Cow icon
     [SerializeField] private Image cowIcon = null; // Set up in inspector
     [SerializeField] private Sprite cowSprite = null; // Set up inspector
-    [SerializeField] private Sprite notCowSprite = null; // Set up in inspector    
+    [SerializeField] private Sprite notCowSprite = null; // Set up in inspector
     [Space] // Reticle icon
     [SerializeField] private Image reticle = null; // Set up in inspector
     [SerializeField] private Sprite normalReticle = null; // Set up in inspector
-    [SerializeField] private Sprite disabledReticle = null; // Set up in inspector    
+    [SerializeField] private Sprite disabledReticle = null; // Set up in inspector
     [Space] // Flight status
     [SerializeField] private Text scoreText = null; // Set up in inspector
     [SerializeField] private Text speedText = null; // Set up in inspector
@@ -58,7 +58,7 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private Slider fuelMeter = null; // Set up in inspector
     [SerializeField] private Image fuelMeterFill = null; // Set up in inspector
     [SerializeField] private Slider cooldownMeter = null; // Set up in inspector
-    [SerializeField] private Text cooldownReadyText = null; // Set up in inspector    
+    [SerializeField] private Text cooldownReadyText = null; // Set up in inspector
     [Space] // Non Gameplay UI Elements
     [SerializeField] private GameObject endScreen = null; // Set up in inspector
     [SerializeField] private Text finalScoreText = null; // Set up in inspector
