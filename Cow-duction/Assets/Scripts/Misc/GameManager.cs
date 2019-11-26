@@ -26,7 +26,6 @@ public class GameManager : MonoBehaviour
     public void ResetGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        Time.timeScale = 1;
 
         // Reset gameplay parameters to default values
         uiManager.ResetGame();

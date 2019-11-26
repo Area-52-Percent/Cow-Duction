@@ -14,12 +14,16 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class SC_Projectile : MonoBehaviour
 {
+    // Private variables
     private SC_AlienUIManager uIManager;
     private GameObject targetObject;
-    [SerializeField] private GameObject milkLeak = null; // Set up in inspector
+
+    // Serialized private variables
+    [SerializeField] private GameObject milkLeak = null; // Set up in inspector    
+    [SerializeField] private AudioClip projectileHit = null; // Set up in inspector
+    [Space]
     [SerializeField] private float projectileDamage = 5.0f;
     [SerializeField] private float knockbackForce = 3.0f;
-    [SerializeField] private AudioClip projectileHit = null; // Set up in inspector
 
     // Start is called before the first frame update
     void Start()

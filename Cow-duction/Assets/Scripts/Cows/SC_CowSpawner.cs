@@ -18,9 +18,9 @@ public class SC_CowSpawner : MonoBehaviour
     public int maxCowAmount = 10;
     public float radius = 10.0f;
     public float spawnRate = 5f;
-    public int intialSpawnAmount = 9;    
+    public int intialSpawnAmount = 9;
     [SerializeField] private float randomFactor = 0.1f;
-    public List<GameObject> spawnPoints;
+    private List<GameObject> spawnPoints;
     public GameObject UFOLoc;
 
     [SerializeField] private int cowAmount = 0;
@@ -30,6 +30,8 @@ public class SC_CowSpawner : MonoBehaviour
     {
         GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>().CowSpawner = this.gameObject;
         UFOLoc = GameObject.Find("UFO");
+        spawnPoints = new List<GameObject>();
+        spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("CowSpawn"));
     }
 
     // Start is called before the first frame update
@@ -95,9 +97,6 @@ public class SC_CowSpawner : MonoBehaviour
                     break;
                 }
             }
-            // GameObject cowClone = Instantiate(cowPrefab, new Vector3(xPos, spawnPoint.transform.position.y, zPos), Quaternion.identity);
-            // RandomizeCow(cowClone);
-            // cowClone.transform.parent = this.transform;
         }
     }
 
