@@ -122,7 +122,7 @@ public class SC_CowBrain : MonoBehaviour
     {
         yield return new WaitForSeconds(recoveryTime);
         
-        if (this)
+        if (this != null)
         {
             while (transform.localEulerAngles.z > 1f && transform.localEulerAngles.z < 359f)
             {
