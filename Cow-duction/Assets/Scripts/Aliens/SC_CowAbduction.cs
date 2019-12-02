@@ -65,8 +65,10 @@ public class SC_CowAbduction : MonoBehaviour
         // Create a line renderer if not set up
         if (!lineRenderer)
         {
+            Color lineColor = new Color(255f, 255f, 255f, 0.5f);
             lineRenderer = gameObject.AddComponent<LineRenderer>();
             lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            lineRenderer.startColor = lineColor;
             lineRenderer.widthMultiplier = 0.25f;
             lineRenderer.positionCount = 0;
         }
@@ -99,7 +101,7 @@ public class SC_CowAbduction : MonoBehaviour
                 
                 if (Physics.Raycast(ray, out hit, maxCaptureLength, layerMask))
                 {
-                    captureLength = Vector3.Distance(transform.position, hit.transform.position);
+                    captureLength = Vector3.Distance(grappleOrigin.position, hit.transform.position);
 
                     StartCoroutine(ShootGrapple(hit));
                 }
@@ -136,7 +138,14 @@ public class SC_CowAbduction : MonoBehaviour
                 brain = attachedObject.GetComponent<SC_FarmerBrain>();
             if (brain && brain.GetTugWhenGrappled())
             {
-                attachedRigidbody.AddForce((attachedObject.transform.position - transform.position).normalized * attachedRigidbody.mass, ForceMode.Impulse);
+                attachedRigidbody.AddForce((attachedObject.transform.position - grappleOrigin.position), ForceMode.Acceleration);
+                GetComponent<Rigidbody>().AddForce((attachedObject.transform.position - transform.position).normalized, ForceMode.Acceleration);
+
+                // Grapple breaks if attached object is too far
+                if (Vector3.Distance(transform.position, attachedObject.transform.position) > captureLength)
+                {
+                    GrappleRelease();
+                }
             }
             else
             {
@@ -146,20 +155,12 @@ public class SC_CowAbduction : MonoBehaviour
                 Debug.DrawRay(ray.origin, ray.direction * captureLength);
 
                 attachedRigidbody.AddForce(worldPoint - attachedObject.transform.position, ForceMode.Acceleration);
-            }
 
-            // Grapple breaks if attached object is too far
-            if (Vector3.Distance(transform.position, attachedObject.transform.position) > maxCaptureLength)
-            {
-                GrappleRelease();
-            }
-        }
-        else
-        {
-            // Set line renderer position to transform position
-            for (int pos = 0; pos < lineRenderer.positionCount; pos++)
-            {
-                lineRenderer.SetPosition(pos, transform.position);
+                // Grapple breaks if attached object is too far
+                if (Vector3.Distance(transform.position, attachedObject.transform.position) > maxCaptureLength)
+                {
+                    GrappleRelease();
+                }
             }
         }
     }
@@ -167,7 +168,7 @@ public class SC_CowAbduction : MonoBehaviour
     // Render a line to the object including any in-between joints
     private void RenderLine(GameObject obj)
     {
-        if (attachedObject)
+        if (obj == attachedObject)
         {
             // Set up points along each joint
             var points = new Vector3[numberOfJoints + 1];
@@ -211,7 +212,7 @@ public class SC_CowAbduction : MonoBehaviour
             RenderLine(probeClone);
             yield return null;
         }
-               
+        
         if (!AttachBody(hit))
         {
             // Hang at hit position briefly
@@ -226,7 +227,7 @@ public class SC_CowAbduction : MonoBehaviour
             // Retract the grapple if it did not attach to a cow or farmer
             counter = 0.0f;
             while (counter < grappleTime)
-            {            
+            {
                 counter += Time.fixedDeltaTime / grappleTime;
                 probeClone.transform.position = Vector3.Lerp(hit.point, grappleOrigin.position, counter / grappleTime);
                 RenderLine(probeClone);
@@ -273,7 +274,7 @@ public class SC_CowAbduction : MonoBehaviour
                     Rigidbody goRigidbody = go.AddComponent<Rigidbody>();
                     goRigidbody.mass = 0.1f;
                     goRigidbody.drag = 1.0f;
-                    goRigidbody.angularDrag = 1.0f;                    
+                    goRigidbody.angularDrag = 1.0f;
 
                     go.transform.position = (j + 1) * (transform.position - hit.transform.position) / (float)numberOfJoints;
 
@@ -297,7 +298,7 @@ public class SC_CowAbduction : MonoBehaviour
                     // attachedObjectJoints[j].connectedBody = GetComponent<Rigidbody>();
                     attachedObjectJoints[j].connectedBody = grappleOrigin.GetComponent<Rigidbody>();
                 else
-                    attachedObjectJoints[j].connectedBody = attachedObjectJoints[j - 1].gameObject.GetComponent<Rigidbody>();                
+                    attachedObjectJoints[j].connectedBody = attachedObjectJoints[j - 1].gameObject.GetComponent<Rigidbody>();
             }
             attachedObject = hit.transform.gameObject;
 
@@ -365,6 +366,13 @@ public class SC_CowAbduction : MonoBehaviour
             else
                 uiManager.ToggleCowIcon(false);
             uiManager.ToggleReticle();
+
+            // Enable attached object colliders if necessary
+            foreach (Collider col in attachedObject.GetComponents<Collider>())
+            {
+                if (col.isTrigger)
+                    col.isTrigger = false;
+            }
 
             attachedObject = null;
             attachedRigidbody.useGravity = true;
