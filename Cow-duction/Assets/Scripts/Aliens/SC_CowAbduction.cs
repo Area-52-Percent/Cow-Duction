@@ -311,11 +311,7 @@ public class SC_CowAbduction : MonoBehaviour
                 probeClone.transform.position = attachedObject.transform.position;
             }
 
-            // Toggle UI indicators
-            if (hit.transform.tag == "Cow")
-                uiManager.ToggleCowIcon(true);
-            else
-                uiManager.ToggleCowIcon(false);
+            // Toggle UI indicator
             uiManager.ToggleReticle();
 
             // Play grapple hit sfx
@@ -360,11 +356,7 @@ public class SC_CowAbduction : MonoBehaviour
             // Reset movement penalty
             spaceshipMovement.ResetMovementPenaltyFactor();
 
-            // Toggle UI indicators
-            if (attachedObject.tag == "Cow")
-                uiManager.ToggleCowIcon(true);
-            else
-                uiManager.ToggleCowIcon(false);
+            // Toggle UI indicator
             uiManager.ToggleReticle();
 
             // Enable attached object colliders if necessary
@@ -469,7 +461,7 @@ public class SC_CowAbduction : MonoBehaviour
             attachedObject = null;
             lineRenderer.enabled = false;
 
-            // Call the UI manager to increase score            
+            // Call the UI manager to increase score
             uiManager.IncreaseScore(col.GetComponent<SC_CowBrain>().GetMilk());
             uiManager.ToggleReticle();
 
