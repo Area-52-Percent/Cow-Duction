@@ -11,7 +11,10 @@ using UnityEngine;
 
 public class SC_RadarCamera : MonoBehaviour
 {
+    // Private variables
     private GameObject followObject;
+
+    // Serialized private variables
     [SerializeField] private float height = 15.0f;
 
     // Awake is called after all objects are initialized

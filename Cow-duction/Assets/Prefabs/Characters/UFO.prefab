@@ -1,52 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &172540546097281780
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4928547088307163962}
-  - component: {fileID: 8967025207825710538}
-  m_Layer: 13
-  m_Name: Beam Origin
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4928547088307163962
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 172540546097281780}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2175921359117653459}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &8967025207825710538
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 172540546097281780}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.2
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 112
-  m_CollisionDetection: 0
 --- !u!1 &2175921359117653471
 GameObject:
   m_ObjectHideFlags: 0
@@ -83,7 +36,6 @@ Transform:
   m_Children:
   - {fileID: 1009792947654107057}
   - {fileID: 2175921360886221582}
-  - {fileID: 4928547088307163962}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -236,7 +188,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2175921359117653471}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 100
   m_Drag: 1
   m_AngularDrag: 1
   m_UseGravity: 1
@@ -256,12 +208,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 032658b4fde3cf74eadbc683ee199f3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  beamOrigin: {fileID: 8967025207825710538}
+  grappleTime: 0.25
+  grappleCooldown: 0.5
   maxCaptureLength: 50
   numberOfJoints: 5
   captureSpeed: 10
-  attachedObject: {fileID: 0}
-  grappleTime: 0.25
+  reticle: {fileID: 0}
   probe: {fileID: 2843867613009940456, guid: 3bc77f8716a4e42d3b2da8649fe1b6bb, type: 3}
   grappleShot: {fileID: 0}
   grappleHit: {fileID: 0}
@@ -280,6 +232,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   horizontalSpeed: 20
+  groundSpeed: 10
   verticalSpeed: 10
   maxHeight: 50
   minHeight: 10
