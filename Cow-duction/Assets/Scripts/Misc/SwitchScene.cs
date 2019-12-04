@@ -8,7 +8,7 @@ public class SwitchScene : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.anyKey)
+        if (Input.anyKey && !Input.GetKey(KeyCode.Escape))
         {
             SceneManager.LoadScene(1, LoadSceneMode.Single);
         }

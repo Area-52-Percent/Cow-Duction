@@ -4,6 +4,7 @@
 */
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ResetButton : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class ResetButton : MonoBehaviour
     // Call reset game from game manager
     public void ResetGame()
     {
-        gameManager.ResetGame();
+        //gameManager.ResetGame();
+        SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
 }
