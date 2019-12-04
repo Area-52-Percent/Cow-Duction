@@ -133,12 +133,16 @@ public class SC_SpaceshipMovement : MonoBehaviour
         }
 
         // Hover if detecting object too close underneath
-        Debug.DrawRay(transform.position, Vector3.down * 3f, Color.cyan);
-        if (Physics.Raycast(transform.position, Vector3.down, hoverHeight))
+        Debug.DrawRay(transform.position, Vector3.down * hoverHeight, Color.cyan);
+        if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, hoverHeight))
         {
-            _rb.AddForce(Vector3.up * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
-            if (_rb.drag < 1f)
-                _rb.drag = 1f;
+            // Ignore trigger colliders
+            if (hit.collider && !hit.collider.isTrigger)
+            {
+                _rb.AddForce(Vector3.up * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
+                if (_rb.drag < 1f)
+                    _rb.drag = 1f;
+            }
         }
 
         // Disable all controls past this if movement not enabled
@@ -147,7 +151,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
             grounded = true;
             return;
         }
-        else
+        else if (grounded)
         {
             grounded = false;
         }
