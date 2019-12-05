@@ -34,9 +34,6 @@ public class SC_AlienUIManager : MonoBehaviour
 
     // Public variables
     public GameObject CowSpawner;
-    public InputField player1Input;
-    public InputField player2Input;
-    public GameObject InputField;
 
     // Serialized private variables
     [SerializeField] private Camera topDownCamera = null; // Set up in inspector
@@ -322,14 +319,7 @@ public class SC_AlienUIManager : MonoBehaviour
         else
             rating = "F";
         
-        //Check for a new highscore and Allow input if true
         finalScoreText.text = score + "\n\nRating: " + rating;
-        GameObject highscoreTable = GameObject.Find("highscoreTable");
-        HighscoreTable highscoreTableS = highscoreTable.GetComponent<HighscoreTable>();
-        if(highscoreTableS.NewHighScore(score))
-        {
-            InputField.SetActive(true);
-        }
         Time.timeScale = Mathf.Epsilon;
         endScreen.SetActive(true);
     }
@@ -442,20 +432,9 @@ public class SC_AlienUIManager : MonoBehaviour
         Start();
     }
 
-    //Adds current Score to highscore list
-    public void SaveScore()
+    public int GetScore()
     {
-        string player1Name = player1Input.text;
-        string player2Name = player2Input.text;
-        if (player1Name == "")
-            player1Name = "AAA";
-        if (player2Name == "")
-            player2Name = "AAA";
-        player1Name = player1Name.ToUpper();
-        player2Name = player2Name.ToUpper();
-        GameObject highscoreTable = GameObject.Find("highscoreTable");
-        HighscoreTable highscoreTableS = highscoreTable.GetComponent<HighscoreTable>();
-        highscoreTableS.AddHighscoreEntry(score, player1Name, player2Name);
+        return score;
     }
     // Exit the game or editor play session
     public void ExitGame()

@@ -9,12 +9,21 @@ public class HighscoreTable : MonoBehaviour
     private Transform entryTemplate;
     private List<HighscoreEntry> highscoreEntryList;
     private List<Transform> highscoreEntryTransformList;
+    public GameObject playerInput;
+    public InputField player1NameInput;
+    public InputField player2NameInput;
+    private int curScore;
 
     private void Awake()
     {
         //Find highscore list
         entryContainer = transform.Find("highscoreEntryContainer");
         entryTemplate = entryContainer.Find("highscoreEntryTemplate");
+        curScore = GameObject.Find("UI").GetComponent<SC_AlienUIManager>().GetScore();
+        if (NewHighScore(curScore))
+        {
+            playerInput.SetActive(true);
+        }
 
         entryTemplate.gameObject.SetActive(false);
         Highscores highscores = new Highscores();
@@ -103,6 +112,12 @@ public class HighscoreTable : MonoBehaviour
         PlayerPrefs.Save();
 
     }
+
+    public void SaveScore()
+    {
+        AddHighscoreEntry(curScore, player1NameInput.text, player2NameInput.text);
+    }
+
     //Check for a new highscore
     public bool NewHighScore(int i)
     {
