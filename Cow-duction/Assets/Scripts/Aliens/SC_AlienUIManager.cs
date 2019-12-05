@@ -23,7 +23,7 @@ public class SC_AlienUIManager : MonoBehaviour
     private AudioSource ufoAudioSource;
     private int score;
     private float fuel; // Percentage of 100
-    private float fuelDepletionRate = 1.0f;
+    private float fuelDepletionRate = 0.5f;
     private float fuelWarnAmount = 25.0f;
     private float abilityActiveTime = 3.0f;
     private float abilityCooldown; // Percentage of 100
@@ -85,7 +85,7 @@ public class SC_AlienUIManager : MonoBehaviour
         fuel = 100.0f;
         abilityCooldown = 100.0f;
         cooldownActive = false;
-        timeRemaining = 240.0f;
+        timeRemaining = 270.0f;
         if (timeScaleFactor < Mathf.Epsilon)
             timeScaleFactor = 1.0f;
         Time.timeScale = timeScaleFactor;
@@ -286,7 +286,8 @@ public class SC_AlienUIManager : MonoBehaviour
 
     private IEnumerator PlayIntro()
     {
-        yield return new WaitForSeconds(introTime);
+        while (ufoAudioSource.isPlaying)
+            yield return null;
 
         holoCow.SetActive(false);
         holoFarmer.SetActive(false);
