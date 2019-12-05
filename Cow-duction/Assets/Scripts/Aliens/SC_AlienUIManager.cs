@@ -63,6 +63,7 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private GameObject parameterScreen = null; // Set up in inspector
     [SerializeField] private GameObject holoCow = null; // Intro cow hologram
     [SerializeField] private GameObject holoFarmer = null; // Intro farmer hologram
+    [SerializeField] private Image controllerScreen = null; // Intro controls
     [SerializeField] private float introTime = 45.0f;
 
     // Awake is called after all objects are initialized
@@ -73,6 +74,8 @@ public class SC_AlienUIManager : MonoBehaviour
         ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
         transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
         reticleFollowCursor = reticle.GetComponent<SC_HudReticleFollowCursor>();
+        
+        introTime = ufoAudioSource.clip.length;
     }
 
     // Start is called before the first frame update
@@ -94,6 +97,8 @@ public class SC_AlienUIManager : MonoBehaviour
         endScreen.SetActive(false);
         parameterScreen.SetActive(false);
         helpScreen.SetActive(false);
+
+        controllerScreen.CrossFadeAlpha(0f, 0f, false);
 
         StartCoroutine(PlayIntro());
     }
@@ -287,8 +292,16 @@ public class SC_AlienUIManager : MonoBehaviour
     private IEnumerator PlayIntro()
     {
         while (ufoAudioSource.isPlaying)
+        {
+            if (ufoAudioSource.time > introTime * 0.75f)
+            {
+                controllerScreen.CrossFadeAlpha(1f, 0.5f, false);
+            }
+            introTime -= Time.fixedDeltaTime;
             yield return null;
+        }
 
+        controllerScreen.CrossFadeAlpha(0f, 0.5f, false);
         holoCow.SetActive(false);
         holoFarmer.SetActive(false);
     }
