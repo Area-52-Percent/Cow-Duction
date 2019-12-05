@@ -132,21 +132,24 @@ public class SC_SpaceshipMovement : MonoBehaviour
             }
         }
 
+        // Hover if detecting object too close underneath
+        Debug.DrawRay(transform.position, Vector3.down * 3f, Color.cyan);
+        if (Physics.Raycast(transform.position, Vector3.down, hoverHeight))
+        {
+            _rb.AddForce(Vector3.up * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
+            if (_rb.drag < 1f)
+                _rb.drag = 1f;
+        }
+
         // Disable all controls past this if movement not enabled
         if (!movementEnabled)
         {
-            // Check if grounded
-            int layerMask = ~(1 << gameObject.layer);
-            Debug.DrawRay(transform.position + (transform.up * 0.5f), -transform.up * 2.5f, Color.red);
-            if (Physics.Raycast(transform.position + (transform.up * 0.5f), -transform.up, 2.5f, layerMask))
-            {
-                grounded = true;
-            }
-            else
-            {
-                grounded = false;
-            }
+            grounded = true;
             return;
+        }
+        else
+        {
+            grounded = false;
         }
 
         // Lift
@@ -154,12 +157,6 @@ public class SC_SpaceshipMovement : MonoBehaviour
             (liftInput < 0.0f && transform.position.y > minHeight))
         {
             _rb.AddForce(Vector3.up * liftInput * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
-        }
-
-        // Hover if detecting object too close underneath
-        if (Physics.Raycast(transform.position, Vector3.down, hoverHeight))
-        {
-            _rb.AddForce(Vector3.up * verticalSpeed * movementPenaltyFactor, ForceMode.Acceleration);
         }
 
         // Constant upward force keeping the spaceship floating
@@ -200,13 +197,11 @@ public class SC_SpaceshipMovement : MonoBehaviour
         {
             movementEnabled = true;
             _rb.drag = 1f;
-            _rb.angularDrag = 1f;
         }
         else
         {
             movementEnabled = false;
             _rb.drag = 0f;
-            _rb.angularDrag = 0.05f;
         }
     }
 

@@ -26,7 +26,7 @@ public class SC_AlienUIManager : MonoBehaviour
     private float fuelDepletionRate = 1.0f;
     private float fuelWarnAmount = 25.0f;
     private float abilityActiveTime = 3.0f;
-    private float abilityCooldown; // Percentage of 100    
+    private float abilityCooldown; // Percentage of 100
     private float cooldownRegenerationRate = 5.0f;
     private bool cooldownActive;
     private float timeRemaining; // In seconds
@@ -41,10 +41,7 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private Color fuelDepletedColor = Color.red; // (Optional) Set up in inspector
     [SerializeField] private AudioClip activateAbility = null; // Set up in inspector
     [SerializeField] private Image hudDisplay = null; // Set up in inspector
-    [Space] // Cow icon
-    [SerializeField] private Image cowIcon = null; // Set up in inspector
-    [SerializeField] private Sprite cowSprite = null; // Set up inspector
-    [SerializeField] private Sprite notCowSprite = null; // Set up in inspector
+    [SerializeField] private Slider milkSlide = null; // Set up in inspector
     [Space] // Reticle icon
     [SerializeField] private Image reticle = null; // Set up in inspector
     [SerializeField] private Sprite normalReticle = null; // Set up in inspector
@@ -64,6 +61,9 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private Text finalScoreText = null; // Set up in inspector
     [SerializeField] private GameObject helpScreen = null; // Set up in inspector
     [SerializeField] private GameObject parameterScreen = null; // Set up in inspector
+    [SerializeField] private GameObject holoCow = null; // Intro cow hologram
+    [SerializeField] private GameObject holoFarmer = null; // Intro farmer hologram
+    [SerializeField] private float introTime = 45.0f;
 
     // Awake is called after all objects are initialized
     void Awake()
@@ -81,7 +81,6 @@ public class SC_AlienUIManager : MonoBehaviour
         // Initialize values for private variables
         score = 0;
         scoreText.text = score.ToString("D2");
-        cowIcon.enabled = false;
         reticle.sprite = normalReticle;
         fuel = 100.0f;
         abilityCooldown = 100.0f;
@@ -95,6 +94,8 @@ public class SC_AlienUIManager : MonoBehaviour
         endScreen.SetActive(false);
         parameterScreen.SetActive(false);
         helpScreen.SetActive(false);
+
+        StartCoroutine(PlayIntro());
     }
 
     // Update is called once per frame
@@ -177,36 +178,20 @@ public class SC_AlienUIManager : MonoBehaviour
             reticle.sprite = normalReticle;
     }
 
-    // Enable or disable cow icon
-    public void ToggleCowIcon(bool cow)
-    {
-        if (cow)
-            cowIcon.sprite = cowSprite;
-        else
-            cowIcon.sprite = notCowSprite;
-
-        if (cowIcon.enabled)
-            cowIcon.enabled = false;
-        else
-            cowIcon.enabled = true;
-    }
-
     // Animate cow icon downwards
     private IEnumerator AnimateIncreaseScore()
     {
-        RectTransform cowIconTransform;
-        Vector2 iconStartPosition;
-
-        if (cowIconTransform = cowIcon.GetComponent<RectTransform>())
+        milkSlide.direction = Slider.Direction.TopToBottom;
+        while (milkSlide.value < 1.0f)
         {
-            iconStartPosition = cowIconTransform.anchoredPosition;
-            while (cowIconTransform.anchoredPosition.y > 0)
-            {
-                cowIconTransform.anchoredPosition += Vector2.down * 5;
-                yield return null;
-            }
-            ToggleCowIcon(true);
-            cowIconTransform.anchoredPosition = iconStartPosition;
+            milkSlide.value += Time.deltaTime;
+            yield return null;
+        }
+        milkSlide.direction = Slider.Direction.BottomToTop;
+        while (milkSlide.value > 0.0f)
+        {
+            milkSlide.value -= Time.deltaTime;
+            yield return null;
         }
     }
 
@@ -228,7 +213,7 @@ public class SC_AlienUIManager : MonoBehaviour
         if (fuel > 0.0f)
             if (_rbUFO.GetComponent<SC_SpaceshipMovement>())
                 _rbUFO.GetComponent<SC_SpaceshipMovement>().AllowMovement(true);
-    }  
+    }
 
     // Fade out HUD and disable mesh for <abilityActiveTime> seconds then fade HUD back in and re-enable mesh
     public IEnumerator UseAbility()
@@ -297,6 +282,14 @@ public class SC_AlienUIManager : MonoBehaviour
         {
             image.color = Color.Lerp(Color.white, Color.red, Time.deltaTime);
         }
+    }
+
+    private IEnumerator PlayIntro()
+    {
+        yield return new WaitForSeconds(introTime);
+
+        holoCow.SetActive(false);
+        holoFarmer.SetActive(false);
     }
 
     // Show the endscreen (TO-DO: Replace hard-coded values)

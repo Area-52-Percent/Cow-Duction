@@ -41,10 +41,16 @@ public class SC_CowAbduction : MonoBehaviour
     // Serialized private variables
     [SerializeField] private GameObject reticle = null; // Set up in inspector
     [SerializeField] private GameObject probe = null; // Set up in inspector
+    [SerializeField] private Transform grappleOrigin = null; // Set up in inspector
     [SerializeField] private AudioClip grappleShot = null; // Set up in inspector
     [SerializeField] private AudioClip grappleHit = null; // Set up in inspector
     [SerializeField] private AudioClip cowSuction = null; // Set up in inspector
     [SerializeField] private LineRenderer lineRenderer; // (Optional) Set up in inspector
+
+    public GameObject GetAttachedObject()
+    {
+        return attachedObject;
+    }
 
     // Awake is called after all objects are initialized
     private void Awake()
@@ -59,12 +65,19 @@ public class SC_CowAbduction : MonoBehaviour
         // Create a line renderer if not set up
         if (!lineRenderer)
         {
+            Color lineColor = new Color(255f, 255f, 255f, 0.5f);
             lineRenderer = gameObject.AddComponent<LineRenderer>();
             lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-            lineRenderer.widthMultiplier = 0.5f;
+            lineRenderer.startColor = lineColor;
+            lineRenderer.widthMultiplier = 0.25f;
             lineRenderer.positionCount = 0;
         }
         lineRenderer.enabled = false;
+
+        if (!grappleOrigin)
+        {
+            grappleOrigin = transform;
+        }
 
         attachedObjectJoints = new ConfigurableJoint[numberOfJoints];
         grappling = false;
@@ -85,10 +98,10 @@ public class SC_CowAbduction : MonoBehaviour
                 RaycastHit hit;
                 // Ignore UFO layer
                 int layerMask = ~(1 << gameObject.layer);
-                                
+                
                 if (Physics.Raycast(ray, out hit, maxCaptureLength, layerMask))
                 {
-                    captureLength = Vector3.Distance(transform.position, hit.transform.position);
+                    captureLength = Vector3.Distance(grappleOrigin.position, hit.transform.position);
 
                     StartCoroutine(ShootGrapple(hit));
                 }
@@ -125,21 +138,29 @@ public class SC_CowAbduction : MonoBehaviour
                 brain = attachedObject.GetComponent<SC_FarmerBrain>();
             if (brain && brain.GetTugWhenGrappled())
             {
-                attachedRigidbody.AddForce((attachedObject.transform.position - transform.position).normalized * attachedRigidbody.mass, ForceMode.Impulse);                
-            }
+                attachedRigidbody.AddForce((attachedObject.transform.position - grappleOrigin.position), ForceMode.Acceleration);
+                GetComponent<Rigidbody>().AddForce((attachedObject.transform.position - transform.position).normalized, ForceMode.Acceleration);
 
-            // Grapple breaks if attached object is too far
-            if (Vector3.Distance(transform.position, attachedObject.transform.position) > maxCaptureLength)
-            {
-                GrappleRelease();
+                // Grapple breaks if attached object is too far
+                if (Vector3.Distance(transform.position, attachedObject.transform.position) > captureLength)
+                {
+                    GrappleRelease();
+                }
             }
-        }
-        else
-        {
-            // Set line renderer position to transform position
-            for (int pos = 0; pos < lineRenderer.positionCount; pos++)
+            else
             {
-                lineRenderer.SetPosition(pos, transform.position);
+                Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, reticle.GetComponent<RectTransform>().position);
+                Ray ray = Camera.main.ScreenPointToRay(reticlePoint);
+                Vector3 worldPoint = ray.origin + (ray.direction * captureLength);
+                Debug.DrawRay(ray.origin, ray.direction * captureLength);
+
+                attachedRigidbody.AddForce(worldPoint - attachedObject.transform.position, ForceMode.Acceleration);
+
+                // Grapple breaks if attached object is too far
+                if (Vector3.Distance(transform.position, attachedObject.transform.position) > maxCaptureLength)
+                {
+                    GrappleRelease();
+                }
             }
         }
     }
@@ -147,11 +168,11 @@ public class SC_CowAbduction : MonoBehaviour
     // Render a line to the object including any in-between joints
     private void RenderLine(GameObject obj)
     {
-        if (attachedObject)
+        if (obj == attachedObject)
         {
             // Set up points along each joint
             var points = new Vector3[numberOfJoints + 1];
-            points[0] = transform.position;
+            points[0] = grappleOrigin.position;
             for (int j = 0; j < numberOfJoints; j++)
             {
                 points[j + 1] = attachedObjectJoints[j].transform.position;
@@ -163,7 +184,7 @@ public class SC_CowAbduction : MonoBehaviour
         {
             // Set up two points for a straight line
             var points = new Vector3[2];
-            points[0] = transform.position;
+            points[0] = grappleOrigin.position;
             points[1] = obj.transform.position;
             lineRenderer.positionCount = points.Length;
             lineRenderer.SetPositions(points);
@@ -178,20 +199,20 @@ public class SC_CowAbduction : MonoBehaviour
         grappling = true;
 
         if (probe)
-            probeClone = Instantiate(probe, transform.position, Quaternion.identity);
+            probeClone = Instantiate(probe, grappleOrigin.position, Quaternion.identity);
         
-        GetComponent<AudioSource>().PlayOneShot(grappleShot, 0.5f);        
+        GetComponent<AudioSource>().PlayOneShot(grappleShot, 0.5f);
         
         // Extend the grapple
         float counter = 0.0f;
         while (counter < grappleTime)
         {
             counter += Time.fixedDeltaTime / grappleTime;
-            probeClone.transform.position = Vector3.Lerp(transform.position, hit.point, counter / grappleTime);
+            probeClone.transform.position = Vector3.Lerp(grappleOrigin.position, hit.point, counter / grappleTime);
             RenderLine(probeClone);
             yield return null;
         }
-               
+        
         if (!AttachBody(hit))
         {
             // Hang at hit position briefly
@@ -206,9 +227,9 @@ public class SC_CowAbduction : MonoBehaviour
             // Retract the grapple if it did not attach to a cow or farmer
             counter = 0.0f;
             while (counter < grappleTime)
-            {            
+            {
                 counter += Time.fixedDeltaTime / grappleTime;
-                probeClone.transform.position = Vector3.Lerp(hit.point, transform.position, counter / grappleTime);
+                probeClone.transform.position = Vector3.Lerp(hit.point, grappleOrigin.position, counter / grappleTime);
                 RenderLine(probeClone);
                 yield return null;
             }
@@ -223,6 +244,7 @@ public class SC_CowAbduction : MonoBehaviour
         if (hit.rigidbody)
         {
             attachedRigidbody = hit.rigidbody;
+            attachedRigidbody.useGravity = false;
 
             // Disable AI while attached
             if (hit.transform.gameObject.GetComponent<NavMeshAgent>())
@@ -252,7 +274,7 @@ public class SC_CowAbduction : MonoBehaviour
                     Rigidbody goRigidbody = go.AddComponent<Rigidbody>();
                     goRigidbody.mass = 0.1f;
                     goRigidbody.drag = 1.0f;
-                    goRigidbody.angularDrag = 1.0f;                    
+                    goRigidbody.angularDrag = 1.0f;
 
                     go.transform.position = (j + 1) * (transform.position - hit.transform.position) / (float)numberOfJoints;
 
@@ -273,9 +295,10 @@ public class SC_CowAbduction : MonoBehaviour
                 attachedObjectJoints[j].linearLimit = softJointLimit;
                 // The first joint is connected to the UFO
                 if (j == 0)
-                    attachedObjectJoints[j].connectedBody = GetComponent<Rigidbody>();
+                    // attachedObjectJoints[j].connectedBody = GetComponent<Rigidbody>();
+                    attachedObjectJoints[j].connectedBody = grappleOrigin.GetComponent<Rigidbody>();
                 else
-                    attachedObjectJoints[j].connectedBody = attachedObjectJoints[j - 1].gameObject.GetComponent<Rigidbody>();                
+                    attachedObjectJoints[j].connectedBody = attachedObjectJoints[j - 1].gameObject.GetComponent<Rigidbody>();
             }
             attachedObject = hit.transform.gameObject;
 
@@ -288,11 +311,7 @@ public class SC_CowAbduction : MonoBehaviour
                 probeClone.transform.position = attachedObject.transform.position;
             }
 
-            // Toggle UI indicators
-            if (hit.transform.tag == "Cow")
-                uiManager.ToggleCowIcon(true);
-            else
-                uiManager.ToggleCowIcon(false);
+            // Toggle UI indicator
             uiManager.ToggleReticle();
 
             // Play grapple hit sfx
@@ -337,14 +356,19 @@ public class SC_CowAbduction : MonoBehaviour
             // Reset movement penalty
             spaceshipMovement.ResetMovementPenaltyFactor();
 
-            // Toggle UI indicators
-            if (attachedObject.tag == "Cow")
-                uiManager.ToggleCowIcon(true);
-            else
-                uiManager.ToggleCowIcon(false);
+            // Toggle UI indicator
             uiManager.ToggleReticle();
 
+            // Enable attached object colliders if necessary
+            foreach (Collider col in attachedObject.GetComponents<Collider>())
+            {
+                if (col.isTrigger)
+                    col.isTrigger = false;
+            }
+
             attachedObject = null;
+            attachedRigidbody.useGravity = true;
+            attachedRigidbody = null;
         }
     }
 
@@ -363,8 +387,8 @@ public class SC_CowAbduction : MonoBehaviour
                 foreach(ConfigurableJoint cj in attachedObjectJoints)
                     cj.linearLimit = softJointLimit;
                 
-                // Apply force on attached body towards UFO
-                attachedRigidbody.AddForce((transform.position - attachedObject.transform.position).normalized, ForceMode.Acceleration);
+                // Apply force on UFO for physical feedback
+                GetComponent<Rigidbody>().AddForceAtPosition((grappleOrigin.position - attachedObject.transform.position).normalized, grappleOrigin.position, ForceMode.Acceleration);
             }
             else
             {
@@ -372,7 +396,7 @@ public class SC_CowAbduction : MonoBehaviour
                 if (attachedObject.tag == "Cow")
                 {
                     // Release cow if object in between UFO and cow
-                    if (Physics.Raycast(transform.position, (attachedObject.transform.position - transform.position), out RaycastHit hit))
+                    if (Physics.Raycast(grappleOrigin.position, (attachedObject.transform.position - grappleOrigin.position), out RaycastHit hit))
                     {
                         if (hit.collider.tag != "Cow")
                         {
@@ -386,7 +410,7 @@ public class SC_CowAbduction : MonoBehaviour
                                 col.isTrigger = true;
                             }
                             // Spring attached body towards UFO
-                            attachedRigidbody.AddForce((transform.position - attachedObject.transform.position) * attachedRigidbody.mass, ForceMode.Impulse);
+                            attachedRigidbody.AddForce((grappleOrigin.position - attachedObject.transform.position) * attachedRigidbody.mass, ForceMode.Impulse);
                         }
                     }
                 }
@@ -437,7 +461,7 @@ public class SC_CowAbduction : MonoBehaviour
             attachedObject = null;
             lineRenderer.enabled = false;
 
-            // Call the UI manager to increase score            
+            // Call the UI manager to increase score
             uiManager.IncreaseScore(col.GetComponent<SC_CowBrain>().GetMilk());
             uiManager.ToggleReticle();
 
