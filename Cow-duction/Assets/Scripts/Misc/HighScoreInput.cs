@@ -23,65 +23,49 @@ public class HighScoreInput : MonoBehaviour
         player1Input[player1position].fontStyle = FontStyle.BoldAndItalic;
         player2Input[player2position].fontStyle = FontStyle.BoldAndItalic;
     }
-    void FixedUpdate()
+    void Update()
     {
         if(inputField.activeSelf)
         {
-            bool isRight = (Input.GetAxis("P1DPADX") < -0.1f) ? true : false;
-
-            bool isLeft = (Input.GetAxis("P1DPADX") > 0.1f) ? true : false;
-
-            bool isDown = (Input.GetAxis("P1DPADY") < -0.1f) ? true : false;
-
-            bool isUp = (Input.GetAxis("P1DPADY") > 0.1f) ? true : false;
-            bool is2Right = (Input.GetAxis("P2DPADX") < -0.1f) ? true : false;
-
-            bool is2Left = (Input.GetAxis("P2DPADX") > 0.1f) ? true : false;
-
-            bool is2Down = (Input.GetAxis("P2DPADY") < -0.1f) ? true : false;
-
-            bool is2Up = (Input.GetAxis("P2DPADY") > 0.1f) ? true : false;
-            if(isUp) //player 1 input up
+            if(Input.GetButtonDown("P1UP")) //player 1 input up
             {
                 player1Index[player1position] = Increase(player1Input[player1position], player1Index[player1position]);
             }
-            if(is2Up) //player2 input up
+            if(Input.GetButtonDown("P2UP")) //player2 input up
             {
                 player2Index[player2position] = Increase(player2Input[player2position], player2Index[player2position]);
             }
-            if (isDown) //player 1 input down
+            if (Input.GetButtonDown("P1DOWN")) //player 1 input down
             {
                 player1Index[player1position] = Decrease(player1Input[player1position], player1Index[player1position]);
             }
-            if (is2Down) //player2 input down
+            if (Input.GetButtonDown("P2DOWN")) //player2 input down
             {
                 player2Index[player2position] = Decrease(player2Input[player2position], player2Index[player2position]);
             }
-            if (isLeft) //player 1 input left
+            if (Input.GetButtonDown("P1LEFT")) //player 1 input left
             {
                 player1Input[player1position].fontStyle = FontStyle.Bold;
                 player1position--;
                 if (player1position < 0)
                     player1position = 2;
                 player1Input[player1position].fontStyle = FontStyle.BoldAndItalic;
-
             }
-            if (is2Left) //player2 input left
+            if (Input.GetButtonDown("P2LEFT")) //player2 input left
             {
                 player2Input[player2position].fontStyle = FontStyle.Bold;
                 player2position--;
                 if (player2position < 0)
                     player2position = 2;
                 player2Input[player2position].fontStyle = FontStyle.BoldAndItalic;
-
             }
-            if (isRight) //player 1 input right
+            if (Input.GetButtonDown("P1RIGHT")) //player 1 input right
             {
                 player1Input[player1position].fontStyle = FontStyle.Bold;
                 player1position = (player1position + 1) % 3;
                 player1Input[player1position].fontStyle = FontStyle.BoldAndItalic;
             }
-            if (is2Right) //player2 input right
+            if (Input.GetButtonDown("P2RIGHT")) //player2 input right
             {
                 player2Input[player2position].fontStyle = FontStyle.Bold;
                 player2position = (player2position + 1) % 3;
@@ -92,6 +76,7 @@ public class HighScoreInput : MonoBehaviour
     public int Increase(Text t, int index)
     {
         index = (index + 1) % 26;
+        Debug.Log(index + "/" + Alphabet[index].ToString());
         t.text = Alphabet[index].ToString();
         return index;
 
