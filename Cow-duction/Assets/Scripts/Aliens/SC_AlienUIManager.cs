@@ -37,6 +37,7 @@ public class SC_AlienUIManager : MonoBehaviour
 
     // Public variables
     public GameObject CowSpawner;
+    public float playTime = 270.0f;
 
     // Serialized private variables
     [SerializeField] private Camera topDownCamera = null; // Set up in inspector
@@ -100,8 +101,7 @@ public class SC_AlienUIManager : MonoBehaviour
         reticle.sprite = normalReticle;
         fuel = 100.0f;
         abilityCooldown = 100.0f;
-        cooldownActive = false;
-        timeRemaining = 270.0f;
+        cooldownActive = false; 
         if (timeScaleFactor < Mathf.Epsilon)
             timeScaleFactor = 1.0f;
         Time.timeScale = timeScaleFactor;
@@ -137,7 +137,10 @@ public class SC_AlienUIManager : MonoBehaviour
             if (playIntro)
                 StartCoroutine(PlayIntro());
             else
+            {
+                timeRemaining = playTime;
                 gameManager.SetMusicVolume(0.25f);
+            }
         }
     }
 
@@ -211,8 +214,11 @@ public class SC_AlienUIManager : MonoBehaviour
                 int seconds = Mathf.FloorToInt(timeRemaining % 60.0f);
                 timeText.text = minutes + ":" + seconds.ToString("D2");
 
-                if (minutes < 1 && timeText.color != Color.red)
-                    timeText.color = Color.red;
+                if (minutes < 1)
+                {
+                    if (timeText.color != Color.red)
+                        timeText.color = Color.red;
+                }
                 else if (timeText.color != Color.white)
                     timeText.color = Color.white;
 
@@ -400,7 +406,7 @@ public class SC_AlienUIManager : MonoBehaviour
         holoFarmer.SetActive(false);
         gameManager.SetMusicVolume(0.25f);
 
-        timeRemaining = 270.0f;
+        timeRemaining = playTime;
     }
 
     // Show the endscreen (TO-DO: Replace hard-coded values)
@@ -421,10 +427,21 @@ public class SC_AlienUIManager : MonoBehaviour
         else if (score > 9)
             rating = "D";
         else
+        {
             rating = "F";
+
+            GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
+            foreach (GameObject farmer in farmers)
+            {
+                Animator farmerAnimator = farmer.GetComponentInChildren<Animator>();
+                if (farmerAnimator)
+                {
+                    farmerAnimator.SetBool("celebrate", true);
+                }
+            }
+        }
         
         finalScoreText.text = score + "\n\nRating: " + rating;
-        Time.timeScale = Mathf.Epsilon;
         endScreen.SetActive(true);
     }
 

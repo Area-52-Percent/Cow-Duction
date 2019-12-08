@@ -74,6 +74,12 @@ public class SC_FarmerBrain : SC_CowBrain
     // Update is called once per frame
     private void Update()
     {
+        if (m_Animator.GetBool("celebrate"))
+        {
+            m_Agent.speed = 0f;
+            return;
+        }
+
         if (m_Agent.enabled && m_Agent.isOnNavMesh && aiControlled)
         {
             if (fireCooldown < fireRate)
@@ -133,9 +139,10 @@ public class SC_FarmerBrain : SC_CowBrain
                     FireWeapon();
                 }
             }
+
+            if (m_Animator)
+                m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
         }
-        if (m_Animator)
-            m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
     }
 
     // Refill ammo on collision with field
