@@ -117,6 +117,15 @@ public class HighscoreTable : MonoBehaviour
     public void SaveScore()
     {
         AddHighscoreEntry(curScore,(player1NameInput[0].text + player1NameInput[1].text + player1NameInput[2].text ), (player2NameInput[0].text + player2NameInput[1].text + player2NameInput[2].text));
+        highscoreEntryTransformList = new List<Transform>();
+        Highscores highscores = new Highscores();
+        string jsonString = PlayerPrefs.GetString("highscoreTable");
+        highscores = JsonUtility.FromJson<Highscores>(jsonString);
+            foreach (HighscoreEntry highscoreEntry in highscores.highscoreEntryList)
+        {
+            CreateHighscoreEntryTransform(highscoreEntry, entryContainer, highscoreEntryTransformList);
+        }
+        GameObject.Find("saveScoreButton").SetActive(false);
     }
 
     //Check for a new highscore

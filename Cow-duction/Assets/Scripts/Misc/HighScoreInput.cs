@@ -31,7 +31,7 @@ public class HighScoreInput : MonoBehaviour
             {
                 player1Index[player1position] = Increase(player1Input[player1position], player1Index[player1position]);
             }
-            if(Input.GetButtonDown("P2UP")) //player2 input up
+            if(Input.GetButtonDown("P2UP") && Input.GetJoystickNames().Length > 1) //player2 input up
             {
                 player2Index[player2position] = Increase(player2Input[player2position], player2Index[player2position]);
             }
@@ -39,7 +39,7 @@ public class HighScoreInput : MonoBehaviour
             {
                 player1Index[player1position] = Decrease(player1Input[player1position], player1Index[player1position]);
             }
-            if (Input.GetButtonDown("P2DOWN")) //player2 input down
+            if (Input.GetButtonDown("P2DOWN") && Input.GetJoystickNames().Length > 1) //player2 input down
             {
                 player2Index[player2position] = Decrease(player2Input[player2position], player2Index[player2position]);
             }
@@ -51,7 +51,7 @@ public class HighScoreInput : MonoBehaviour
                     player1position = 2;
                 player1Input[player1position].fontStyle = FontStyle.BoldAndItalic;
             }
-            if (Input.GetButtonDown("P2LEFT")) //player2 input left
+            if (Input.GetButtonDown("P2LEFT") && Input.GetJoystickNames().Length > 1) //player2 input left
             {
                 player2Input[player2position].fontStyle = FontStyle.Bold;
                 player2position--;
@@ -65,7 +65,7 @@ public class HighScoreInput : MonoBehaviour
                 player1position = (player1position + 1) % 3;
                 player1Input[player1position].fontStyle = FontStyle.BoldAndItalic;
             }
-            if (Input.GetButtonDown("P2RIGHT")) //player2 input right
+            if (Input.GetButtonDown("P2RIGHT") && Input.GetJoystickNames().Length > 1) //player2 input right
             {
                 player2Input[player2position].fontStyle = FontStyle.Bold;
                 player2position = (player2position + 1) % 3;
@@ -76,7 +76,6 @@ public class HighScoreInput : MonoBehaviour
     public int Increase(Text t, int index)
     {
         index = (index + 1) % 26;
-        Debug.Log(index + "/" + Alphabet[index].ToString());
         t.text = Alphabet[index].ToString();
         return index;
 
