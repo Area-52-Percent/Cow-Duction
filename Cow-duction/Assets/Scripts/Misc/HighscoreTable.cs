@@ -10,9 +10,11 @@ public class HighscoreTable : MonoBehaviour
     private List<HighscoreEntry> highscoreEntryList;
     private List<Transform> highscoreEntryTransformList;
     public GameObject playerInput;
-    public InputField player1NameInput;
-    public InputField player2NameInput;
+    public List<Text> player1NameInput;
+    public List<Text> player2NameInput;
     private int curScore;
+
+    
 
     private void Awake()
     {
@@ -24,7 +26,6 @@ public class HighscoreTable : MonoBehaviour
         {
             playerInput.SetActive(true);
         }
-
         entryTemplate.gameObject.SetActive(false);
         Highscores highscores = new Highscores();
         //create new default highscore list
@@ -115,7 +116,7 @@ public class HighscoreTable : MonoBehaviour
 
     public void SaveScore()
     {
-        AddHighscoreEntry(curScore, player1NameInput.text, player2NameInput.text);
+        AddHighscoreEntry(curScore,(player1NameInput[0].text + player1NameInput[1].text + player1NameInput[2].text ), (player2NameInput[0].text + player2NameInput[1].text + player2NameInput[2].text));
     }
 
     //Check for a new highscore
@@ -125,6 +126,7 @@ public class HighscoreTable : MonoBehaviour
         Highscores highscores = JsonUtility.FromJson<Highscores>(jsonString);
         return highscores.NewHighScore(i);
     }
+
     //used to store highscore list and manipulate it
     private class Highscores
     {
