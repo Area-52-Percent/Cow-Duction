@@ -46,6 +46,7 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private AudioClip activateAbility = null; // Set up in inspector
     [SerializeField] private Image hudDisplay = null; // Set up in inspector
     [SerializeField] private Slider milkSlide = null; // Set up in inspector
+    [SerializeField] private Image cropSplatter = null; // Set up in inspector
     [Space] // Reticle icon
     [SerializeField] private Image reticle = null; // Set up in inspector
     [SerializeField] private Sprite normalReticle = null; // Set up in inspector
@@ -102,7 +103,7 @@ public class SC_AlienUIManager : MonoBehaviour
         fuel = 100.0f;
         abilityCooldown = 100.0f;
         cooldownActive = false; 
-        if (timeScaleFactor < Mathf.Epsilon)
+        if (timeScaleFactor <= Mathf.Epsilon)
             timeScaleFactor = 1.0f;
         Time.timeScale = timeScaleFactor;
 
@@ -147,7 +148,7 @@ public class SC_AlienUIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!gameManager.GetGameStarted())
+        if (gameManager.GetGameStarting())
             return;
         
         // Toggle parameter screen
@@ -156,7 +157,7 @@ public class SC_AlienUIManager : MonoBehaviour
             ToggleParameterScreen();
         }
 
-        if (!gameplayScreen.activeSelf)
+        if (!gameManager.GetGameStarted() && !gameplayScreen.activeSelf)
             return;
 
         // Display speed and altitude
@@ -338,28 +339,46 @@ public class SC_AlienUIManager : MonoBehaviour
     }
 
     // Subtract fuel by amount of damage taken
-    public void TakeDamage(float amount)
+    public void TakeDamage(float amount, Vector3 position)
     {
-        StartCoroutine(AnimateDamage());
+        StartCoroutine(AnimateDamage(position));
 
         fuel -= amount;
         fuelMeter.value = fuel;
     }
 
     // Visual indicator of taking damage
-    private IEnumerator AnimateDamage()
+    private IEnumerator AnimateDamage(Vector3 position)
     {
+        RectTransform splatterRectTransform = cropSplatter.rectTransform;
+        Vector3 splatterPosition = RectTransformUtility.WorldToScreenPoint(mainCamera, position);
+        if (splatterPosition.x < 0)
+            splatterPosition.x = 0;
+        else if (splatterPosition.x > Screen.width)
+            splatterPosition.x = Screen.width;
+        if (splatterPosition.y < 0)
+            splatterPosition.y = 0;
+        else if (splatterPosition.y > Screen.height)
+            splatterPosition.y = Screen.height;
+
+        cropSplatter.rectTransform.position = splatterPosition;
+
+        cropSplatter.CrossFadeAlpha(1f, 0f, true);
+        if (!cropSplatter.gameObject.activeSelf)
+            cropSplatter.gameObject.SetActive(true);
+
         foreach (Image image in fuelMeter.GetComponentsInChildren<Image>())
         {
             image.color = Color.Lerp(Color.red, Color.white, Time.deltaTime);
         }
 
-        yield return new WaitForEndOfFrame();
+        yield return new WaitForSeconds(0.2f);
 
         foreach (Image image in fuelMeter.GetComponentsInChildren<Image>())
         {
             image.color = Color.Lerp(Color.white, Color.red, Time.deltaTime);
         }
+        cropSplatter.CrossFadeAlpha(0f, 1f, true);
     }
 
     // Play intro audio, animate holograms and display controls screen

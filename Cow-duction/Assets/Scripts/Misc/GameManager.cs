@@ -23,11 +23,17 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioClip menuMusic = null;
     [SerializeField] private AudioClip gameplayMusic = null;
 
+    private bool gameStarting = false;
     private bool gameStarted = false;
 
     public bool GetGameStarted()
     {
         return gameStarted;
+    }
+
+    public bool GetGameStarting()
+    {
+        return gameStarting;
     }
 
     public void SetMusicVolume(float volume)
@@ -60,7 +66,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!gameStarted && !uiManager.GetPaused())
+        if (!gameStarted && !gameStarting && Time.timeScale > Mathf.Epsilon)
         {
             if (Input.anyKey && !Input.GetKey(KeyCode.Escape))
             {
@@ -71,6 +77,8 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator StartGame()
     {
+        gameStarting = true;
+
         if (SceneManager.GetActiveScene().name == "Start")
         {
             SceneManager.LoadScene(1, LoadSceneMode.Single);
@@ -96,6 +104,7 @@ public class GameManager : MonoBehaviour
         }
 
         gameStarted = true;
+        gameStarting = false;
         
         uiManager.ResetGame();
 
