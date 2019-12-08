@@ -86,7 +86,7 @@ public class SC_AlienUIManager : MonoBehaviour
         fuel = 100.0f;
         abilityCooldown = 100.0f;
         cooldownActive = false;
-        timeRemaining = 240.0f;
+        timeRemaining = 10.0f;
         if (timeScaleFactor < Mathf.Epsilon)
             timeScaleFactor = 1.0f;
         Time.timeScale = timeScaleFactor;
