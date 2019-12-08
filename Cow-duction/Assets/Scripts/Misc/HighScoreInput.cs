@@ -23,32 +23,41 @@ public class HighScoreInput : MonoBehaviour
         player1Input[player1position].fontStyle = FontStyle.BoldAndItalic;
         player2Input[player2position].fontStyle = FontStyle.BoldAndItalic;
     }
-    void Update()
+    void FixedUpdate()
     {
         if(inputField.activeSelf)
         {
-            float player1DpadX = Input.GetAxis("DPADX");
-            float player1DpadY = Input.GetAxis("DPADY");
-            float player2DpadX = 0;
-            float player2DpadY = 0;
-            Debug.Log(player1DpadX);
-            if(player1DpadY > 0.1f) //player 1 input up
+            bool isRight = (Input.GetAxis("P1DPADX") < -0.1f) ? true : false;
+
+            bool isLeft = (Input.GetAxis("P1DPADX") > 0.1f) ? true : false;
+
+            bool isDown = (Input.GetAxis("P1DPADY") < -0.1f) ? true : false;
+
+            bool isUp = (Input.GetAxis("P1DPADY") > 0.1f) ? true : false;
+            bool is2Right = (Input.GetAxis("P2DPADX") < -0.1f) ? true : false;
+
+            bool is2Left = (Input.GetAxis("P2DPADX") > 0.1f) ? true : false;
+
+            bool is2Down = (Input.GetAxis("P2DPADY") < -0.1f) ? true : false;
+
+            bool is2Up = (Input.GetAxis("P2DPADY") > 0.1f) ? true : false;
+            if(isUp) //player 1 input up
             {
                 player1Index[player1position] = Increase(player1Input[player1position], player1Index[player1position]);
             }
-            if(/*player2DpadY > 0.1f*/false) //player2 input up
+            if(is2Up) //player2 input up
             {
                 player2Index[player2position] = Increase(player2Input[player2position], player2Index[player2position]);
             }
-            if (player1DpadY < -0.1f) //player 1 input down
+            if (isDown) //player 1 input down
             {
                 player1Index[player1position] = Decrease(player1Input[player1position], player1Index[player1position]);
             }
-            if (/*player2DpadY < -0.1f*/false) //player2 input down
+            if (is2Down) //player2 input down
             {
                 player2Index[player2position] = Decrease(player2Input[player2position], player2Index[player2position]);
             }
-            if (player1DpadX < -0.1f) //player 1 input left
+            if (isLeft) //player 1 input left
             {
                 player1Input[player1position].fontStyle = FontStyle.Bold;
                 player1position--;
@@ -57,7 +66,7 @@ public class HighScoreInput : MonoBehaviour
                 player1Input[player1position].fontStyle = FontStyle.BoldAndItalic;
 
             }
-            if (/*player2DpadX < -0.1f*/false) //player2 input left
+            if (is2Left) //player2 input left
             {
                 player2Input[player2position].fontStyle = FontStyle.Bold;
                 player2position--;
@@ -66,13 +75,13 @@ public class HighScoreInput : MonoBehaviour
                 player2Input[player2position].fontStyle = FontStyle.BoldAndItalic;
 
             }
-            if (player1DpadX > 0.1f) //player 1 input right
+            if (isRight) //player 1 input right
             {
                 player1Input[player1position].fontStyle = FontStyle.Bold;
                 player1position = (player1position + 1) % 3;
                 player1Input[player1position].fontStyle = FontStyle.BoldAndItalic;
             }
-            if (/*player2DpadX > -0.1f*/false) //player2 input right
+            if (is2Right) //player2 input right
             {
                 player2Input[player2position].fontStyle = FontStyle.Bold;
                 player2position = (player2position + 1) % 3;

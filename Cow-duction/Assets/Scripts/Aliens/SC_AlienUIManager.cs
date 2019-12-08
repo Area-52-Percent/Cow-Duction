@@ -320,7 +320,7 @@ public class SC_AlienUIManager : MonoBehaviour
             rating = "F";
         
         finalScoreText.text = score + "\n\nRating: " + rating;
-        Time.timeScale = Mathf.Epsilon;
+        //Time.timeScale = Mathf.Epsilon;
         endScreen.SetActive(true);
     }
 
