@@ -84,8 +84,7 @@ public class SC_CowBrain : MonoBehaviour
             if (m_Agent.remainingDistance <= fieldRadius)
             {
                 Wander();
-                if (m_AudioSource && cowMoo)
-                    m_AudioSource.PlayOneShot(cowMoo);
+                PlayMoo(1f);
             }
         }
         if (m_Animator)
@@ -117,13 +116,22 @@ public class SC_CowBrain : MonoBehaviour
         }
     }
 
+    public void PlayMoo(float pitch)
+    {
+        if (m_AudioSource && cowMoo)
+        {
+            m_AudioSource.pitch = pitch;
+            m_AudioSource.PlayOneShot(cowMoo);
+        }
+    }
+
     // Re-enable agent after a set period of time
     public IEnumerator Recover()
     {
-        yield return new WaitForSeconds(recoveryTime);
-        
         if (this != null)
         {
+            yield return new WaitForSeconds(recoveryTime);
+
             while (transform.localEulerAngles.z > 1f && transform.localEulerAngles.z < 359f)
             {
                 Rigidbody rb = GetComponent<Rigidbody>();
