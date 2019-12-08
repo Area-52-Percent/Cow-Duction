@@ -21,12 +21,6 @@ public class HighscoreTable : MonoBehaviour
         //Find highscore list
         entryContainer = transform.Find("highscoreEntryContainer");
         entryTemplate = entryContainer.Find("highscoreEntryTemplate");
-        curScore = GameObject.Find("UI").GetComponent<SC_AlienUIManager>().GetScore();
-        if (NewHighScore(curScore))
-        {
-            playerInput.SetActive(true);
-        }
-        entryTemplate.gameObject.SetActive(false);
         Highscores highscores = new Highscores();
         //create new default highscore list
         if (!PlayerPrefs.HasKey("highscoreTable"))
@@ -53,6 +47,12 @@ public class HighscoreTable : MonoBehaviour
             string jsonString = PlayerPrefs.GetString("highscoreTable");
             highscores = JsonUtility.FromJson<Highscores>(jsonString);
         }
+        curScore = GameObject.Find("UI").GetComponent<SC_AlienUIManager>().GetScore();
+        if (NewHighScore(curScore))
+        {
+            playerInput.SetActive(true);
+        }
+        entryTemplate.gameObject.SetActive(false);
 
         //build onscreen list
         highscoreEntryTransformList = new List<Transform>();
