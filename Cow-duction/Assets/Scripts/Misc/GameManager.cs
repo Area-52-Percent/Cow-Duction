@@ -16,7 +16,6 @@ public class GameManager : MonoBehaviour
     private GameObject ufo;
     [SerializeField] private Camera startCamera;
     [SerializeField] private GameObject startScreen;
-    [SerializeField] private GameObject farmers;
     private Camera mainCamera;
     private SC_AlienUIManager uiManager;
     private AudioSource musicAudioSource;
@@ -57,8 +56,6 @@ public class GameManager : MonoBehaviour
         startScreen = GameObject.Find("Start Screen");
         startCamera = GameObject.Find("Start Camera").GetComponent<Camera>();
 
-        if (farmers)
-            farmers.SetActive(false);
 
         gameStarted = false;
     }
@@ -98,9 +95,6 @@ public class GameManager : MonoBehaviour
 
             mainCamera.gameObject.SetActive(true);
             startCamera.gameObject.SetActive(false);
-
-            if (farmers)
-                farmers.SetActive(true);
         }
 
         gameStarted = true;

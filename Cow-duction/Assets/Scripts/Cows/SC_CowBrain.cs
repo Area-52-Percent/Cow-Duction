@@ -134,17 +134,13 @@ public class SC_CowBrain : MonoBehaviour
             
             float distanceToGround = Mathf.Infinity;
             RaycastHit rayHit;
-            while (distanceToGround > m_Agent.height)
+            while ((transform.localEulerAngles.z > 1f && transform.localEulerAngles.z < 359f) || distanceToGround > m_Agent.height)
             {
                 if (Physics.Raycast(transform.position, Vector3.down, out rayHit))
                 {
                     distanceToGround = rayHit.distance;
                 }
-                yield return null;
-            }
 
-            while (transform.localEulerAngles.z > 1f && transform.localEulerAngles.z < 359f)
-            {
                 Rigidbody rb = GetComponent<Rigidbody>();
                 Quaternion deltaQuat = Quaternion.FromToRotation(transform.up, Vector3.up);
 

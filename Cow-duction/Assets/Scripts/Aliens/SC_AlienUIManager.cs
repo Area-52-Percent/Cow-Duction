@@ -71,8 +71,10 @@ public class SC_AlienUIManager : MonoBehaviour
     [Space] // Intro
     [SerializeField] private GameObject holoCow = null; // Intro cow hologram
     [SerializeField] private GameObject holoFarmer = null; // Intro farmer hologram
+    [SerializeField] private Text milkText = null;
     [SerializeField] private Image controllerScreen = null; // Intro controls
     [SerializeField] private bool playIntro = true;
+    private bool playingIntro = false;
     [Space] // Outro
     [SerializeField] private Text finalScoreText = null; // Set up in inspector
 
@@ -107,6 +109,9 @@ public class SC_AlienUIManager : MonoBehaviour
             timeScaleFactor = 1.0f;
         Time.timeScale = timeScaleFactor;
 
+        if (cropSplatter.gameObject.activeSelf)
+            cropSplatter.gameObject.SetActive(false);
+
         // Deactivate non-gameplay menus
         endScreen.SetActive(false);
         parameterScreen.SetActive(false);
@@ -139,8 +144,7 @@ public class SC_AlienUIManager : MonoBehaviour
                 StartCoroutine(PlayIntro());
             else
             {
-                timeRemaining = playTime;
-                gameManager.SetMusicVolume(0.25f);
+                SkipIntro();
             }
         }
     }
@@ -159,6 +163,12 @@ public class SC_AlienUIManager : MonoBehaviour
 
         if (!gameManager.GetGameStarted() && !gameplayScreen.activeSelf)
             return;
+
+        if (playingIntro && Input.GetButtonDown("Skip"))
+        {
+            StopCoroutine(PlayIntro());
+            SkipIntro();
+        }
 
         // Display speed and altitude
         speedText.text = _rbUFO.velocity.magnitude.ToString("F1");
@@ -209,7 +219,7 @@ public class SC_AlienUIManager : MonoBehaviour
             }
 
             // Update time (Unscaled)
-            if (timeRemaining > 0.0f && !endScreen.activeSelf)
+            if (timeRemaining > 0.0f)
             {
                 int minutes = Mathf.FloorToInt(timeRemaining / 60.0f);
                 int seconds = Mathf.FloorToInt(timeRemaining % 60.0f);
@@ -225,7 +235,7 @@ public class SC_AlienUIManager : MonoBehaviour
 
                 timeRemaining -= Time.unscaledDeltaTime;
             }
-            else
+            else if (!endScreen.activeSelf)
             {
                 timeRemaining = 0.0f;
                 timeText.text = "0:00";
@@ -384,14 +394,17 @@ public class SC_AlienUIManager : MonoBehaviour
     // Play intro audio, animate holograms and display controls screen
     private IEnumerator PlayIntro()
     {
-        Vector3 holoScale = holoCow.transform.localScale;
+        playingIntro = true;
+
+        Vector3 holoScale = Vector3.one * 0.25f;
 
         gameManager.SetMusicVolume(0.05f);
         ufoAudioSource.Play();
 
         timeRemaining = Mathf.Infinity;
 
-        while (ufoAudioSource.isPlaying)
+        // Hard-coded timing, seemingly no way around it for now
+        while (playingIntro && ufoAudioSource.isPlaying)
         {
             if (ufoAudioSource.time > 20f)
             {
@@ -400,12 +413,36 @@ public class SC_AlienUIManager : MonoBehaviour
 
             if (ufoAudioSource.time > 15f)
             {
+                milkText.CrossFadeAlpha(0f, 1f, true);
                 if (!holoFarmer.activeSelf)
                 {
                     holoFarmer.SetActive(true);
                     holoFarmer.transform.localScale = Vector3.zero;
                 }
                 holoFarmer.transform.localScale = Vector3.Lerp(holoFarmer.transform.localScale, holoScale, Time.deltaTime);
+            }
+            // Not exact timings, may need a better solution
+            else if (ufoAudioSource.time > 10.75f)
+            {
+                milkText.text = "MILK";
+            }
+            else if (ufoAudioSource.time > 10.25f)
+            {
+                milkText.text = "MIL";
+            }
+            else if (ufoAudioSource.time > 9.75f)
+            {
+                milkText.text = "MI";
+            }
+            else if (ufoAudioSource.time > 9.25f)
+            {
+                milkText.text = "M";
+                if (milkText.color.a < 1f)
+                    milkText.CrossFadeAlpha(1f, 0f, true);
+            }
+            else
+            {
+                milkText.text = "";
             }
 
             if (ufoAudioSource.time > 0f)
@@ -420,12 +457,35 @@ public class SC_AlienUIManager : MonoBehaviour
             yield return null;
         }
 
+        SkipIntro();
+    }
+
+    // Set game state after intro sequence
+    private void SkipIntro()
+    {
         controllerScreen.CrossFadeAlpha(0f, 0.5f, false);
         holoCow.SetActive(false);
         holoFarmer.SetActive(false);
+        milkText.CrossFadeAlpha(0f, 1f, true);
         gameManager.SetMusicVolume(0.25f);
+        
+        if (ufoAudioSource.isPlaying)
+            ufoAudioSource.Stop();
+
+        GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
+        if (farmers.Length > 0)
+        {
+            foreach (GameObject farmer in farmers)
+            {
+                SC_FarmerBrain farmerBrain = farmer.GetComponent<SC_FarmerBrain>();
+                if (farmerBrain)
+                    farmerBrain.peaceful = false;
+            }
+        }
 
         timeRemaining = playTime;
+
+        playingIntro = false;
     }
 
     // Show the endscreen (TO-DO: Replace hard-coded values)
@@ -450,12 +510,15 @@ public class SC_AlienUIManager : MonoBehaviour
             rating = "F";
 
             GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
-            foreach (GameObject farmer in farmers)
+            if (farmers.Length > 0)
             {
-                Animator farmerAnimator = farmer.GetComponentInChildren<Animator>();
-                if (farmerAnimator)
+                foreach (GameObject farmer in farmers)
                 {
-                    farmerAnimator.SetBool("celebrate", true);
+                    Animator farmerAnimator = farmer.GetComponentInChildren<Animator>();
+                    if (farmerAnimator)
+                    {
+                        farmerAnimator.SetBool("celebrate", true);
+                    }
                 }
             }
         }

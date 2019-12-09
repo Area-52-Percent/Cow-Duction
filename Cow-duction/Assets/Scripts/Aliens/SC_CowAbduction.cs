@@ -146,6 +146,14 @@ public class SC_CowAbduction : MonoBehaviour
         {
             GrapplePush();
         }
+        else
+        {
+            if (ufoAudioSource.clip == grappleReel)
+            {
+                ufoAudioSource.clip = null;
+                ufoAudioSource.pitch = 1f;
+            }
+        }
 
         // Check if object is attached
         if (attachedObject)
