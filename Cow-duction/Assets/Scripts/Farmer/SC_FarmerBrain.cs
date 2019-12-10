@@ -19,7 +19,7 @@ public class SC_FarmerBrain : SC_CowBrain
     private int ammoCount;
     private bool lockedOn;
     private bool seekingAmmo;
-    public bool peaceful;
+    private bool peaceful;
     
 
     // Serialized private variables
@@ -35,7 +35,7 @@ public class SC_FarmerBrain : SC_CowBrain
     [SerializeField] private float projectileLife = 5.0f;
     [SerializeField] private float fireRate = 3.0f;
     [SerializeField] private int startingAmmo = 5;
-    // [SerializeField] private float peaceTime = 45.0f;
+    [SerializeField] private float peaceTime = 45.0f;
 
     // Awake is called after all objects are initialized
     void Awake()
@@ -74,12 +74,6 @@ public class SC_FarmerBrain : SC_CowBrain
     // Update is called once per frame
     private void Update()
     {
-        if (m_Animator.GetBool("celebrate"))
-        {
-            m_Agent.speed = 0f;
-            return;
-        }
-
         if (m_Agent.enabled && m_Agent.isOnNavMesh && aiControlled)
         {
             if (fireCooldown < fireRate)
@@ -101,7 +95,18 @@ public class SC_FarmerBrain : SC_CowBrain
                     {
                         Wander();
                     }
-                    else if (!peaceful && Vector3.Distance(transform.position, targetTransform.position) <= lockOnDistance)
+                    if (peaceful)
+                    {
+                        if (peaceTime > 0.0f)
+                        {
+                            peaceTime -= Time.deltaTime;
+                        }
+                        else
+                        {
+                            peaceful = false;
+                        }
+                    }
+                    else if (Vector3.Distance(transform.position, targetTransform.position) <= lockOnDistance)
                     {
                         LockOn();
                     }
@@ -129,9 +134,8 @@ public class SC_FarmerBrain : SC_CowBrain
                 }
             }
         }
-
         if (m_Animator)
-                m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
+            m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
     }
 
     // Refill ammo on collision with field
