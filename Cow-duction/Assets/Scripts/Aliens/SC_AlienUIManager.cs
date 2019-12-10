@@ -642,10 +642,6 @@ public class SC_AlienUIManager : MonoBehaviour
         Start();
     }
 
-    public int GetScore()
-    {
-        return score;
-    }
     // Exit the game or editor play session
     public void ExitGame()
     {
