@@ -45,6 +45,7 @@ public class SC_CowAbduction : MonoBehaviour
     [SerializeField] private Transform grappleOrigin = null; // Set up in inspector
     [SerializeField] private AudioClip grappleShot = null; // Set up in inspector
     [SerializeField] private AudioClip grappleHit = null; // Set up in inspector
+    [SerializeField] private AudioClip grappleBreak = null; // Set up in inspector
     [SerializeField] private AudioClip grappleReel = null; // Set up in inspector
     [SerializeField] private AudioClip cowSuction = null; // Set up in inspector
     [SerializeField] private LineRenderer lineRenderer; // (Optional) Set up in inspector
@@ -132,14 +133,12 @@ public class SC_CowAbduction : MonoBehaviour
                 {
                     ufoAudioSource.loop = true;
                     ufoAudioSource.clip = grappleReel;
-                    ufoAudioSource.pitch = 1.5f;
                     ufoAudioSource.Play();
                 }
             }
             else if (ufoAudioSource.clip == grappleReel)
             {
                 ufoAudioSource.clip = null;
-                ufoAudioSource.pitch = 1f;
             }
         }
         else if (Input.GetAxis("GrapplePushPull") < 0f)
@@ -151,7 +150,6 @@ public class SC_CowAbduction : MonoBehaviour
             if (ufoAudioSource.clip == grappleReel)
             {
                 ufoAudioSource.clip = null;
-                ufoAudioSource.pitch = 1f;
             }
         }
 
@@ -217,7 +215,6 @@ public class SC_CowAbduction : MonoBehaviour
             {
                 ufoAudioSource.loop = false;
                 ufoAudioSource.clip = null;
-                ufoAudioSource.pitch = 1f;
             }
         }
     }
@@ -448,6 +445,9 @@ public class SC_CowAbduction : MonoBehaviour
                 if (col.isTrigger)
                     col.isTrigger = false;
             }
+
+            // Play grapple break audio clip
+            GetComponent<AudioSource>().PlayOneShot(grappleBreak, 1f);
 
             attachedObject = null;
             attachedRigidbody.useGravity = true;
