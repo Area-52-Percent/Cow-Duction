@@ -83,6 +83,11 @@ public class SC_AlienUIManager : MonoBehaviour
         return paused;
     }
 
+    public int GetScore()
+    {
+        return score;
+    }
+
     // Awake is called after all objects are initialized
     void Awake()
     {
