@@ -19,6 +19,7 @@ public class SC_FarmerBrain : SC_CowBrain
     private int ammoCount;
     private bool lockedOn;
     private bool seekingAmmo;
+    private bool peaceful;
     
 
     // Serialized private variables
@@ -34,6 +35,7 @@ public class SC_FarmerBrain : SC_CowBrain
     [SerializeField] private float projectileLife = 5.0f;
     [SerializeField] private float fireRate = 3.0f;
     [SerializeField] private int startingAmmo = 5;
+    [SerializeField] private float peaceTime = 45.0f;
 
     // Awake is called after all objects are initialized
     void Awake()
@@ -65,6 +67,7 @@ public class SC_FarmerBrain : SC_CowBrain
         fireCooldown = fireRate;
         ammoCount = startingAmmo;
         wandering = true;
+        peaceful = true;
         Wander();
     }
 
@@ -92,7 +95,18 @@ public class SC_FarmerBrain : SC_CowBrain
                     {
                         Wander();
                     }
-                    if (Vector3.Distance(transform.position, targetTransform.position) <= lockOnDistance)
+                    if (peaceful)
+                    {
+                        if (peaceTime > 0.0f)
+                        {
+                            peaceTime -= Time.deltaTime;
+                        }
+                        else
+                        {
+                            peaceful = false;
+                        }
+                    }
+                    else if (Vector3.Distance(transform.position, targetTransform.position) <= lockOnDistance)
                     {
                         LockOn();
                     }

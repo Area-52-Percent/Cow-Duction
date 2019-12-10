@@ -43,7 +43,7 @@ public class SC_Projectile : MonoBehaviour
                 uIManager.TakeDamage(projectileDamage);
                 
                 GameObject milkLeakClone = Instantiate(milkLeak, collision.GetContact(0).point, Quaternion.identity);
-                milkLeakClone.transform.parent = targetObject.transform;      
+                milkLeakClone.transform.parent = targetObject.transform;
                 milkLeakClone.AddComponent<AudioSource>().PlayOneShot(projectileHit, 0.25f);
 
                 Destroy(gameObject);

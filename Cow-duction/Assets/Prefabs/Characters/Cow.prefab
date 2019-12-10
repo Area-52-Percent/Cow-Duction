@@ -110,10 +110,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 1.1
-  m_Height: 2.33
+  m_Radius: 1.25
+  m_Height: 3
   m_Direction: 2
-  m_Center: {x: 0, y: 1.05, z: -0.3}
+  m_Center: {x: 0, y: 1.25, z: 0}
 --- !u!135 &5082949308938345652
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -125,8 +125,8 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.6
-  m_Center: {x: 0, y: 2, z: 0.85}
+  m_Radius: 0.75
+  m_Center: {x: 0, y: 2, z: 0.9}
 --- !u!82 &3718116117574583040
 AudioSource:
   m_ObjectHideFlags: 0
@@ -335,11 +335,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cow_GameExport
       objectReference: {fileID: 0}
-    - target: {fileID: -6057140222963153312, guid: 5454526abd4844622bf5fe52fc3cbed6,
-        type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: f1113f5dc7cba4ffabbdd7a102afde68, type: 2}
     - target: {fileID: -4216859302048453862, guid: 5454526abd4844622bf5fe52fc3cbed6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -410,6 +405,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: -6057140222963153312, guid: 5454526abd4844622bf5fe52fc3cbed6,
+        type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: f1113f5dc7cba4ffabbdd7a102afde68, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5454526abd4844622bf5fe52fc3cbed6, type: 3}
 --- !u!4 &5875304817866252306 stripped
