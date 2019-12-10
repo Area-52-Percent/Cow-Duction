@@ -6,6 +6,11 @@ public class CameraRotation : MonoBehaviour
 {
     public Transform target;
 
+    void Start()
+    {
+        target = GameObject.Find("UFO").transform;
+    }
+
     // Update is called once per frame
     void Update()
     {
