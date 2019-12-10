@@ -19,7 +19,8 @@ public class ResetButton : MonoBehaviour
     // Call reset game from game manager
     public void ResetGame()
     {
-        //gameManager.ResetGame();
-        SceneManager.LoadScene(0, LoadSceneMode.Single);
+        if (gameManager.GetGameStarted())
+            StartCoroutine(gameManager.ResetGame());
+        // SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
 }

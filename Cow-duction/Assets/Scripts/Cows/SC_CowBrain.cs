@@ -84,8 +84,7 @@ public class SC_CowBrain : MonoBehaviour
             if (m_Agent.remainingDistance <= fieldRadius)
             {
                 Wander();
-                if (m_AudioSource && cowMoo)
-                    m_AudioSource.PlayOneShot(cowMoo);
+                PlayMoo(1f);
             }
         }
         if (m_Animator)
@@ -117,15 +116,31 @@ public class SC_CowBrain : MonoBehaviour
         }
     }
 
+    public void PlayMoo(float pitch)
+    {
+        if (m_AudioSource && cowMoo)
+        {
+            m_AudioSource.pitch = pitch;
+            m_AudioSource.PlayOneShot(cowMoo);
+        }
+    }
+
     // Re-enable agent after a set period of time
     public IEnumerator Recover()
     {
-        yield return new WaitForSeconds(recoveryTime);
-        
         if (this != null)
         {
-            while (transform.localEulerAngles.z > 1f && transform.localEulerAngles.z < 359f)
+            yield return new WaitForSeconds(recoveryTime);
+            
+            float distanceToGround = Mathf.Infinity;
+            RaycastHit rayHit;
+            while ((transform.localEulerAngles.z > 1f && transform.localEulerAngles.z < 359f) || distanceToGround > m_Agent.height)
             {
+                if (Physics.Raycast(transform.position, Vector3.down, out rayHit))
+                {
+                    distanceToGround = rayHit.distance;
+                }
+
                 Rigidbody rb = GetComponent<Rigidbody>();
                 Quaternion deltaQuat = Quaternion.FromToRotation(transform.up, Vector3.up);
 
