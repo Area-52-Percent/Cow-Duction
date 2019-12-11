@@ -76,6 +76,10 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private bool playIntro = true;
     private bool playingIntro = false;
     [Space] // Outro
+    [SerializeField] private AudioClip twoMinuteWarning = null; // Set up in inspector
+    [SerializeField] private AudioClip thirtySecondWarning = null; // Set up in inspector
+    [SerializeField] private AudioClip loseAudio = null; // Set up in inspector
+    [SerializeField] private AudioClip winAudio = null; // Set up in inspector
     [SerializeField] private Text finalScoreText = null; // Set up in inspector
 
     public bool GetPaused()
@@ -230,10 +234,27 @@ public class SC_AlienUIManager : MonoBehaviour
                 int seconds = Mathf.FloorToInt(timeRemaining % 60.0f);
                 timeText.text = minutes + ":" + seconds.ToString("D2");
 
-                if (minutes < 1)
+                if (minutes < 1 && seconds <= 30)
                 {
                     if (timeText.color != Color.red)
+                    {
                         timeText.color = Color.red;
+                        ufoAudioSource.PlayOneShot(thirtySecondWarning);
+                        gameManager.SetMusicVolume(0.1f);
+                    }
+                    else if (!ufoAudioSource.isPlaying)
+                        gameManager.SetMusicVolume(0.25f);
+                }
+                else if (minutes < 2)
+                {
+                    if (timeText.color != Color.yellow)
+                    {
+                        timeText.color = Color.yellow;
+                        ufoAudioSource.PlayOneShot(twoMinuteWarning);
+                        gameManager.SetMusicVolume(0.1f);
+                    }
+                    else if (!ufoAudioSource.isPlaying)
+                        gameManager.SetMusicVolume(0.25f);
                 }
                 else if (timeText.color != Color.white)
                     timeText.color = Color.white;
@@ -526,7 +547,22 @@ public class SC_AlienUIManager : MonoBehaviour
                     }
                 }
             }
+
+            ufoAudioSource.PlayOneShot(loseAudio, 1f);
         }
+
+        switch (rating)
+        {
+            case "SS":
+            case "S":
+            case "A":
+                ufoAudioSource.PlayOneShot(winAudio, 1f);
+                break;
+            default:
+                break;
+        }
+
+        gameManager.SetMusicVolume(0.1f);
         
         finalScoreText.text = score + "\n\nRating: " + rating;
         endScreen.SetActive(true);

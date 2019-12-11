@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     private Camera mainCamera;
     private SC_AlienUIManager uiManager;
     private AudioSource musicAudioSource;
+    [SerializeField] private AudioClip startSFX = null;
     [SerializeField] private AudioClip menuMusic = null;
     [SerializeField] private AudioClip gameplayMusic = null;
 
@@ -67,6 +68,7 @@ public class GameManager : MonoBehaviour
         {
             if (Input.anyKey && !Input.GetKey(KeyCode.Escape))
             {
+                musicAudioSource.PlayOneShot(startSFX);
                 StartCoroutine(StartGame());
             }
         }
