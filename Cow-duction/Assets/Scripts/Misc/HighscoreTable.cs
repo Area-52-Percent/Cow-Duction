@@ -121,7 +121,12 @@ public class HighscoreTable : MonoBehaviour
         Highscores highscores = new Highscores();
         string jsonString = PlayerPrefs.GetString("highscoreTable");
         highscores = JsonUtility.FromJson<Highscores>(jsonString);
-            foreach (HighscoreEntry highscoreEntry in highscores.highscoreEntryList)
+        foreach (Transform child in entryContainer)
+        {
+            if(child.name != "highscoreEntryTemplate")
+                Destroy(child.gameObject);
+        }
+        foreach (HighscoreEntry highscoreEntry in highscores.highscoreEntryList)
         {
             CreateHighscoreEntryTransform(highscoreEntry, entryContainer, highscoreEntryTransformList);
         }
