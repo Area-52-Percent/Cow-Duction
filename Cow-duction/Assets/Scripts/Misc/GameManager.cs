@@ -47,18 +47,11 @@ public class GameManager : MonoBehaviour
         ufo = GameObject.Find("UFO");
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
         musicAudioSource = GetComponent<AudioSource>();
-        musicAudioSource.clip = menuMusic;
         SetMusicVolume(0.5f);
-        musicAudioSource.Play();
 
         mainCamera = Camera.main;
-        mainCamera.gameObject.SetActive(false);
 
-        startScreen = GameObject.Find("Start Screen");
-        startCamera = GameObject.Find("Start Camera").GetComponent<Camera>();
-
-
-        gameStarted = false;
+        SoftReset();
     }
 
     // Update is called once per frame
@@ -102,7 +95,7 @@ public class GameManager : MonoBehaviour
         gameStarted = true;
         gameStarting = false;
         
-        uiManager.ResetGame();
+        uiManager.StartGame();
 
         musicAudioSource.clip = gameplayMusic;
         musicAudioSource.Play();
@@ -129,6 +122,8 @@ public class GameManager : MonoBehaviour
             while (!asyncSceneLoad.isDone)
                 yield return null;
 
+        SoftReset();
+
         // Reset gameplay parameters to default values
         uiManager.ResetGame();
 
@@ -138,6 +133,34 @@ public class GameManager : MonoBehaviour
         SC_SpaceshipMovement ufoSM = ufo.GetComponent<SC_SpaceshipMovement>();
         ufoSM.ResetGame();
 
-        Start();
+        SetMusicVolume(0.5f);
+    }
+
+    // Reset scene without re-finding components attached to dont destroy objects
+    private void SoftReset()
+    {
+        musicAudioSource.clip = menuMusic;
+        musicAudioSource.Play();
+
+        startScreen = GameObject.Find("Start Screen");
+        startCamera = GameObject.Find("Start Camera").GetComponent<Camera>();
+
+        mainCamera.gameObject.SetActive(false);
+
+        musicAudioSource.clip = menuMusic;
+
+        gameStarted = false;
+        gameStarting = false;
+
+        GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
+        if (farmers.Length > 0)
+        {
+            foreach (GameObject farmer in farmers)
+            {
+                SC_FarmerBrain farmerBrain = farmer.GetComponent<SC_FarmerBrain>();
+                if (farmerBrain)
+                    farmerBrain.peaceful = true;
+            }
+        }
     }
 }

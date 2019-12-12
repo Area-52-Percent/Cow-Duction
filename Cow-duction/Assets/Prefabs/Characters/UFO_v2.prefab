@@ -47,20 +47,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &3818077139745452015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4298373523401772797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1bd545f3b8394cc3ad4d9bd46c553c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rotationAxis: 1
-  rotationSpeed: 30
 --- !u!114 &4857620306632847800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -196,7 +182,7 @@ Transform:
   - {fileID: 8143872988498698211}
   - {fileID: 1763323486952899274}
   - {fileID: 8024469196052438338}
-  - {fileID: 1008166585209748718}
+  - {fileID: 8243534033842505913}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -374,13 +360,14 @@ MonoBehaviour:
   maxCaptureLength: 50
   numberOfJoints: 5
   captureSpeed: 10
-  reticleAttractionForce: 2
+  reticleAttractionForce: 2.5
   reticle: {fileID: 0}
   probe: {fileID: 2843867613009940456, guid: 3bc77f8716a4e42d3b2da8649fe1b6bb, type: 3}
   grappleOrigin: {fileID: 1763323486952899274}
   grappleShot: {fileID: 8300000, guid: 899740e7e72e3455498f4051067b7bab, type: 3}
   grappleHit: {fileID: 8300000, guid: a5f0849dac3674ef9a5873428dfc2644, type: 3}
-  grappleReel: {fileID: 8300000, guid: 4c1d4cd159ab14762aa4bb99a5f5115e, type: 3}
+  grappleBreak: {fileID: 8300000, guid: 63df9bdfba2e342afa5a866cd0cb3d06, type: 3}
+  grappleReel: {fileID: 8300000, guid: 044ff592a22c64740b956a904b2b4ddd, type: 3}
   cowSuction: {fileID: 8300000, guid: bebbce08bcbf849799e58d5e031aca7f, type: 3}
   lineRenderer: {fileID: 0}
   waypointIcon: {fileID: 0}
@@ -409,6 +396,20 @@ MonoBehaviour:
   autoRotationForce: 0.25
   maxRotation: 15
   invertLook: 0
+--- !u!114 &3818077139745452015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8243534033842505836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1bd545f3b8394cc3ad4d9bd46c553c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationAxis: 1
+  rotationSpeed: 30
 --- !u!1001 &3105190865417461295
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -416,11 +417,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8143872988861120830}
     m_Modifications:
-    - target: {fileID: 8219112530923827582, guid: 9ddb9d2d384e049488a31665613b798c,
-        type: 3}
-      propertyPath: m_Name
-      value: Holo Farmer
-      objectReference: {fileID: 0}
     - target: {fileID: 4921166192912876397, guid: 9ddb9d2d384e049488a31665613b798c,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -491,6 +487,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.25
       objectReference: {fileID: 0}
+    - target: {fileID: 8219112530923827582, guid: 9ddb9d2d384e049488a31665613b798c,
+        type: 3}
+      propertyPath: m_Name
+      value: Holo Farmer
+      objectReference: {fileID: 0}
     - target: {fileID: 2726368367823099808, guid: 9ddb9d2d384e049488a31665613b798c,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -500,6 +501,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -50.00003
+      objectReference: {fileID: 0}
+    - target: {fileID: 7666201747370946921, guid: 9ddb9d2d384e049488a31665613b798c,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8363874591491919823, guid: 9ddb9d2d384e049488a31665613b798c,
         type: 3}
@@ -511,22 +517,17 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7666201747370946921, guid: 9ddb9d2d384e049488a31665613b798c,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2177030499133217338, guid: 9ddb9d2d384e049488a31665613b798c,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: b1607b2fbb641415e88dd460709843a9, type: 2}
-    - target: {fileID: 8841081691272684047, guid: 9ddb9d2d384e049488a31665613b798c,
+    - target: {fileID: 4697920377797471011, guid: 9ddb9d2d384e049488a31665613b798c,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: b1607b2fbb641415e88dd460709843a9, type: 2}
-    - target: {fileID: 4697920377797471011, guid: 9ddb9d2d384e049488a31665613b798c,
+    - target: {fileID: 8841081691272684047, guid: 9ddb9d2d384e049488a31665613b798c,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
@@ -558,11 +559,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8143872988861120830}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: ae570223ea803491b9cf80167448e975,
-        type: 3}
-      propertyPath: m_Name
-      value: milkyufo
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae570223ea803491b9cf80167448e975,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -618,6 +614,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: ae570223ea803491b9cf80167448e975,
+        type: 3}
+      propertyPath: m_Name
+      value: milkyufo
+      objectReference: {fileID: 0}
     - target: {fileID: 348385769364920362, guid: ae570223ea803491b9cf80167448e975,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -638,11 +639,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8143872988861120830}
     m_Modifications:
-    - target: {fileID: 5314257958602278042, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8,
-        type: 3}
-      propertyPath: m_Name
-      value: Holo Cow
-      objectReference: {fileID: 0}
     - target: {fileID: 9195031772006381193, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -713,6 +709,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 0.25
       objectReference: {fileID: 0}
+    - target: {fileID: 5314257958602278042, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8,
+        type: 3}
+      propertyPath: m_Name
+      value: Holo Cow
+      objectReference: {fileID: 0}
     - target: {fileID: 6838050461056707075, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8,
         type: 3}
       propertyPath: m_IsActive
@@ -731,13 +732,13 @@ PrefabInstance:
     - {fileID: 5082949308938345652, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8, type: 3}
     - {fileID: 3718116117574583040, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8, type: 3}
---- !u!1 &4298373523401772797 stripped
+--- !u!1 &8243534033842505836 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5314257958602278042, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8,
     type: 3}
   m_PrefabInstance: {fileID: 8243534033842506343}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1008166585209748718 stripped
+--- !u!4 &8243534033842505913 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9195031772006381193, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8,
     type: 3}

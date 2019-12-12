@@ -112,7 +112,9 @@ public class SC_AlienUIManager : MonoBehaviour
         scoreText.text = score.ToString("D2");
         reticle.sprite = normalReticle;
         fuel = 100.0f;
+        fuelMeter.value = fuel;
         abilityCooldown = 100.0f;
+        cooldownMeter.value = abilityCooldown;
         cooldownActive = false; 
         if (timeScaleFactor <= Mathf.Epsilon)
             timeScaleFactor = 1.0f;
@@ -137,25 +139,9 @@ public class SC_AlienUIManager : MonoBehaviour
         if (holoFarmer.activeSelf)
             holoFarmer.SetActive(false);
 
-        if (!gameManager.GetGameStarted())
-        {
-            if (gameplayScreen.activeSelf)
-                gameplayScreen.SetActive(false);
-            topDownCamera.gameObject.SetActive(false);
-        }
-        else
-        {
-            if (!gameplayScreen.activeSelf)
-                gameplayScreen.SetActive(true);
-            if (!topDownCamera.gameObject.activeSelf)
-                topDownCamera.gameObject.SetActive(true);
-            if (playIntro)
-                StartCoroutine(PlayIntro());
-            else
-            {
-                SkipIntro();
-            }
-        }
+        if (gameplayScreen.activeSelf)
+            gameplayScreen.SetActive(false);
+        topDownCamera.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -463,8 +449,7 @@ public class SC_AlienUIManager : MonoBehaviour
             else if (ufoAudioSource.time > 9.25f)
             {
                 milkText.text = "M";
-                if (milkText.color.a < 1f)
-                    milkText.CrossFadeAlpha(1f, 0f, true);
+                milkText.CrossFadeAlpha(1f, 0f, true);
             }
             else
             {
@@ -483,6 +468,7 @@ public class SC_AlienUIManager : MonoBehaviour
             yield return null;
         }
 
+        gameManager.SetMusicVolume(0.25f);
         SkipIntro();
     }
 
@@ -493,7 +479,6 @@ public class SC_AlienUIManager : MonoBehaviour
         holoCow.SetActive(false);
         holoFarmer.SetActive(false);
         milkText.CrossFadeAlpha(0f, 1f, true);
-        gameManager.SetMusicVolume(0.25f);
         
         if (ufoAudioSource.isPlaying)
             ufoAudioSource.Stop();
@@ -678,7 +663,23 @@ public class SC_AlienUIManager : MonoBehaviour
     // Reset gameplay variables to starting values
     public void ResetGame()
     {
+        if (playingIntro)
+            SkipIntro();
         Start();
+    }
+
+    public void StartGame()
+    {
+        if (!gameplayScreen.activeSelf)
+            gameplayScreen.SetActive(true);
+        if (!topDownCamera.gameObject.activeSelf)
+            topDownCamera.gameObject.SetActive(true);
+        if (playIntro)
+            StartCoroutine(PlayIntro());
+        else
+        {
+            SkipIntro();
+        }
     }
 
     // Exit the game or editor play session
