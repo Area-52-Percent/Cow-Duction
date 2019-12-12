@@ -471,7 +471,7 @@ public class SC_CowAbduction : MonoBehaviour
                     cj.linearLimit = softJointLimit;
                 
                 // Apply force on UFO for physical feedback
-                GetComponent<Rigidbody>().AddForceAtPosition((grappleOrigin.position - attachedObject.transform.position).normalized, Camera.main.transform.position, ForceMode.Acceleration);
+                // GetComponent<Rigidbody>().AddForceAtPosition((grappleOrigin.position - attachedObject.transform.position).normalized, Camera.main.transform.position, ForceMode.Acceleration);
             }
             else
             {
