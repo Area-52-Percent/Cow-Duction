@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38303c567fb483e4dbd1431bfa182dff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 8663054242007550574}
+  target: {fileID: 0}
 --- !u!81 &121242866
 AudioListener:
   m_ObjectHideFlags: 0
@@ -1460,11 +1460,15 @@ PrefabInstance:
       propertyPath: m_Name
       value: Holo Cow
       objectReference: {fileID: 0}
+    - target: {fileID: 6431692119125674942, guid: aa9e3aecaed844b7e8cd924f09c6942c,
+        type: 3}
+      propertyPath: m_Mass
+      value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6431692119125674912, guid: aa9e3aecaed844b7e8cd924f09c6942c,
+        type: 3}
+      propertyPath: reticleAttractionForce
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa9e3aecaed844b7e8cd924f09c6942c, type: 3}
---- !u!4 &8663054242007550574 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8842600886706570691, guid: aa9e3aecaed844b7e8cd924f09c6942c,
-    type: 3}
-  m_PrefabInstance: {fileID: 8663054242007550573}
-  m_PrefabAsset: {fileID: 0}
