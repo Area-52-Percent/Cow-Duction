@@ -65,8 +65,8 @@ NavMeshAgent:
   m_GameObject: {fileID: 5314257958602278042}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 1.5
-  m_Speed: 6
+  m_Radius: 2
+  m_Speed: 5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -93,7 +93,7 @@ MonoBehaviour:
   fieldRadius: 5
   seekingFood: 1
   wanderRadius: 125
-  maxWanderTime: 20
+  maxWanderTime: 10
   idleTime: 3
   maxSpeed: 5
   recoveryTime: 4
@@ -430,6 +430,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Radar Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 7328981208343111244, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2287445515127965985, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
         type: 3}

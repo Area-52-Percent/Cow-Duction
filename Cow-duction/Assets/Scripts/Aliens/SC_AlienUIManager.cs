@@ -519,21 +519,19 @@ public class SC_AlienUIManager : MonoBehaviour
     {
         string rating = "";
 
-        if (score > 27)
+        if (score > 25)
             rating = "SS";
-        else if (score > 19)
+        else if (score > 20)
             rating = "S";
-        else if (score > 15)
+        else if (score > 17)
             rating = "A";
         else if (score > 13)
             rating = "B";
-        else if (score > 11)
+        else if (score > 7)
             rating = "C";
-        else if (score > 9)
-            rating = "D";
         else
         {
-            rating = "F";
+            rating = "D";
 
             GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
             if (farmers.Length > 0)
