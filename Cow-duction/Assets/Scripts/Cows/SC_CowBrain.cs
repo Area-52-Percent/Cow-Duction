@@ -25,7 +25,7 @@ public class SC_CowBrain : MonoBehaviour
     protected Animator m_Animator;
     protected Vector3 currentDestination; // Keeps track of destination while agent disabled
     protected float wanderTime = 0.0f;
-    protected bool wandering = true;
+    protected bool wandering = false;
     
     // Serialized protected variables
     [SerializeField] protected float fieldRadius = 5.0f;
@@ -245,7 +245,16 @@ public class SC_CowBrain : MonoBehaviour
         if (!m_Agent.enabled)
             return;
         
-        m_Agent.destination = Random.insideUnitSphere * wanderRadius;
+        NavMeshPath navMeshPath = new NavMeshPath();
+        Vector3 targetPosition = Random.insideUnitSphere * wanderRadius;
+
+        // Keep looking for a path if it can't reach the destination
+        while (navMeshPath.status == NavMeshPathStatus.PathPartial) {
+            targetPosition = Random.insideUnitSphere * wanderRadius;
+            m_Agent.CalculatePath(targetPosition, navMeshPath);
+        }
+
+        m_Agent.destination = targetPosition;
         currentDestination = m_Agent.destination;
         m_Agent.stoppingDistance = 0f;
         wanderTime = 0f;
