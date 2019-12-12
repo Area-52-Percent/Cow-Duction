@@ -70,21 +70,21 @@ public class SC_CowBrain : MonoBehaviour
     {
         if (m_Agent.enabled && m_Agent.isOnNavMesh && aiControlled)
         {
-            if (!seekingFood)
+            if (wanderTime < maxWanderTime && m_Agent.remainingDistance > fieldRadius)
             {
-                if (wandering && wanderTime < maxWanderTime)
+                wanderTime += Time.deltaTime;
+            }
+            else
+            {
+                if (seekingFood)
                 {
-                    wanderTime += Time.deltaTime;
+                    Wander();
+                    PlayMoo(1f);
                 }
                 else
                 {
                     SeekFood();
                 }
-            }
-            if (m_Agent.remainingDistance <= fieldRadius)
-            {
-                Wander();
-                PlayMoo(1f);
             }
         }
         if (m_Animator)
