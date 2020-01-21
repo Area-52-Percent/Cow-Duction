@@ -31,7 +31,6 @@ public class SC_HudReticleColor : MonoBehaviour
         int layerMask = ~(1 << gameObject.layer);
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
         {
-            Debug.Log("in if");
             if (hit.collider)
             {
                 Rigidbody ob = hit.collider.attachedRigidbody;
