@@ -50,6 +50,10 @@ public class SC_HudReticleColor : MonoBehaviour
                         image.color = Color.white;
                     }
                 }
+                else
+                {
+                    image.color = Color.white;
+                }
             }
             else
             {
