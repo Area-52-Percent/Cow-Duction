@@ -11,6 +11,9 @@ public class SC_HudReticleColor : MonoBehaviour
     public Renderer rend;
     public Camera cam;
     public Transform reticle;
+    public Transform grappleOrigin;
+    private float viewLength;
+    private float maxViewLength;
 
     // Start is called before the first frame update
     void Start()
@@ -19,6 +22,7 @@ public class SC_HudReticleColor : MonoBehaviour
         rend = GetComponent<Renderer>();
         Debug.Log(rend);
         initColor = image.color;
+        maxViewLength = 50;
     }
 
     // Update is called once per frame
@@ -31,18 +35,27 @@ public class SC_HudReticleColor : MonoBehaviour
         int layerMask = ~(1 << gameObject.layer);
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
         {
-            if (hit.collider)
+            viewLength = Vector3.Distance(grappleOrigin.position, hit.transform.position);
+            Vector3 hitPoint = hit.point;
+            if (hit.distance < maxViewLength)
             {
-                Rigidbody ob = hit.collider.attachedRigidbody;
-                if (ob != null)
+                if (hit.collider)
                 {
-                    if (ob.CompareTag("Cow"))
+                    Rigidbody ob = hit.collider.attachedRigidbody;
+                    if (ob != null)
                     {
-                        image.color = Color.green;
-                    }
-                    else if (ob.CompareTag("Farmer"))
-                    {
-                        image.color = Color.red;
+                        if (ob.CompareTag("Cow"))
+                        {
+                            image.color = Color.green;
+                        }
+                        else if (ob.CompareTag("Farmer"))
+                        {
+                            image.color = Color.red;
+                        }
+                        else
+                        {
+                            image.color = Color.white;
+                        }
                     }
                     else
                     {
@@ -53,10 +66,6 @@ public class SC_HudReticleColor : MonoBehaviour
                 {
                     image.color = Color.white;
                 }
-            }
-            else
-            {
-                image.color = Color.white;
             }
         }
         else
