@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Mirror;
 
-[AddComponentMenu("")]
 public class NetworkManagerCowduction : NetworkManager
 {
     public Transform spaceshipSpawn;
