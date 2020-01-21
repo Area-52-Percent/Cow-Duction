@@ -1,46 +1,52 @@
-﻿/*  MultiPlayerCowSpawner.cs
-
-    Spawns cows in regular intervals at input spawn locations.
-
-    Assumptions:
-        There is a GameObject in the scene with the "UIManager" tag and SC_AlienUIManager component.
-        A cow prefab and spawn point transforms are set up before use.
- */
-
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using Mirror;
 
+/// <summary>
+/// Spawns cows in regular intervals at input spawn locations.
+/// </summary>
+/// <remarks>
+/// <para>A cow prefab and spawn point transforms should be set up before use.</para>
+/// </remarks>
 public class MultiPlayerCowSpawner : NetworkBehaviour
 {
-    public GameObject cowPrefab;
-    [SerializeField] private GameObject[] cows = null; // Set up in inspector
-    [SerializeField] private float[] cowSpawnRatios = null; // Set up in inspector (as decimal out of 1, last ratio should be 1 to guarantee something spawns)
+    private List<GameObject> spawnPoints;
+    private GameObject UFOLoc;
+    private int cowAmount = 0;
+
+    [Tooltip("Place cow prefabs in this array")]
+    public GameObject[] cows = null;
+    [Tooltip("Spawn ratios of the above array, as a decimal between 0 and 1 (where 1 is a 100% spawn chance)")]
+    public float[] cowSpawnRatios = null;
+    
+    [Header("Parameters")]
     public int maxCowAmount = 10;
     public float radius = 10.0f;
     public float spawnRate = 5f;
     public int intialSpawnAmount = 9;
-    [SerializeField] private float randomFactor = 0.1f;
-    private List<GameObject> spawnPoints;
-    public GameObject UFOLoc;
+    public float randomFactor = 0.1f;
 
-    [SerializeField] private int cowAmount = 0;
+    // OnDisable is called when the object is removed from the server
+    private void OnDisable()
+    {
+        foreach(Transform cow in transform)
+        {
+            Destroy(cow.gameObject);
+        }
+    }
 
     // Awake is called after all objects are initialized
-    void Awake()
+    private void Awake()
     {
-        // GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>().CowSpawner = this.gameObject;
-        UFOLoc = GameObject.FindWithTag("UFO");
+        // UFOLoc = GameObject.FindWithTag("UFO");
         spawnPoints = new List<GameObject>();
         spawnPoints.AddRange(GameObject.FindGameObjectsWithTag("CowSpawn"));
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         // Error checking
-        if (cowPrefab == null)
-            Debug.LogError("Cow prefab not assigned");
         if (cows.Length < 1)
             Debug.LogError("No cows assigned");
         if (maxCowAmount < 1)
@@ -54,48 +60,22 @@ public class MultiPlayerCowSpawner : NetworkBehaviour
         }
     }
 
-    // public override void OnStartServer()
-    // {
-    //     base.OnStartServer();
-        
-    //     // Error checking
-    //     if (cowPrefab == null)
-    //         Debug.LogError("Cow prefab not assigned");
-    //     if (cows.Length < 1)
-    //         Debug.LogError("No cows assigned");
-    //     if (maxCowAmount < 1)
-    //         maxCowAmount = 10;
-    //     if (radius < 1)
-    //         radius = 10;
-        
-    //     foreach (GameObject spawnPoint in spawnPoints)
-    //     {
-    //         SpawnCows(spawnPoint, intialSpawnAmount / spawnPoints.Count);
-    //     }
-    // }
-
-    void OnDisable()
-    {
-        foreach(Transform cow in transform)
-        {
-            Destroy(cow.gameObject);
-        }
-    }
-
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         cowAmount = GameObject.FindGameObjectsWithTag("Cow").Length;
         
         if (cowAmount < maxCowAmount)
         {
+            if (UFOLoc == null)
+                UFOLoc = GameObject.FindGameObjectWithTag("UFO");
+            
             //Compare spawnpoints elapsed time
             float[] ElapsedTimes = new float[spawnPoints.Count];
             for (int i = 0; i < spawnPoints.Count; i++)
             {
                 // ((1 + (k/n)) ^ n) / e ^ k where n is the distance between the ufo a given spawn
                 float fx = ( (Mathf.Pow(1 + (5 / Vector3.Distance(spawnPoints[i].transform.position, UFOLoc.transform.position)), Vector3.Distance(spawnPoints[i].transform.position, UFOLoc.transform.position)) / Mathf.Exp(5)));
-                // Debug.Log(i + "?" + Vector3.Distance(spawnPoints[i].transform.position, UFOLoc.transform.position) + "-" + fx);
                 ElapsedTimes[i] = spawnPoints[i].GetComponent<SpawnPointTimer>().elapsedTime * fx;
             }
             float MaxSinceLastSpawn = Mathf.Max(ElapsedTimes);
@@ -123,7 +103,7 @@ public class MultiPlayerCowSpawner : NetworkBehaviour
                 {
                     GameObject cowClone = Instantiate(cows[c], new Vector3(xPos, spawnPoint.transform.position.y, zPos), Quaternion.identity);
                     RandomizeCow(cowClone);
-                    cowClone.transform.parent = this.transform;
+                    cowClone.transform.parent = transform;
                     NetworkServer.Spawn(cowClone);
                     break;
                 }
@@ -131,6 +111,7 @@ public class MultiPlayerCowSpawner : NetworkBehaviour
         }
     }
 
+    // Randomize cow parameters
     private void RandomizeCow(GameObject cow)
     {
         MultiPlayerCowBrain cowBrain = cow.GetComponent<MultiPlayerCowBrain>();
@@ -138,9 +119,9 @@ public class MultiPlayerCowSpawner : NetworkBehaviour
 
         float mass = cowRigidbody.mass;
         float size = cow.transform.localScale.x; // Assume scale is uniform
-        float milk = cowBrain.GetMilk();
-        float maxSpeed = cowBrain.GetMaxSpeed();
-        float maxWanderTime = cowBrain.GetMaxWanderTime();
+        float milk = cowBrain.milk;
+        float maxSpeed = cowBrain.maxSpeed;
+        float maxWanderTime = cowBrain.maxWanderTime;
 
         size = Random.Range(size - (size * randomFactor), size + (size * randomFactor));
         mass = Random.Range(mass - (mass * randomFactor), mass + (mass * randomFactor)) + size;
@@ -150,8 +131,8 @@ public class MultiPlayerCowSpawner : NetworkBehaviour
 
         cowRigidbody.mass = mass;
         cow.transform.localScale *= size;
-        cowBrain.SetMilk(milk);
+        cowBrain.milk = milk;
+        cowBrain.maxWanderTime = maxWanderTime;
         cowBrain.SetMaxSpeed(maxSpeed);
-        cowBrain.SetMaxWanderTime(maxWanderTime);
     }
 }

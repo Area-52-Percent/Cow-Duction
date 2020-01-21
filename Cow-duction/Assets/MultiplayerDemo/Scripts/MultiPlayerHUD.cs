@@ -1,14 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Mirror;
 
 public class MultiPlayerHUD : NetworkBehaviour
 {
+    [Tooltip("The mesh which should visible to observers, but not visible from the first person perspective")]
     public GameObject thirdPersonMesh;
-    public Canvas hud; // The local player's HUD
+    [Tooltip("The Canvas component which should only be visible to this object")]
+    public Canvas hud;
 
-    void Start()
+    // Start is called before the first frame update
+    private void Start()
     {
         hud = GetComponentInChildren<Canvas>();
         if (isLocalPlayer)

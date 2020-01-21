@@ -1,29 +1,23 @@
-﻿/* MultiPlayerCowAbduction.cs
-
-   Grappling hook system that shoots a raycast from the Main Camera in the direction of the mouse position.
-   The grappling hook attaches to Cows and Farmers with a line of Configurable Joints.
-   The length of the hook rope can be increased or decreased to pull or push the attached object.
-   
-   Assumptions:
-     This component belongs to a GameObject with Rigidbody and Collider (set as trigger) components.
-     There is a GameObject in the scene with the "UIManager" tag and a UIManager component.
-     There is a Shader file located at "./Sprites/Default".
-     GameObjects that interact with the grappling hook have Collider and Rigidbody components.
- */
-
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
 using Mirror;
 
+/// <summary>
+/// Grappling hook system that shoots a raycast from the Main Camera in the direction of the reticle or mouse position.
+/// The grappling hook attaches to Cows and Farmers with a line of Configurable Joints.
+/// The length of the hook rope can be increased or decreased to pull or push the attached object.
+/// </summary>
+/// <remarks>
+/// <para>This component should belong to a GameObject with Rigidbody and Collider (set as trigger) components.</para>
+/// <para>GameObjects that interact with the grappling hook should have Collider and Rigidbody components.</para>
+/// </remarks>
 [RequireComponent(typeof(MultiPlayerSpaceshipController))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(AudioSource))]
 public class MultiPlayerCowAbduction : NetworkBehaviour
 {
-    // Private variables
-    // private SC_AlienUIManager uiManager;
     private MultiPlayerSpaceshipController spaceshipController;
     private Rigidbody rb;
     private ConfigurableJoint[] attachedObjectJoints;
@@ -34,67 +28,33 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     private bool grappling;
     
     [Header("Parameters")]
-    public float grappleTime = 0.5f;
+    public int grappleJointCount = 5;
+    public float grappleTime = 0.25f;
     public float grappleCooldown = 0.5f;
     public float maxCaptureLength = 50.0f;
-    public int numberOfJoints = 5;
     public float captureSpeed = 5.0f;
     public float reticleAttractionForce = 1.0f;
     [Tooltip("A canvas image whose position will be used in raycast calls")]
-    [SerializeField] private GameObject reticle = null;
+    public GameObject reticle = null;
     [Tooltip("A prefab which will spawn when firing the grapple")]
-    [SerializeField] private GameObject probe = null;
+    public GameObject probe = null;
     [Tooltip("An empty transform which marks the grapple origin position")]
-    [SerializeField] private Transform grappleOrigin = null;
+    public Transform grappleOrigin = null;
     [Tooltip("(Optional) The line renderer for the grapple rope")]
-    [SerializeField] private LineRenderer lineRenderer;
+    public LineRenderer lineRenderer;
 
     [Header("SFX")]
-    [SerializeField] private AudioClip grappleShot = null;
-    [SerializeField] private AudioClip grappleHit = null;
-    [SerializeField] private AudioClip grappleBreak = null;
-    [SerializeField] private AudioClip grappleReel = null;
-    [SerializeField] private AudioClip cowSuction = null;
+    public AudioClip grappleShot = null;
+    public AudioClip grappleHit = null;
+    public AudioClip grappleBreak = null;
+    public AudioClip grappleReel = null;
+    public AudioClip cowSuction = null;
 
     [Header("Waypoint Icon")]
-    [SerializeField] private RectTransform waypointIcon = null;
-    [SerializeField] private Sprite cowIcon = null;
-    [SerializeField] private Sprite unknownIcon = null;
-    [SerializeField] private Sprite warningIcon = null;
-
-    public GameObject GetAttachedObject()
-    {
-        return attachedObject;
-    }
-
-    // Awake is called after all objects are initialized
-    void Awake()
-    {
-        spaceshipController = GetComponent<MultiPlayerSpaceshipController>();
-        rb = GetComponent<Rigidbody>();
-        // uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        ResetGame();
-    }
-
-    public override void OnStartLocalPlayer()
-    {
-        base.OnStartLocalPlayer();
-
-        ResetGame();
-    }
-
-    void OnDisable()
-    {
-        if (isLocalPlayer)
-        {
-            ResetGame();
-        }
-    }
+    public RectTransform waypointIcon = null;
+    public Sprite cowIcon = null;
+    public Sprite unknownIcon = null;
+    public Sprite warningIcon = null;
 
     [Header("Diagnostics")]
     public float grapplePushPull = 0f;
@@ -102,7 +62,38 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     public bool isPulling = false;
     public bool isReleasingGrapple = false;
 
-    void Update()
+    // OnStartLocalPlayer is called when the local player object is set up
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+
+        ResetGame();
+    }
+
+    // OnDisable is called when the object is removed from the server
+    private void OnDisable()
+    {
+        if (isLocalPlayer)
+        {
+            ResetGame();
+        }
+    }
+
+    // Awake is called after all objects are initialized
+    private void Awake()
+    {
+        spaceshipController = GetComponent<MultiPlayerSpaceshipController>();
+        rb = GetComponent<Rigidbody>();
+    }
+
+    // Start is called before the first frame update
+    private void Start()
+    {
+        ResetGame();
+    }
+
+    // Update is called once per frame
+    private void Update()
     {
         if (!isLocalPlayer) return;
 
@@ -112,7 +103,8 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         isReleasingGrapple = Input.GetButtonDown("GrappleRelease");
     }
 
-    void FixedUpdate()
+    // FixedUpdate is called in fixed time intervals
+    private void FixedUpdate()
     {
         // Left click casts a raycast in the direction of the cursor position.
         if (isFiring && Time.timeScale > Mathf.Epsilon)
@@ -252,15 +244,40 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         }
     }
 
+    // Reset parameters to starting values
+    public void ResetGame() {
+        // Create a line renderer if not set up
+        if (!lineRenderer)
+        {
+            Color lineColor = new Color(255f, 255f, 255f, 0.5f);
+            lineRenderer = gameObject.AddComponent<LineRenderer>();
+            lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+            lineRenderer.startColor = lineColor;
+            lineRenderer.widthMultiplier = 0.25f;
+            lineRenderer.positionCount = 0;
+        }
+        lineRenderer.enabled = false;
+
+        if (!grappleOrigin)
+        {
+            grappleOrigin = transform;
+        }
+
+        attachedObjectJoints = new ConfigurableJoint[grappleJointCount];
+        grappling = false;
+        if (probeClone != null)
+            Destroy(probeClone);
+    }
+
     // Render a line to the object including any in-between joints
     private void RenderLine(GameObject obj)
     {
         if (obj == attachedObject && attachedObjectJoints != null)
         {
             // Set up points along each joint
-            var points = new Vector3[numberOfJoints + 1];
+            var points = new Vector3[grappleJointCount + 1];
             points[0] = grappleOrigin.position;
-            for (int j = 0; j < numberOfJoints; j++)
+            for (int j = 0; j < grappleJointCount; j++)
             {
                 points[j + 1] = attachedObjectJoints[j].transform.position;
             }
@@ -370,11 +387,11 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             }
 
             // Set up an array of joints simulating a rope
-            attachedObjectJoints = new ConfigurableJoint[numberOfJoints];
-            for (int j = 0; j < numberOfJoints; j++)
+            attachedObjectJoints = new ConfigurableJoint[grappleJointCount];
+            for (int j = 0; j < grappleJointCount; j++)
             {
                 // The last joint connects the cow to the joint chain
-                if (j == numberOfJoints - 1)
+                if (j == grappleJointCount - 1)
                     attachedObjectJoints[j] = hit.transform.gameObject.AddComponent<ConfigurableJoint>();
                 else
                 {
@@ -387,7 +404,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                     goRigidbody.drag = 1.0f;
                     goRigidbody.angularDrag = 1.0f;
 
-                    go.transform.position = (j + 1) * (transform.position - hit.transform.position) / (float)numberOfJoints;
+                    go.transform.position = (j + 1) * (transform.position - hit.transform.position) / (float)grappleJointCount;
 
                     attachedObjectJoints[j] = go.AddComponent<ConfigurableJoint>();
                 }
@@ -401,13 +418,12 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 attachedObjectJoints[j].zMotion = ConfigurableJointMotion.Limited;
                 // Set up joint linear limit
                 SoftJointLimit softJointLimit = new SoftJointLimit();
-                softJointLimit.limit = (captureLength / (float)numberOfJoints) + 0.1f;
+                softJointLimit.limit = (captureLength / (float)grappleJointCount) + 0.1f;
                 softJointLimit.contactDistance = 0.1f;
                 attachedObjectJoints[j].linearLimit = softJointLimit;
                 // The first joint is connected to the UFO
                 if (j == 0)
                     attachedObjectJoints[j].connectedBody = rb;
-                    // attachedObjectJoints[j].connectedBody = grappleOrigin.GetComponent<Rigidbody>();
                 else
                     attachedObjectJoints[j].connectedBody = attachedObjectJoints[j - 1].gameObject.GetComponent<Rigidbody>();
             }
@@ -422,22 +438,16 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 probeClone.transform.position = attachedObject.transform.position;
             }
 
-            // Toggle UI indicator
-            // if (uiManager != null)
-            //     uiManager.ToggleReticle();
+            NetworkIdentity objNetId = attachedObject.GetComponent<NetworkIdentity>();
+            if (objNetId != null)
+                objNetId.AssignClientAuthority(netIdentity.connectionToClient);
 
             // Change waypoint sprite
             if (hit.transform.tag == "Cow") {
-                // uiManager.SetWaypointIcon(cowIcon);
-
                 SC_CowBrain cowBrain = hit.transform.GetComponent<SC_CowBrain>();
                 if (cowBrain)
                     cowBrain.PlayMoo(3f);
             }
-            // else if (hit.transform.tag == "Farmer" || hit.transform.tag == "Bull")
-            //     uiManager.SetWaypointIcon(warningIcon);
-            // else
-            //     uiManager.SetWaypointIcon(unknownIcon);
 
             // Play grapple hit sfx
             if (probeClone.GetComponent<AudioSource>())
@@ -481,16 +491,16 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             // Reset movement penalty
             spaceshipController.SetMovementMultiplier(1f);
 
-            // Toggle UI indicator
-            // if (uiManager != null)
-            //     uiManager.ToggleReticle();
-
             // Enable attached object colliders if necessary
             foreach (Collider col in attachedObject.GetComponents<Collider>())
             {
                 if (col.isTrigger)
                     col.isTrigger = false;
             }
+
+            NetworkIdentity objNetId = attachedObject.GetComponent<NetworkIdentity>();
+            if (objNetId != null)
+                objNetId.RemoveClientAuthority();
 
             // Play grapple break audio clip
             GetComponent<AudioSource>().PlayOneShot(grappleBreak, 1f);
@@ -511,7 +521,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 // Decrease joint limits over time
                 captureLength -= Time.deltaTime * captureSpeed;
                 SoftJointLimit softJointLimit = new SoftJointLimit();
-                softJointLimit.limit = captureLength / (float)numberOfJoints;
+                softJointLimit.limit = captureLength / (float)grappleJointCount;
                 softJointLimit.contactDistance = 0.1f;
                 foreach(ConfigurableJoint cj in attachedObjectJoints)
                     cj.linearLimit = softJointLimit;
@@ -565,7 +575,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 // Increase joint limits over time
                 captureLength += Time.deltaTime * captureSpeed;
                 SoftJointLimit softJointLimit = new SoftJointLimit();
-                softJointLimit.limit = captureLength / (float)numberOfJoints;
+                softJointLimit.limit = captureLength / (float)grappleJointCount;
                 softJointLimit.contactDistance = 0.1f;
                 foreach(ConfigurableJoint cj in attachedObjectJoints)
                     cj.linearLimit = softJointLimit;
@@ -594,40 +604,11 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             attachedObject = null;
             lineRenderer.enabled = false;
 
-            // Call the UI manager to increase score
-            // uiManager.IncreaseScore(col.GetComponent<SC_CowBrain>().GetMilk());
-            // uiManager.ToggleReticle();
-
             // Reset movement penalty
             spaceshipController.SetMovementMultiplier(1f);
 
             // Play suction audio
             GetComponent<AudioSource>().PlayOneShot(cowSuction, 0.5f);
         }
-    }
-
-    // Reset parameters to starting values
-    public void ResetGame() {
-        // Create a line renderer if not set up
-        if (!lineRenderer)
-        {
-            Color lineColor = new Color(255f, 255f, 255f, 0.5f);
-            lineRenderer = gameObject.AddComponent<LineRenderer>();
-            lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
-            lineRenderer.startColor = lineColor;
-            lineRenderer.widthMultiplier = 0.25f;
-            lineRenderer.positionCount = 0;
-        }
-        lineRenderer.enabled = false;
-
-        if (!grappleOrigin)
-        {
-            grappleOrigin = transform;
-        }
-
-        attachedObjectJoints = new ConfigurableJoint[numberOfJoints];
-        grappling = false;
-        if (probeClone != null)
-            Destroy(probeClone);
     }
 }

@@ -6,39 +6,10 @@ using Mirror;
 public class MultiPlayerFarmerController : NetworkBehaviour
 {
     public CharacterController characterController;
+    [Tooltip("An empty transform which the main camera will align with")]
     public Transform cameraTransform;
+    [Tooltip("The transform of the farmer's gun")]
     public Transform gunTransform;
-
-    void OnValidate()
-    {
-        if (characterController == null)
-            characterController = GetComponent<CharacterController>();
-    }
-
-    public override void OnStartLocalPlayer()
-    {
-        base.OnStartLocalPlayer();
-
-        Camera.main.transform.SetParent(transform);
-        Camera.main.transform.localPosition = cameraTransform.localPosition;
-        Camera.main.transform.localEulerAngles = cameraTransform.localEulerAngles;
-        gunTransform.SetParent(Camera.main.transform);
-
-        LockCursor(true);
-    }
-
-    void OnDisable()
-    {
-        if (isLocalPlayer)
-        {
-            gunTransform.SetParent(transform);
-            Camera.main.transform.SetParent(null);
-            Camera.main.transform.localPosition = new Vector3(0f, 10f, -10f);
-            Camera.main.transform.localEulerAngles = Vector3.zero;
-
-            LockCursor(false);
-        }
-    }
 
     [Header("Parameters")]
     public float moveSpeed = 8f;
@@ -58,8 +29,42 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public bool isFalling = false;
     public bool isCursorLocked = false;
     public Vector3 velocity;
+  
+    private void OnValidate()
+    {
+        if (characterController == null)
+            characterController = GetComponent<CharacterController>();
+    }
 
-    void Update()
+    // OnStartLocalPlayer is called when the local player object is set up
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+
+        Camera.main.transform.SetParent(transform);
+        Camera.main.transform.localPosition = cameraTransform.localPosition;
+        Camera.main.transform.localEulerAngles = cameraTransform.localEulerAngles;
+        gunTransform.SetParent(Camera.main.transform);
+
+        LockCursor(true);
+    }
+
+    // OnDisable is called when the object is removed from the server
+    private void OnDisable()
+    {
+        if (isLocalPlayer)
+        {
+            gunTransform.SetParent(transform);
+            Camera.main.transform.SetParent(null);
+            Camera.main.transform.localPosition = new Vector3(0f, 10f, -10f);
+            Camera.main.transform.localEulerAngles = Vector3.zero;
+
+            LockCursor(false);
+        }
+    }
+
+    // Update is called once per frame
+    private void Update()
     {
         if (!isLocalPlayer) return;
         
@@ -93,7 +98,8 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         }
     }
 
-    void FixedUpdate()
+    // FixedUpdate is called in fixed time intervals
+    private void FixedUpdate()
     {
         if (!isLocalPlayer || characterController == null) return;
 
@@ -114,7 +120,8 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         velocity = characterController.velocity;
     }
 
-    void LockCursor(bool lockCursor)
+    // Lock or unlock the cursor
+    private void LockCursor(bool lockCursor)
     {
         if (lockCursor)
         {

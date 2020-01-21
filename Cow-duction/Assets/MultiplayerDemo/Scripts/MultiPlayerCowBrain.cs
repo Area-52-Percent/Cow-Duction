@@ -1,75 +1,63 @@
-﻿/*  MultiPlayerCowBrain.cs
-
-    Simple AI that randomly selects a destination on a flat plane to travel to.
-    The destination updates once the agent is within 1 meter of it.
-   
-    Assumptions:
-        This component is attached to a GameObject with Collider, NavMeshAgent and Rigidbody components.
- */
-
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityStandardAssets.Characters.FirstPerson;
 using Mirror;
 
+/// <summary>
+/// Simple AI that randomly selects a destination on a flat plane to travel to.
+/// The destination updates once the agent is within 1 meter of it.
+/// </summary>
+/// <remarks>
+/// <para>This component should be attached to a GameObject with Collider, NavMeshAgent and Rigidbody components.</para>
+/// </remarks>
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(NavMeshAgent))]
 public class MultiPlayerCowBrain : NetworkBehaviour
 {
-    // Protected variables
     protected GameObject[] fields; // Tagged as Field
-    protected RigidbodyFirstPersonController rbFpController;
     protected NavMeshAgent m_Agent;
-    protected Camera m_Cam;
     protected AudioSource m_AudioSource;
     protected Animator m_Animator;
     protected Vector3 currentDestination; // Keeps track of destination while agent disabled
-    protected float wanderTime = 0.0f;
+    protected float wanderTime = 0f;
     protected bool wandering = false;
     
-    // Serialized protected variables
-    [SerializeField] protected float fieldRadius = 5.0f;
-    [SerializeField] private bool seekingFood = true;    
-    [SerializeField] protected int wanderRadius = 100;
-    [SerializeField] protected float maxWanderTime = 10.0f;
-    [SerializeField] protected float idleTime = 3.0f;
-    [SerializeField] protected float maxSpeed = 8.0f;
-    [SerializeField] protected float recoveryTime = 3.0f;    
-    [SerializeField] protected bool tugWhenGrappled = false;
-    [SerializeField] protected bool aiControlled = true;
+    [Header("Parameters")]
+    public float fieldRadius = 5f;
+    public float wanderRadius = 100f;
+    public float maxWanderTime = 10f;
+    public float maxSpeed = 8f;
+    public float idleTime = 3f;
+    public float recoveryTime = 3f;
+    public float milk = 10f;
+    public bool tugWhenGrappled = false;
+    public bool seekingFood = true;
 
-    // Serialized private variables
-    [Space]
-    [SerializeField] private AudioClip cowMoo = null; // Set up in inspector
-    [SerializeField] private float milk = 10.0f;
+    [Header("SFX")]
+    public AudioClip cowMoo = null;
+
+    public void SetMaxSpeed(float speed)
+    {
+        maxSpeed = speed;
+        m_Agent.speed = maxSpeed;
+    }
 
     // Awake is called after all objects are initialized
     private void Awake()
     {
         m_Agent = GetComponent<NavMeshAgent>();
-        m_Cam = GetComponentInChildren<Camera>();
         m_AudioSource = GetComponent<AudioSource>();
         m_Animator = GetComponentInChildren<Animator>();
-        rbFpController = GetComponent<RigidbodyFirstPersonController>();
         fields = GameObject.FindGameObjectsWithTag("Field");
-        if (aiControlled)
-        {
-            SetPlayerControlled(false);
-            m_Agent.destination = Random.insideUnitSphere * wanderRadius;
-            currentDestination = m_Agent.destination;
-        }
-        else
-        {
-            SetPlayerControlled(true);
-        }
+        m_Agent.destination = Random.insideUnitSphere * wanderRadius;
+        currentDestination = m_Agent.destination;
         SeekFood();
     }
 
     // Update is called once per frame
     private void Update()
     {
-        if (m_Agent.enabled && m_Agent.isOnNavMesh && aiControlled)
+        if (m_Agent.enabled && m_Agent.isOnNavMesh)
         {
             if (wanderTime < maxWanderTime && m_Agent.remainingDistance > fieldRadius)
             {
@@ -99,7 +87,7 @@ public class MultiPlayerCowBrain : NetworkBehaviour
         {
             StartCoroutine(Idle());
             SatisfyHunger();
-        }        
+        }
     }
 
     // Allow agent to be knocked over
@@ -117,6 +105,7 @@ public class MultiPlayerCowBrain : NetworkBehaviour
         }
     }
 
+    // Play cow moo sfx at the specified pitch
     public void PlayMoo(float pitch)
     {
         if (m_AudioSource && cowMoo)
@@ -129,10 +118,10 @@ public class MultiPlayerCowBrain : NetworkBehaviour
     // Re-enable agent after a set period of time
     public IEnumerator Recover()
     {
+        yield return new WaitForSeconds(recoveryTime);
+            
         if (this != null)
         {
-            yield return new WaitForSeconds(recoveryTime);
-            
             float distanceToGround = Mathf.Infinity;
             RaycastHit rayHit;
             while ((transform.localEulerAngles.z > 1f && transform.localEulerAngles.z < 359f) || distanceToGround > m_Agent.height)
@@ -164,47 +153,6 @@ public class MultiPlayerCowBrain : NetworkBehaviour
             if (!m_Agent.hasPath)
                 m_Agent.destination = currentDestination;
         }
-    }
-    
-    public float GetMilk()
-    {
-        return milk;
-    }
-
-    public float GetMaxSpeed()
-    {
-        return maxSpeed;
-    }
-    
-    public float GetMaxWanderTime()
-    {
-        return maxWanderTime;
-    }
-
-    public bool GetTugWhenGrappled()
-    {
-        return tugWhenGrappled;
-    }
-
-    public void SetMilk(float _milk)
-    {
-        milk = _milk;
-    }
-
-    public void SetMaxSpeed(float _maxSpeed)
-    {
-        maxSpeed = _maxSpeed;
-        m_Agent.speed = maxSpeed;
-    }
-
-    public void SetMaxWanderTime(float _maxWanderTime)
-    {
-        maxWanderTime = _maxWanderTime;
-    }
-
-    public void SetTugWhenGrappled(bool _tugWhenGrappled)
-    {
-        tugWhenGrappled = _tugWhenGrappled;
     }
 
     // Set destination as the closest field
@@ -269,26 +217,5 @@ public class MultiPlayerCowBrain : NetworkBehaviour
         yield return new WaitForSeconds(idleTime);
 
         m_Agent.speed = maxSpeed;
-    }
-
-    // Toggle between AI controlled and Player controlled
-    protected void SetPlayerControlled(bool control)
-    {
-        if (control)
-        {
-            aiControlled = false;
-            if (m_Cam)
-                m_Cam.enabled = true;
-            if (rbFpController)
-                rbFpController.enabled = true;
-        }
-        else
-        {
-            aiControlled = true;
-            if (m_Cam)
-                m_Cam.enabled = false;
-            if (rbFpController)
-                rbFpController.enabled = false;
-        }
     }
 }

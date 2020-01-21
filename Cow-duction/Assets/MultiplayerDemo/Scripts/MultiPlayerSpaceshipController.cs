@@ -3,8 +3,8 @@ using Mirror;
 
 public class MultiPlayerSpaceshipController : NetworkBehaviour
 {
-    Rigidbody rb;
-    const float MAXANGLE = 360;
+    private Rigidbody rb;
+    private const float MAXANGLE = 360;
 
     public Transform cameraTransform;
 
@@ -18,14 +18,17 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
     public float maxRotation = 30f;
     [Range(0f, 360f)]
     public float maxMoveRotation = 10f;
-
     public bool invertY = true;
 
-    void Start()
-    {
-        rb = GetComponent<Rigidbody>();
-    }
+    [Header("Diagnostics")]
+    public float horizontal;     // Controller: (LeftJoystick X-axis)  Keyboard: (D)(A)
+    public float vertical;       // Controller: (LeftJoystick Y-axis)  Keyboard: (W)(S)
+    public float turnHorizontal; // Controller: (RightJoystick X-axis) Keyboard: (Right)(Left)
+    public float turnVertical;   // Controller: (RightJoystick Y-axis) Keyboard: (Up)(Down)
+    public float roll;           // Controller: (RT)(LT)               Keyboard: (E)(Q)
+    public float lift;           // Controller: (RB)(LB)               Keyboard: (Z)(C)
 
+    // OnStartLocalPlayer is called when the local player object is set up
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
@@ -37,7 +40,8 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
         Camera.main.transform.localEulerAngles = cameraTransform.localEulerAngles;
     }
 
-    void OnDisable()
+    // OnDisable is called when the object is removed from the server
+    private void OnDisable()
     {
         if (isLocalPlayer)
         {
@@ -48,15 +52,14 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
         }
     }
 
-    [Header("Diagnostics")]
-    [SerializeField] float horizontal;     // Controller: (LeftJoystick X-axis)  Keyboard: (D)(A)
-    [SerializeField] float vertical;       // Controller: (LeftJoystick Y-axis)  Keyboard: (W)(S)
-    [SerializeField] float turnHorizontal; // Controller: (RightJoystick X-axis) Keyboard: (Right)(Left)
-    [SerializeField] float turnVertical;   // Controller: (RightJoystick Y-axis) Keyboard: (Up)(Down)
-    [SerializeField] float roll;           // Controller: (RT)(LT)               Keyboard: (E)(Q)
-    [SerializeField] float lift;           // Controller: (RB)(LB)               Keyboard: (Z)(C)
+    // Start is called before the first frame update
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+    }
 
-    void Update()
+    // Update is called once per frame
+    private void Update()
     {
         if (!isLocalPlayer) return;
 
@@ -68,7 +71,8 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
         lift = Input.GetAxis("Lift");
     }
 
-    void FixedUpdate()
+    // FixedUpdate is called in fixed time intervals
+    private void FixedUpdate()
     {
         // Anti-gravity force
         rb.AddForce(-Physics.gravity.y * Vector3.up * rb.mass);
@@ -108,7 +112,8 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
         }
     }
 
-    void LateUpdate()
+    // LateUpdate is called after each Update call
+    private void LateUpdate()
     {
         if (Mathf.Abs(horizontal) > 0f || Mathf.Abs(vertical) > 0f)
         {
@@ -120,22 +125,26 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
         }
     }
 
-    void Move(Vector3 direction)
+    // Apply a velocity change in the specified direction
+    public void Move(Vector3 direction)
     {
-        rb.AddForce(direction, ForceMode.VelocityChange);
+        rb.AddForce(direction * movementMultiplier, ForceMode.VelocityChange);
     }
 
+    // Apply an instant force on the rigidbody with specified direction and magnitude
     public void AddImpulseForce(Vector3 dir, float force)
     {
         rb.AddRelativeForce(dir * force * rb.mass, ForceMode.Impulse);
     }
-    
+
+    // Set the multiplier affecting the magnitude of the velocity change in Move
     public void SetMovementMultiplier(float multiplier)
     {
         movementMultiplier = multiplier;
     }
 
-    void ClampRotation(float max)
+    // Clamp the transform rotation by applying a relative torque on the rigidbody
+    private void ClampRotation(float max)
     {
         float correctionMultiplier = 1f;
         if (Mathf.Sign(horizontal) == Mathf.Sign(roll) ||
