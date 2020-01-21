@@ -24,13 +24,36 @@ public class SC_HudReticleColor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, reticle.GetComponent<RectTransform>().position);
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.forward, out hit))
+        Ray ray = Camera.main.ScreenPointToRay(reticlePoint);
+
+        int layerMask = ~(1 << gameObject.layer);
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
         {
             Debug.Log("in if");
             if (hit.collider)
             {
-                image.color = Color.green;
+                Rigidbody ob = hit.collider.attachedRigidbody;
+                if (ob != null)
+                {
+                    if (ob.CompareTag("Cow"))
+                    {
+                        image.color = Color.green;
+                    }
+                    else if (ob.CompareTag("Farmer"))
+                    {
+                        image.color = Color.red;
+                    }
+                    else
+                    {
+                        image.color = Color.white;
+                    }
+                }
+            }
+            else
+            {
+                image.color = Color.white;
             }
         }
         else
