@@ -15,7 +15,19 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public float moveSpeed = 8f;
     public float turnSensitivity = 5f;
     public float tiltSensitivity = 2f;
+    public float touchSensitivity = 2f;
     public bool invertY = false;
+
+    [Header("Touch Diagnostics")]
+    public float touchX = 0f;
+    public float touchY = 0f;
+    public Vector2 positionTouchBegan;
+    public double timeTouchBegan = 0f;
+    public double timeTouchEnded = 0f;
+    public float tapTime = 0.25f;
+    public bool touchMove = false;
+    public bool touchAim = false;
+    public Touch touch;
 
     [Header("Diagnostics")]
     public float mouseX = 0f;
@@ -67,15 +79,63 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     private void Update()
     {
         if (!isLocalPlayer) return;
-        
-        // TO DO: Touchscreen input
-        mouseX = Input.GetAxis("Mouse X");
-        mouseY = Input.GetAxis("Mouse Y");
-        horizontal = Input.GetAxis("Horizontal");
-        vertical = Input.GetAxis("Vertical");
 
-        turn += mouseX * turnSensitivity;
-        tilt += (invertY ? mouseY : -mouseY) * tiltSensitivity;
+        if (Input.touchCount > 0)
+        {
+            touch = Input.GetTouch(0);
+
+            switch (touch.phase)
+            {
+                case TouchPhase.Began:
+                    timeTouchBegan = NetworkTime.time;
+                    positionTouchBegan = touch.position;
+                    if (touch.position.x < Screen.width) // Left = Move
+                        touchMove = true;
+                    else // Right = Aim
+                        touchAim = true;
+                    break;
+                case TouchPhase.Moved:
+                    if (touchMove) // Moving
+                    {
+                        touchX = touch.position.x - positionTouchBegan.x;
+                        touchY = touch.position.y - positionTouchBegan.y;
+                    }
+                    else // Aiming
+                    {
+                        touchX = touch.deltaPosition.x;
+                        touchY = touch.deltaPosition.y;
+                    }
+                    break;
+                case TouchPhase.Ended:
+                    timeTouchEnded = NetworkTime.time;
+                    if (timeTouchEnded - timeTouchBegan <= tapTime) // Tap to fire
+                        Debug.Log("Fire Gun");
+                    touchMove = false;
+                    touchAim = false;
+                    break;
+            }
+            if (touchAim)
+            {
+                turn += touchX * touchSensitivity;
+                tilt += (invertY ? touchY : -touchY) * touchSensitivity;
+            }
+            if (touchMove)
+            {
+                horizontal = Mathf.Clamp(touchX, -1f, 1f);
+                vertical = Mathf.Clamp(-touchY, -1f, 1f);
+            }
+        }
+        else // Keyboard input
+        {
+            mouseX = Input.GetAxis("Mouse X");
+            mouseY = Input.GetAxis("Mouse Y");
+            horizontal = Input.GetAxis("Horizontal");
+            vertical = Input.GetAxis("Vertical");
+
+            turn += mouseX * turnSensitivity;
+            tilt += (invertY ? mouseY : -mouseY) * tiltSensitivity;
+        }
+
         tilt = Mathf.Clamp(tilt, -90f, 90f);
 
         if (isGrounded)

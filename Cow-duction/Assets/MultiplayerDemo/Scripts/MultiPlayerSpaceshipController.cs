@@ -9,6 +9,7 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
     public Transform cameraTransform;
 
     [Header("Parameters")]
+    public float maxHeight = 50f;
     public float moveSpeed = 20f;
     public float movementMultiplier = 1f;
     public float rotateSpeed = 1f;
@@ -92,7 +93,7 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
             Move(direction * vertical * moveSpeed * Time.fixedDeltaTime);
             rb.AddRelativeTorque(Vector3.right * vertical * rotateMovingSpeed, ForceMode.Acceleration);
         }
-        if (Mathf.Abs(lift) > 0f)
+        if (Mathf.Abs(lift) > 0f && transform.position.y < maxHeight)
         {
             Move(transform.up * lift * moveSpeed * Time.fixedDeltaTime);
         }
