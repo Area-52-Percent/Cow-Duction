@@ -15,8 +15,8 @@ GameObject:
   - component: {fileID: 7510877250499661381}
   - component: {fileID: 6704976071375942063}
   - component: {fileID: -265028131768668521}
-  - component: {fileID: -1425196209200007091}
   - component: {fileID: 6106865226898448461}
+  - component: {fileID: -1425196209200007091}
   - component: {fileID: 4928104880894512320}
   m_Layer: 13
   m_Name: Spaceship
@@ -194,8 +194,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serverOnly: 0
-  m_AssetId: 3f4a9c49d384741138cf3daac24cf0d8
-  m_SceneId: 0
+  m_AssetId: 
+  m_SceneId: 3361607724
 --- !u!114 &-265028131768668521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -212,35 +212,6 @@ MonoBehaviour:
   syncInterval: 0.1
   compressRotation: 1
   clientAuthority: 1
---- !u!114 &-1425196209200007091
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 11462927149525122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53a696721f6f447e19a974f2057c45bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  cameraTransform: {fileID: 1475819289059599778}
-  moveSpeed: 20
-  movementMultiplier: 1
-  rotateSpeed: 1
-  rotateMovingSpeed: 0.5
-  rotateCorrectionSpeed: 1.5
-  maxRotation: 30
-  maxMoveRotation: 15
-  invertY: 0
-  horizontal: 0
-  vertical: 0
-  turnHorizontal: 0
-  turnVertical: 0
-  roll: 0
-  lift: 0
 --- !u!114 &6106865226898448461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -257,6 +228,36 @@ MonoBehaviour:
   syncInterval: 0.1
   thirdPersonMesh: {fileID: 0}
   hud: {fileID: 0}
+--- !u!114 &-1425196209200007091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11462927149525122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53a696721f6f447e19a974f2057c45bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  cameraTransform: {fileID: 1475819289059599778}
+  maxHeight: 50
+  moveSpeed: 20
+  movementMultiplier: 1
+  rotateSpeed: 1
+  rotateMovingSpeed: 0.5
+  rotateCorrectionSpeed: 1.5
+  maxRotation: 30
+  maxMoveRotation: 15
+  invertY: 0
+  horizontal: 0
+  vertical: 0
+  turnHorizontal: 0
+  turnVertical: 0
+  roll: 0
+  lift: 0
 --- !u!114 &4928104880894512320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,7 +273,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   grappleJointCount: 5
-  grappleTime: 0.5
+  grappleTime: 0.25
   grappleCooldown: 0.5
   maxCaptureLength: 50
   captureSpeed: 5

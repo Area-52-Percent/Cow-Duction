@@ -9,8 +9,8 @@ using Mirror;
 /// The length of the hook rope can be increased or decreased to pull or push the attached object.
 /// </summary>
 /// <remarks>
-/// <para>This component should belong to a GameObject with Rigidbody and Collider (set as trigger) components.</para>
-/// <para>GameObjects that interact with the grappling hook should have Collider and Rigidbody components.</para>
+/// <para>There should be both a normal collider and a trigger collider on this object. The trigger collider should be larger than the normal collider.</para>
+/// <para>GameObjects that interact with the grappling hook should have a Collider component and a Rigidbody if it does not have a NavMeshAgent component.</para>
 /// </remarks>
 [RequireComponent(typeof(MultiPlayerSpaceshipController))]
 [RequireComponent(typeof(Rigidbody))]
@@ -174,7 +174,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         if (attachedObject)
         {
             // Enable the line renderer
-            RenderLine(attachedObject);
+            RpcRenderLine(attachedObject);
 
             // Limit velocity of attached object
             if (attachedRigidbody.velocity.magnitude > 1.0f)
@@ -270,7 +270,8 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     }
 
     // Render a line to the object including any in-between joints
-    private void RenderLine(GameObject obj)
+    [ClientRpc]
+    private void RpcRenderLine(GameObject obj)
     {
         if (obj == attachedObject && attachedObjectJoints != null)
         {
@@ -334,7 +335,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         {
             counter += Time.fixedDeltaTime / grappleTime;
             probeClone.transform.position = Vector3.Lerp(grappleOrigin.position, grappleHitPoint, counter / grappleTime);
-            RenderLine(probeClone);
+            RpcRenderLine(probeClone);
             yield return null;
         }
         
@@ -345,7 +346,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             while (counter < grappleCooldown)
             {
                 counter += Time.fixedDeltaTime / grappleTime;
-                RenderLine(probeClone);
+                RpcRenderLine(probeClone);
                 yield return null;
             }
            
@@ -355,7 +356,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             {
                 counter += Time.fixedDeltaTime / grappleTime;
                 probeClone.transform.position = Vector3.Lerp(grappleHitPoint, grappleOrigin.position, counter / grappleTime);
-                RenderLine(probeClone);
+                RpcRenderLine(probeClone);
                 yield return null;
             }
             Destroy(probeClone);
@@ -369,6 +370,13 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         if (hit.distance > maxCaptureLength)
             return false;
         
+        if (hit.transform.tag == "Cow")
+        {
+            MultiPlayerCowBrain cowBrain = hit.transform.gameObject.GetComponent<MultiPlayerCowBrain>();
+            Rigidbody cowRigidbody = hit.transform.gameObject.AddComponent<Rigidbody>();
+            cowRigidbody.mass = cowBrain.mass;
+        }
+
         if (hit.rigidbody)
         {
             attachedRigidbody = hit.rigidbody;
@@ -453,6 +461,11 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             if (probeClone.GetComponent<AudioSource>())
             {
                 probeClone.GetComponent<AudioSource>().PlayOneShot(grappleHit);
+            }
+
+            if (attachedObject.GetComponent<NetworkIdentity>())
+            {
+                attachedObject.GetComponent<NetworkIdentity>().AssignClientAuthority(GetComponent<NetworkIdentity>().connectionToClient);
             }
             return true;
         }

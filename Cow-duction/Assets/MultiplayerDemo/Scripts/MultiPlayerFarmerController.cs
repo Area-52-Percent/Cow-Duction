@@ -13,9 +13,10 @@ public class MultiPlayerFarmerController : NetworkBehaviour
 
     [Header("Parameters")]
     public float moveSpeed = 8f;
-    public float turnSensitivity = 5f;
-    public float tiltSensitivity = 2f;
-    public float touchSensitivity = 2f;
+    public float turnSensitivity = 20f;
+    public float tiltSensitivity = 16f;
+    public float touchSensitivity = 5f;
+    public float tapTime = 0.25f;
     public bool invertY = false;
 
     [Header("Touch Diagnostics")]
@@ -24,7 +25,6 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public Vector2 positionTouchBegan;
     public double timeTouchBegan = 0f;
     public double timeTouchEnded = 0f;
-    public float tapTime = 0.25f;
     public bool touchMove = false;
     public bool touchAim = false;
     public Touch touch;
@@ -89,7 +89,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
                 case TouchPhase.Began:
                     timeTouchBegan = NetworkTime.time;
                     positionTouchBegan = touch.position;
-                    if (touch.position.x < Screen.width) // Left = Move
+                    if (touch.position.x < Screen.width / 2) // Left = Move
                         touchMove = true;
                     else // Right = Aim
                         touchAim = true;
@@ -116,13 +116,13 @@ public class MultiPlayerFarmerController : NetworkBehaviour
             }
             if (touchAim)
             {
-                turn += touchX * touchSensitivity;
-                tilt += (invertY ? touchY : -touchY) * touchSensitivity;
+                turn += touchX * touchSensitivity * Time.deltaTime;
+                tilt += (invertY ? touchY : -touchY) * touchSensitivity * Time.deltaTime;
             }
             if (touchMove)
             {
                 horizontal = Mathf.Clamp(touchX, -1f, 1f);
-                vertical = Mathf.Clamp(-touchY, -1f, 1f);
+                vertical = Mathf.Clamp(touchY, -1f, 1f);
             }
         }
         else // Keyboard input
@@ -132,8 +132,8 @@ public class MultiPlayerFarmerController : NetworkBehaviour
             horizontal = Input.GetAxis("Horizontal");
             vertical = Input.GetAxis("Vertical");
 
-            turn += mouseX * turnSensitivity;
-            tilt += (invertY ? mouseY : -mouseY) * tiltSensitivity;
+            turn += mouseX * turnSensitivity * Time.deltaTime;
+            tilt += (invertY ? mouseY : -mouseY) * tiltSensitivity * Time.deltaTime;
         }
 
         tilt = Mathf.Clamp(tilt, -90f, 90f);

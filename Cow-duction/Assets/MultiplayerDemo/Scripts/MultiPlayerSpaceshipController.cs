@@ -93,8 +93,10 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
             Move(direction * vertical * moveSpeed * Time.fixedDeltaTime);
             rb.AddRelativeTorque(Vector3.right * vertical * rotateMovingSpeed, ForceMode.Acceleration);
         }
-        if (Mathf.Abs(lift) > 0f && transform.position.y < maxHeight)
+        if (Mathf.Abs(lift) > 0f)
         {
+            if (lift > 0 && transform.position.y >= maxHeight) return;
+
             Move(transform.up * lift * moveSpeed * Time.fixedDeltaTime);
         }
 

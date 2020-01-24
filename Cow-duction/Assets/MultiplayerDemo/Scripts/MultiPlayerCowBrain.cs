@@ -7,10 +7,7 @@ using Mirror;
 /// Simple AI that randomly selects a destination on a flat plane to travel to.
 /// The destination updates once the agent is within 1 meter of it.
 /// </summary>
-/// <remarks>
-/// <para>This component should be attached to a GameObject with Collider, NavMeshAgent and Rigidbody components.</para>
-/// </remarks>
-[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(NavMeshAgent))]
 public class MultiPlayerCowBrain : NetworkBehaviour
 {
@@ -21,6 +18,7 @@ public class MultiPlayerCowBrain : NetworkBehaviour
     protected Vector3 currentDestination; // Keeps track of destination while agent disabled
     protected float wanderTime = 0f;
     protected bool wandering = false;
+    private bool seekingFood = true;
     
     [Header("Parameters")]
     public float fieldRadius = 5f;
@@ -30,8 +28,8 @@ public class MultiPlayerCowBrain : NetworkBehaviour
     public float idleTime = 3f;
     public float recoveryTime = 3f;
     public float milk = 10f;
+    public float mass = 10f;
     public bool tugWhenGrappled = false;
-    public bool seekingFood = true;
 
     [Header("SFX")]
     public AudioClip cowMoo = null;
@@ -93,30 +91,60 @@ public class MultiPlayerCowBrain : NetworkBehaviour
     // Allow agent to be knocked over
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.rigidbody && (collision.rigidbody.velocity.magnitude * collision.rigidbody.mass) > (GetComponent<Rigidbody>().velocity.magnitude * GetComponent<Rigidbody>().mass))
+        if (collision.rigidbody && (collision.rigidbody.velocity.magnitude * collision.rigidbody.mass > maxSpeed * mass))
         {
             if (m_Agent && m_Agent.enabled)
             {
                 m_Agent.enabled = false;
+                if (!GetComponent<Rigidbody>())
+                {
+                    gameObject.AddComponent<Rigidbody>();
+                    GetComponent<Rigidbody>().mass = mass;
+                }
                 if (!GetComponent<NavMeshObstacle>())
+                {
                     gameObject.AddComponent<NavMeshObstacle>();
+                    GetComponent<NavMeshObstacle>().radius = m_Agent.radius;
+                    GetComponent<NavMeshObstacle>().height = m_Agent.height;
+                }
                 StartCoroutine(Recover());
             }
         }
     }
 
-    // Play cow moo sfx at the specified pitch
-    public void PlayMoo(float pitch)
+    // Choose a random destination
+    protected void Wander()
     {
-        if (m_AudioSource && cowMoo)
-        {
-            m_AudioSource.pitch = pitch;
-            m_AudioSource.PlayOneShot(cowMoo);
+        if (!m_Agent.enabled)
+            return;
+        
+        NavMeshPath navMeshPath = new NavMeshPath();
+        Vector3 targetPosition = Random.insideUnitSphere * wanderRadius;
+
+        // Keep looking for a path if it can't reach the destination
+        while (navMeshPath.status == NavMeshPathStatus.PathPartial) {
+            targetPosition = Random.insideUnitSphere * wanderRadius;
+            m_Agent.CalculatePath(targetPosition, navMeshPath);
         }
+
+        m_Agent.destination = targetPosition;
+        currentDestination = m_Agent.destination;
+        m_Agent.stoppingDistance = 0f;
+        wanderTime = 0f;
+    }
+
+    // Wait for a set amount of seconds before moving again
+    protected IEnumerator Idle()
+    {
+        m_Agent.speed = 1.0f;
+
+        yield return new WaitForSeconds(idleTime);
+
+        m_Agent.speed = maxSpeed;
     }
 
     // Re-enable agent after a set period of time
-    public IEnumerator Recover()
+    protected IEnumerator Recover()
     {
         yield return new WaitForSeconds(recoveryTime);
             
@@ -147,11 +175,23 @@ public class MultiPlayerCowBrain : NetworkBehaviour
                 yield return null;
             }
 
+            if (GetComponent<Rigidbody>())
+                Destroy(GetComponent<Rigidbody>());
             if (GetComponent<NavMeshObstacle>())
                 Destroy(GetComponent<NavMeshObstacle>());
             m_Agent.enabled = true;
             if (!m_Agent.hasPath)
                 m_Agent.destination = currentDestination;
+        }
+    }
+
+    // Play cow moo sfx at the specified pitch
+    private void PlayMoo(float pitch)
+    {
+        if (m_AudioSource && cowMoo)
+        {
+            m_AudioSource.pitch = pitch;
+            m_AudioSource.PlayOneShot(cowMoo);
         }
     }
 
@@ -186,36 +226,5 @@ public class MultiPlayerCowBrain : NetworkBehaviour
         seekingFood = false;
         wandering = true;
         Wander();
-    }
-
-    // Choose a random destination
-    protected void Wander()
-    {
-        if (!m_Agent.enabled)
-            return;
-        
-        NavMeshPath navMeshPath = new NavMeshPath();
-        Vector3 targetPosition = Random.insideUnitSphere * wanderRadius;
-
-        // Keep looking for a path if it can't reach the destination
-        while (navMeshPath.status == NavMeshPathStatus.PathPartial) {
-            targetPosition = Random.insideUnitSphere * wanderRadius;
-            m_Agent.CalculatePath(targetPosition, navMeshPath);
-        }
-
-        m_Agent.destination = targetPosition;
-        currentDestination = m_Agent.destination;
-        m_Agent.stoppingDistance = 0f;
-        wanderTime = 0f;
-    }
-
-    // Wait for a set amount of seconds before moving again
-    protected IEnumerator Idle()
-    {
-        m_Agent.speed = 1.0f;
-
-        yield return new WaitForSeconds(idleTime);
-
-        m_Agent.speed = maxSpeed;
     }
 }

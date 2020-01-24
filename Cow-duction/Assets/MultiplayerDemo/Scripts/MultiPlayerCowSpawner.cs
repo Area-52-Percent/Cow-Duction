@@ -115,9 +115,8 @@ public class MultiPlayerCowSpawner : NetworkBehaviour
     private void RandomizeCow(GameObject cow)
     {
         MultiPlayerCowBrain cowBrain = cow.GetComponent<MultiPlayerCowBrain>();
-        Rigidbody cowRigidbody = cow.GetComponent<Rigidbody>();
 
-        float mass = cowRigidbody.mass;
+        float mass = cowBrain.mass;
         float size = cow.transform.localScale.x; // Assume scale is uniform
         float milk = cowBrain.milk;
         float maxSpeed = cowBrain.maxSpeed;
@@ -129,7 +128,7 @@ public class MultiPlayerCowSpawner : NetworkBehaviour
         maxSpeed = Random.Range(maxSpeed - (maxSpeed * randomFactor), maxSpeed + (maxSpeed * randomFactor)) + size;
         maxWanderTime = Random.Range(maxWanderTime - (maxWanderTime * randomFactor), maxWanderTime + (maxWanderTime * randomFactor)) - size;
 
-        cowRigidbody.mass = mass;
+        cowBrain.mass = mass;
         cow.transform.localScale *= size;
         cowBrain.milk = milk;
         cowBrain.maxWanderTime = maxWanderTime;
