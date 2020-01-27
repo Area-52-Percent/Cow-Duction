@@ -19,7 +19,8 @@ public class MultiPlayerCowBrain : NetworkBehaviour
     protected float wanderTime = 0f;
     protected bool wandering = false;
     private bool seekingFood = true;
-    
+    private bool recovering = false;
+
     [Header("Parameters")]
     public float fieldRadius = 5f;
     public float wanderRadius = 100f;
@@ -72,6 +73,14 @@ public class MultiPlayerCowBrain : NetworkBehaviour
                 {
                     SeekFood();
                 }
+            }
+        }
+        else if (!recovering)
+        {
+            Rigidbody cowRb = GetComponent<Rigidbody>();
+            if (cowRb && cowRb.useGravity)
+            {
+                StartCoroutine(Recover());
             }
         }
         if (m_Animator)
@@ -148,41 +157,45 @@ public class MultiPlayerCowBrain : NetworkBehaviour
     {
         yield return new WaitForSeconds(recoveryTime);
             
-        if (this != null)
+        recovering = true;
+
+        float distanceToGround = Mathf.Infinity;
+        Rigidbody rb = GetComponent<Rigidbody>();
+        RaycastHit rayHit;
+
+        while ((transform.localEulerAngles.z > 1f && transform.localEulerAngles.z < 359f) || distanceToGround > m_Agent.height)
         {
-            float distanceToGround = Mathf.Infinity;
-            RaycastHit rayHit;
-            while ((transform.localEulerAngles.z > 1f && transform.localEulerAngles.z < 359f) || distanceToGround > m_Agent.height)
+            if (Physics.Raycast(transform.position, Vector3.down, out rayHit))
             {
-                if (Physics.Raycast(transform.position, Vector3.down, out rayHit))
-                {
-                    distanceToGround = rayHit.distance;
-                }
-
-                Rigidbody rb = GetComponent<Rigidbody>();
-                Quaternion deltaQuat = Quaternion.FromToRotation(transform.up, Vector3.up);
-
-                Vector3 axis;
-                float angle;
-                deltaQuat.ToAngleAxis(out angle, out axis);
-
-                float dampenFactor = 2f; // this value requires tuning
-                rb.AddTorque(-rb.angularVelocity * dampenFactor, ForceMode.Acceleration);
-
-                float adjustFactor = 1f; // this value requires tuning
-                rb.AddTorque(axis.normalized * angle * adjustFactor, ForceMode.Acceleration);
-                
-                yield return null;
+                distanceToGround = rayHit.distance;
             }
 
-            if (GetComponent<Rigidbody>())
-                Destroy(GetComponent<Rigidbody>());
-            if (GetComponent<NavMeshObstacle>())
-                Destroy(GetComponent<NavMeshObstacle>());
-            m_Agent.enabled = true;
-            if (!m_Agent.hasPath)
-                m_Agent.destination = currentDestination;
+            Quaternion deltaQuat = Quaternion.FromToRotation(transform.up, Vector3.up);
+
+            Vector3 axis;
+            float angle;
+            deltaQuat.ToAngleAxis(out angle, out axis);
+
+            float dampenFactor = 2f; // this value requires tuning
+            rb.AddTorque(-rb.angularVelocity * dampenFactor, ForceMode.Acceleration);
+
+            float adjustFactor = 1f; // this value requires tuning
+            rb.AddTorque(axis.normalized * angle * adjustFactor, ForceMode.Acceleration);
+            
+            yield return null;
         }
+
+        if (rb)
+            Destroy(rb);
+
+        if (GetComponent<NavMeshObstacle>())
+            Destroy(GetComponent<NavMeshObstacle>());
+
+        m_Agent.enabled = true;
+        if (!m_Agent.hasPath)
+            m_Agent.destination = currentDestination;
+
+        recovering = false;
     }
 
     // Play cow moo sfx at the specified pitch

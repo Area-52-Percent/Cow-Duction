@@ -216,20 +216,23 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 GrappleRelease();
             }
 
-            if (waypointIcon != null && !waypointIcon.gameObject.activeSelf)
-                waypointIcon.gameObject.SetActive(true);
-            
-            // Waypoint tracks position of attached object, clamped to the screen
-            Vector3 waypointIconPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, attachedObject.transform.position);
-            if (waypointIconPosition.x < waypointIcon.rect.width)
-                waypointIconPosition.x = waypointIcon.rect.width;
-            else if (waypointIconPosition.x > Screen.width - waypointIcon.rect.width)
-                waypointIconPosition.x = Screen.width - waypointIcon.rect.width;
-            if (waypointIconPosition.y < waypointIcon.rect.height)
-                waypointIconPosition.y = waypointIcon.rect.height;
-            else if (waypointIconPosition.y > Screen.height - waypointIcon.rect.height)
-                waypointIconPosition.y = Screen.height - waypointIcon.rect.height;
-            waypointIcon.position = waypointIconPosition;
+            if (waypointIcon != null)
+            {
+                if (!waypointIcon.gameObject.activeSelf)
+                    waypointIcon.gameObject.SetActive(true);
+
+                // Waypoint tracks position of attached object, clamped to the screen
+                Vector3 waypointIconPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, attachedObject.transform.position);
+                if (waypointIconPosition.x < waypointIcon.rect.width)
+                    waypointIconPosition.x = waypointIcon.rect.width;
+                else if (waypointIconPosition.x > Screen.width - waypointIcon.rect.width)
+                    waypointIconPosition.x = Screen.width - waypointIcon.rect.width;
+                if (waypointIconPosition.y < waypointIcon.rect.height)
+                    waypointIconPosition.y = waypointIcon.rect.height;
+                else if (waypointIconPosition.y > Screen.height - waypointIcon.rect.height)
+                    waypointIconPosition.y = Screen.height - waypointIcon.rect.height;
+                waypointIcon.position = waypointIconPosition;
+            }
         }
         else // attachedObject == null
         {
@@ -450,7 +453,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             if (objNetId != null)
                 objNetId.AssignClientAuthority(netIdentity.connectionToClient);
 
-            // Change waypoint sprite
+            // Play distressed moo
             if (hit.transform.tag == "Cow") {
                 SC_CowBrain cowBrain = hit.transform.GetComponent<SC_CowBrain>();
                 if (cowBrain)
