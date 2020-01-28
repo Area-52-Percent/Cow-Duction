@@ -56,9 +56,15 @@ public class DynamicDesign : MonoBehaviour
     private void RandomizeTree(GameObject tree)
     {
         float xPos = tree.transform.position.x;
+        float yPos = tree.transform.position.y;
         float zPos = tree.transform.position.z;
         tree.SetActive(false);
         int randomTreeType = Mathf.RoundToInt(Random.Range(0.0f, 1.0f));
-        GameObject treeClone = Instantiate(trees[randomTreeType], new Vector3(xPos, tree.transform.position.y, zPos), Quaternion.identity);
+        if (randomTreeType == 0)
+        {
+            yPos = yPos + 3f;
+        }
+        GameObject treeClone = Instantiate(trees[randomTreeType], new Vector3(xPos, yPos, zPos), Quaternion.identity);
+        treeClone.transform.SetParent(GameObject.Find("Trees").transform);
     }
 }

@@ -57,6 +57,7 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private Text speedText = null; // Set up in inspector
     [SerializeField] private Text altitudeText = null; // Set up in inspector
     [SerializeField] private Text timeText = null; // Set up in inspector
+    [SerializeField] private Text achievementText = null; // Set up in inspector
     [SerializeField] private Text fuelWarnText = null; // Set up in inspector
     [SerializeField] private Slider fuelMeter = null; // Set up in inspector
     [SerializeField] private Image fuelMeterFill = null; // Set up in inspector
