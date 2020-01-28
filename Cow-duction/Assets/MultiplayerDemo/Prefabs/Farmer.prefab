@@ -213,7 +213,7 @@ GameObject:
   - component: {fileID: 9191940059234161867}
   m_Layer: 0
   m_Name: Farmer
-  m_TagString: Untagged
+  m_TagString: Farmer
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -280,8 +280,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serverOnly: 0
-  m_AssetId: 
-  m_SceneId: 2082174437
+  m_AssetId: b136d4db3eb1543ae9f48c83e0cc7945
+  m_SceneId: 0
 --- !u!114 &-5150503960663521439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,11 +331,14 @@ MonoBehaviour:
   characterController: {fileID: 1045973885651576277}
   cameraTransform: {fileID: 2564912053017645724}
   gunTransform: {fileID: 933337896069547030}
+  projectile: {fileID: 5336471833384703356, guid: ac61cf315a270426cb923db51a43e328,
+    type: 3}
   moveSpeed: 8
   turnSensitivity: 20
   tiltSensitivity: 16
   touchSensitivity: 5
   tapTime: 0.25
+  projectileSpeed: 10
   invertY: 0
   touchX: 0
   touchY: 0
@@ -355,6 +358,37 @@ MonoBehaviour:
   isFalling: 0
   isCursorLocked: 0
   velocity: {x: 0, y: 0, z: 0}
+--- !u!114 &2865173409242405032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7673742432339268255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serverOnly: 0
+  m_AssetId: 
+  m_SceneId: 0
+--- !u!114 &6723839922491354238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7673742432339268255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  animator: {fileID: 3652355579825802742}
+  clientAuthority: 0
 --- !u!1 &8884297973901515445
 GameObject:
   m_ObjectHideFlags: 0
@@ -522,6 +556,12 @@ GameObject:
 --- !u!4 &6639930710674792588 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: a15e226f1fcf24b65a5a177449cb00c7,
+    type: 3}
+  m_PrefabInstance: {fileID: 1828304234377104278}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &3652355579825802742 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: -6057140222963153312, guid: a15e226f1fcf24b65a5a177449cb00c7,
     type: 3}
   m_PrefabInstance: {fileID: 1828304234377104278}
   m_PrefabAsset: {fileID: 0}

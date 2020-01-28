@@ -10,6 +10,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public Transform cameraTransform;
     [Tooltip("The transform of the farmer's gun")]
     public Transform gunTransform;
+    public GameObject projectile;
 
     [Header("Parameters")]
     public float moveSpeed = 8f;
@@ -17,6 +18,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public float tiltSensitivity = 16f;
     public float touchSensitivity = 5f;
     public float tapTime = 0.25f;
+    public float projectileSpeed = 100f;
     public bool invertY = false;
 
     [Header("Touch Diagnostics")]
@@ -109,7 +111,9 @@ public class MultiPlayerFarmerController : NetworkBehaviour
                 case TouchPhase.Ended:
                     timeTouchEnded = NetworkTime.time;
                     if (timeTouchEnded - timeTouchBegan <= tapTime) // Tap to fire
-                        Debug.Log("Fire Gun");
+                    {
+                        CmdFireProjectile();
+                    }
                     touchMove = false;
                     touchAim = false;
                     break;
@@ -149,6 +153,11 @@ public class MultiPlayerFarmerController : NetworkBehaviour
             jumpSpeed = 0;
         }
 
+        if (Input.GetButtonDown("Fire1"))
+        {
+            CmdFireProjectile();
+        }
+
         if (Input.GetButtonDown("Cancel"))
         {
             if (isCursorLocked)
@@ -165,6 +174,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
 
         transform.rotation = Quaternion.Euler(0f, turn, 0f);
         Camera.main.transform.localRotation = Quaternion.Euler(tilt, 0f, 0f);
+        cameraTransform.localRotation = Quaternion.Euler(tilt, 0f, 0f);
 
         Vector3 direction = new Vector3(horizontal, jumpSpeed, vertical);
         direction = Vector3.ClampMagnitude(direction, 1f);
@@ -178,6 +188,13 @@ public class MultiPlayerFarmerController : NetworkBehaviour
 
         isGrounded = characterController.isGrounded;
         velocity = characterController.velocity;
+    }
+
+    [Command]
+    private void CmdFireProjectile()
+    {
+        GameObject projectileClone = Instantiate(projectile, cameraTransform.position + cameraTransform.forward, cameraTransform.rotation);
+        NetworkServer.Spawn(projectileClone);
     }
 
     // Lock or unlock the cursor
