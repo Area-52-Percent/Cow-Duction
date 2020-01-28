@@ -9,31 +9,13 @@ public class BarnDestruction : MonoBehaviour
     public Mesh destroyedMesh;
     private Mesh defaultMesh;
     private bool isDestroyed;
-    private bool isRepairing;
     public float timeToRepair;
-    private float curTime;
+    private IEnumerator co;
+    private GameObject destroyedObject;
     void Start()
     {
         isDestroyed = false;
-        isRepairing = false;
         defaultMesh = myObject.GetComponent<MeshFilter>().mesh;
-        curTime = 0;
-    }
-    void Update()
-    {
-        if(isRepairing)
-        {
-            if (curTime > timeToRepair)
-            {
-                Destroy(gameObject.transform.Find("destroyedObject"));
-                myObject.SetActive(true);
-                curTime = 0;
-                isRepairing = false;
-                isDestroyed = false;
-            }
-            else
-                curTime += Time.deltaTime;
-        }
     }
     //**Mesh Swapping Method**
     //Usable for a static Destroyed Object when physics is NOT wanted on each piece
@@ -64,8 +46,7 @@ public class BarnDestruction : MonoBehaviour
         {
             if (col.gameObject.name == "AlienProjectile")
             {
-                GameObject destroyedObject = Instantiate(DestroyedObjectPrefab, transform.position, transform.rotation);
-                destroyedObject.name = "destroyedObject";
+                destroyedObject = Instantiate(DestroyedObjectPrefab, transform.position, transform.rotation);
                 destroyedObject.transform.parent = gameObject.transform;
                 myObject.SetActive(false);
                 isDestroyed = true;
@@ -75,7 +56,8 @@ public class BarnDestruction : MonoBehaviour
         {
             if (col.gameObject.tag == "Farmer")
             {
-                isRepairing = true;
+                co = Repair();
+                StartCoroutine(co);
             }
         }
     }
@@ -83,8 +65,14 @@ public class BarnDestruction : MonoBehaviour
     {
         if(collision.gameObject.tag == "Farmer")
         {
-            isRepairing = false;
-            curTime = 0;
+            StopCoroutine(co);
         }
+    }
+    protected IEnumerator Repair()
+    {
+        yield return new WaitForSeconds(timeToRepair);
+        Destroy(destroyedObject);
+        //Add some Effect
+        myObject.SetActive(true);
     }
 }
