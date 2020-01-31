@@ -7,7 +7,7 @@ public class BarnDestruction : MonoBehaviour
     public GameObject myObject;
     public GameObject DestroyedObjectPrefab;
     public Mesh destroyedMesh;
-    private Mesh defaultMesh;
+    //private Mesh defaultMesh;
     private bool isDestroyed;
     public float timeToRepair;
     private IEnumerator co;
@@ -15,7 +15,7 @@ public class BarnDestruction : MonoBehaviour
     void Start()
     {
         isDestroyed = false;
-        defaultMesh = myObject.GetComponent<MeshFilter>().mesh;
+        //defaultMesh = myObject.GetComponent<MeshFilter>().mesh;
     }
     //**Mesh Swapping Method**
     //Usable for a static Destroyed Object when physics is NOT wanted on each piece
@@ -40,11 +40,11 @@ public class BarnDestruction : MonoBehaviour
     //}
     //**New Object Method**
     //Use when you want to enact physics on the destroyed Object
-    void OnCollisionEnter(Collision col)
+    void OnTriggerEnter(Collider col)
     {
         if (!isDestroyed)
         {
-            if (col.gameObject.name == "AlienProjectile")
+            if (col.gameObject.name == "UFO")
             {
                 destroyedObject = Instantiate(DestroyedObjectPrefab, transform.position, transform.rotation);
                 destroyedObject.transform.parent = gameObject.transform;
