@@ -83,9 +83,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneId: 0
   serverOnly: 0
-  m_AssetId: 
-  m_SceneId: 3644509532
+  m_AssetId: 7f4d5b6d021694fd2b105745efa4a8a7
 --- !u!114 &8792314447803442791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,8 +100,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  compressRotation: 1
   clientAuthority: 0
+  localPositionSensitivity: 0.01
+  localEulerAnglesSensitivity: 0.01
+  localScaleSensitivity: 0.01
+  compressRotation: 0
 --- !u!114 &5087147125273948035
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,8 +126,8 @@ MonoBehaviour:
   idleTime: 3
   recoveryTime: 3
   milk: 10
+  mass: 10
   tugWhenGrappled: 0
-  seekingFood: 1
   cowMoo: {fileID: 0}
 --- !u!1001 &2616802461944748777
 PrefabInstance:

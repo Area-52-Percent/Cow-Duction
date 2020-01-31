@@ -42,8 +42,7 @@ namespace Mirror
             if (!showGUI)
                 return;
 
-            // GUILayout.BeginArea(new Rect(10 + offsetX, 40 + offsetY, 215, 9999));
-            GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height));
+            GUILayout.BeginArea(new Rect(10 + offsetX, 40 + offsetY, 215, 9999));
             if (!NetworkClient.isConnected && !NetworkServer.active)
             {
                 if (!NetworkClient.active)

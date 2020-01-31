@@ -434,7 +434,10 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 attachedObjectJoints[j].linearLimit = softJointLimit;
                 // The first joint is connected to the UFO
                 if (j == 0)
+                {
                     attachedObjectJoints[j].connectedBody = rb;
+                    attachedObjectJoints[j].connectedAnchor = grappleOrigin.localPosition;
+                }
                 else
                     attachedObjectJoints[j].connectedBody = attachedObjectJoints[j - 1].gameObject.GetComponent<Rigidbody>();
             }

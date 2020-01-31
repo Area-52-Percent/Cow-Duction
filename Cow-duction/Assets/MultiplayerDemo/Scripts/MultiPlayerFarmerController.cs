@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using Mirror;
 
 [RequireComponent(typeof(CharacterController))]
@@ -18,7 +19,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public float tiltSensitivity = 16f;
     public float touchSensitivity = 5f;
     public float tapTime = 0.25f;
-    public float projectileSpeed = 100f;
+    // public float projectileSpeed = 100f;
     public bool invertY = false;
 
     [Header("Touch Diagnostics")]
@@ -27,8 +28,8 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public Vector2 positionTouchBegan;
     public double timeTouchBegan = 0f;
     public double timeTouchEnded = 0f;
-    public bool touchMove = false;
-    public bool touchAim = false;
+    public int touchMove = -1;
+    public int touchAim = -1;
     public Touch touch;
 
     [Header("Diagnostics")]
@@ -82,51 +83,60 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
-        if (Input.touchCount > 0)
-        {
-            touch = Input.GetTouch(0);
+        int touchCount = Input.touchCount;
 
-            switch (touch.phase)
+        if (touchCount > 0)
+        {
+            if (!Input.multiTouchEnabled) touchCount = 1;
+
+            for (int t = 0; t < touchCount; t++)
             {
-                case TouchPhase.Began:
-                    timeTouchBegan = NetworkTime.time;
-                    positionTouchBegan = touch.position;
-                    if (touch.position.x < Screen.width / 2) // Left = Move
-                        touchMove = true;
-                    else // Right = Aim
-                        touchAim = true;
-                    break;
-                case TouchPhase.Moved:
-                    if (touchMove) // Moving
-                    {
-                        touchX = touch.position.x - positionTouchBegan.x;
-                        touchY = touch.position.y - positionTouchBegan.y;
-                    }
-                    else // Aiming
-                    {
-                        touchX = touch.deltaPosition.x;
-                        touchY = touch.deltaPosition.y;
-                    }
-                    break;
-                case TouchPhase.Ended:
-                    timeTouchEnded = NetworkTime.time;
-                    if (timeTouchEnded - timeTouchBegan <= tapTime) // Tap to fire
-                    {
-                        CmdFireProjectile();
-                    }
-                    touchMove = false;
-                    touchAim = false;
-                    break;
-            }
-            if (touchAim)
-            {
-                turn += touchX * touchSensitivity * Time.deltaTime;
-                tilt += (invertY ? touchY : -touchY) * touchSensitivity * Time.deltaTime;
-            }
-            if (touchMove)
-            {
-                horizontal = Mathf.Clamp(touchX, -1f, 1f);
-                vertical = Mathf.Clamp(touchY, -1f, 1f);
+                touch = Input.GetTouch(t);
+
+                switch (touch.phase)
+                {
+                    case TouchPhase.Began:
+                        timeTouchBegan = NetworkTime.time;
+                        positionTouchBegan = touch.position;
+
+                        if (touch.position.x < Screen.width / 2)
+                            touchMove = t;
+                        else
+                            touchAim = t;
+                        break;
+                    case TouchPhase.Moved:
+                        if (touchMove == t) // Moving
+                        {
+                            touchX = touch.position.x - positionTouchBegan.x;
+                            touchY = touch.position.y - positionTouchBegan.y;
+
+                            horizontal = Mathf.Clamp(touchX, -1f, 1f);
+                            vertical = Mathf.Clamp(touchY, -1f, 1f);
+                        }
+                        else if (touchAim == t) // Aiming
+                        {
+                            touchX = touch.deltaPosition.x;
+                            touchY = touch.deltaPosition.y;
+
+                            turn += touchX * touchSensitivity * Time.deltaTime;
+                            tilt += (invertY ? touchY : -touchY) * touchSensitivity * Time.deltaTime;
+                        }
+                        break;
+                    case TouchPhase.Ended:
+                        timeTouchEnded = NetworkTime.time;
+                        // Tap to fire
+                        if (timeTouchEnded - timeTouchBegan <= tapTime &&
+                            Mathf.Abs(positionTouchBegan.x - touch.position.x) == 0 && 
+                            Mathf.Abs(positionTouchBegan.y - touch.position.y) == 0)
+                        {
+                            CmdFireProjectile();
+                        }
+                        if (touchMove > -1)
+                            touchMove = -1;
+                        if (touchAim > -1)
+                            touchAim = -1;
+                        break;
+                }
             }
         }
         else // Keyboard input
@@ -151,11 +161,6 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         {
             isFalling = true;
             jumpSpeed = 0;
-        }
-
-        if (Input.GetButtonDown("Fire1"))
-        {
-            CmdFireProjectile();
         }
 
         if (Input.GetButtonDown("Cancel"))
