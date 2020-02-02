@@ -17,16 +17,16 @@ public class DynamicDesign : MonoBehaviour
     {
         styleSelector = Mathf.RoundToInt(Random.Range(0.0f, 2.0f));
         Debug.Log("Dynamic Design started");
-        if (Random.Range(0.0f, 1000.0f) <= 500.0f)
-        {
-            environments[0].gameObject.SetActive(true);
-            environments[1].gameObject.SetActive(false);
-        }
-        else
-        {
-            environments[0].gameObject.SetActive(false);
-            environments[1].gameObject.SetActive(true);
-        }
+        //if (Random.Range(0.0f, 1000.0f) <= 500.0f)
+        //{
+        environments[0].gameObject.SetActive(true);
+        environments[1].gameObject.SetActive(false);
+        //}
+        //else
+        //{
+            //environments[0].gameObject.SetActive(false);
+            //environments[1].gameObject.SetActive(true);
+        //}
 
         barnSpawnPoints = new List<GameObject>();
         barnSpawnPoints.AddRange(GameObject.FindGameObjectsWithTag("Barn"));
