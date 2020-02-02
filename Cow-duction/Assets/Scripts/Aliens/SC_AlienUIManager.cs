@@ -19,6 +19,7 @@ public class SC_AlienUIManager : MonoBehaviour
     private GameManager gameManager;
     private Camera mainCamera;
     private SC_HudReticleFollowCursor reticleFollowCursor;
+    private SC_CowShooter cowShooter;
     private TransformWrapper transformWrapper;
     private Rigidbody _rbUFO;
     private MeshRenderer[] ufoMesh;
@@ -102,6 +103,7 @@ public class SC_AlienUIManager : MonoBehaviour
         ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
         transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
         reticleFollowCursor = reticle.GetComponent<SC_HudReticleFollowCursor>();
+        cowShooter = _rbUFO.GetComponent<SC_CowShooter>();
     }
 
     // Start is called before the first frame update
@@ -301,6 +303,8 @@ public class SC_AlienUIManager : MonoBehaviour
 
         score += 1;
         scoreText.text = score.ToString("D2");
+
+        cowShooter.AddCow();
         
         if (fuel <= 0.0f)
             fuelWarnText.enabled = false;
