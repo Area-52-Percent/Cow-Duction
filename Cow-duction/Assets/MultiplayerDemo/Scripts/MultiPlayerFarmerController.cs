@@ -7,6 +7,7 @@ using Mirror;
 public class MultiPlayerFarmerController : NetworkBehaviour
 {
     public CharacterController characterController;
+    public Animator animator;
     [Tooltip("An empty transform which the main camera will align with")]
     public Transform cameraTransform;
     [Tooltip("The transform of the farmer's gun")]
@@ -49,6 +50,8 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     {
         if (characterController == null)
             characterController = GetComponent<CharacterController>();
+        if (animator == null)
+            animator = GetComponent<NetworkAnimator>().animator;
     }
 
     // OnStartLocalPlayer is called when the local player object is set up
@@ -56,10 +59,9 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     {
         base.OnStartLocalPlayer();
 
-        Camera.main.transform.SetParent(transform);
-        Camera.main.transform.localPosition = cameraTransform.localPosition;
-        Camera.main.transform.localEulerAngles = cameraTransform.localEulerAngles;
-        gunTransform.SetParent(Camera.main.transform);
+        Camera.main.transform.SetParent(cameraTransform);
+        Camera.main.transform.localPosition = Vector3.zero;
+        Camera.main.transform.localEulerAngles = Vector3.zero;
 
         LockCursor(true);
     }
@@ -69,7 +71,6 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            gunTransform.SetParent(transform);
             Camera.main.transform.SetParent(null);
             Camera.main.transform.localPosition = new Vector3(0f, 10f, -10f);
             Camera.main.transform.localEulerAngles = Vector3.zero;
@@ -148,6 +149,11 @@ public class MultiPlayerFarmerController : NetworkBehaviour
 
             turn += mouseX * turnSensitivity * Time.deltaTime;
             tilt += (invertY ? mouseY : -mouseY) * tiltSensitivity * Time.deltaTime;
+
+            if (Input.GetButtonDown("Fire1"))
+            {
+                CmdFireProjectile();
+            }
         }
 
         tilt = Mathf.Clamp(tilt, -90f, 90f);
@@ -178,7 +184,6 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         if (!isLocalPlayer || characterController == null) return;
 
         transform.rotation = Quaternion.Euler(0f, turn, 0f);
-        Camera.main.transform.localRotation = Quaternion.Euler(tilt, 0f, 0f);
         cameraTransform.localRotation = Quaternion.Euler(tilt, 0f, 0f);
 
         Vector3 direction = new Vector3(horizontal, jumpSpeed, vertical);
@@ -193,6 +198,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
 
         isGrounded = characterController.isGrounded;
         velocity = characterController.velocity;
+        animator.SetFloat("speed", velocity.magnitude);
     }
 
     [Command]

@@ -276,6 +276,12 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     [ClientRpc]
     private void RpcRenderLine(GameObject obj)
     {
+        if (obj == null)
+        {
+            lineRenderer.enabled = false;
+            return;
+        }
+
         if (obj == attachedObject && attachedObjectJoints != null)
         {
             // Set up points along each joint
@@ -363,6 +369,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 yield return null;
             }
             Destroy(probeClone);
+            RpcRenderLine(null);
         }
         grappling = false;
     }
@@ -446,15 +453,17 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             // Set spaceship movement penalty
             spaceshipController.SetMovementMultiplier(1 - Mathf.Clamp01(attachedRigidbody.mass / rb.mass));
 
+            NetworkIdentity objNetId = attachedObject.GetComponent<NetworkIdentity>();
+            if (objNetId != null)
+            {
+                objNetId.AssignClientAuthority(netIdentity.connectionToClient);
+            }
+
             if (probeClone)
             {
                 probeClone.transform.parent = attachedObject.transform;
-                probeClone.transform.position = attachedObject.transform.position;
+                probeClone.transform.localPosition = Vector3.zero;
             }
-
-            NetworkIdentity objNetId = attachedObject.GetComponent<NetworkIdentity>();
-            if (objNetId != null)
-                objNetId.AssignClientAuthority(netIdentity.connectionToClient);
 
             // Play distressed moo
             if (hit.transform.tag == "Cow") {
@@ -469,10 +478,6 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 probeClone.GetComponent<AudioSource>().PlayOneShot(grappleHit);
             }
 
-            if (attachedObject.GetComponent<NetworkIdentity>())
-            {
-                attachedObject.GetComponent<NetworkIdentity>().AssignClientAuthority(GetComponent<NetworkIdentity>().connectionToClient);
-            }
             return true;
         }
         return false;
@@ -501,7 +506,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
 
             // Disable line renderer
             if (lineRenderer.enabled)
-                lineRenderer.enabled = false;
+                RpcRenderLine(null);
 
             // Destroy probe
             if (probeClone)
@@ -621,7 +626,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             }
 
             attachedObject = null;
-            lineRenderer.enabled = false;
+            RpcRenderLine(null);
 
             // Reset movement penalty
             spaceshipController.SetMovementMultiplier(1f);
