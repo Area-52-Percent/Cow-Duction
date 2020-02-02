@@ -5,6 +5,7 @@ using UnityEngine;
 public class SpawnPointTimer : MonoBehaviour
 {
     [SerializeField] public float elapsedTime = 0.0f;
+    [SerializeField] public float specialElapsedTime = 0.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -15,5 +16,6 @@ public class SpawnPointTimer : MonoBehaviour
     void Update()
     {
         elapsedTime += Time.deltaTime;
+        specialElapsedTime += Time.deltaTime;
     }
 }

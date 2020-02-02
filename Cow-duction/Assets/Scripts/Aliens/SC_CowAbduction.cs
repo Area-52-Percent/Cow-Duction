@@ -549,7 +549,7 @@ public class SC_CowAbduction : MonoBehaviour
             lineRenderer.enabled = false;
 
             // Call the UI manager to increase score
-            uiManager.IncreaseScore(col.GetComponent<SC_CowBrain>().GetMilk());
+            uiManager.IncreaseScore(col.GetComponent<SC_CowBrain>().GetMilk(), col.gameObject);
             uiManager.ToggleReticle();
 
             // Reset movement penalty
