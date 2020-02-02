@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SC_Achievement : MonoBehaviour
 {
-    private string name;
+    private string achname;
     private string description;
     private bool unlocked;
     private GameObject achievementRef;
@@ -18,7 +18,7 @@ public class SC_Achievement : MonoBehaviour
 
     public bool Unlocked { get => unlocked; set => unlocked = value; }
     public string Description { get => description; set => description = value; }
-    public string Name { get => name; set => name = value; }
+    public string Name { get => achname; set => achname = value; }
     public GameObject AchievementRef { get => achievementRef; set => achievementRef = value; }
 
     public bool EarnAchievement()
