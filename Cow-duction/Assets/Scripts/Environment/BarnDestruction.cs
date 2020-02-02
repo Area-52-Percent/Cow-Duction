@@ -6,7 +6,7 @@ public class BarnDestruction : MonoBehaviour
 {
     public GameObject myObject;
     public GameObject DestroyedObjectPrefab;
-    public Mesh destroyedMesh;
+    //public Mesh destroyedMesh;
     //private Mesh defaultMesh;
     private bool isDestroyed;
     public float timeToRepair;
@@ -40,11 +40,11 @@ public class BarnDestruction : MonoBehaviour
     //}
     //**New Object Method**
     //Use when you want to enact physics on the destroyed Object
-    void OnTriggerEnter(Collider col)
+    void OnCollisionEnter(Collision col)
     {
         if (!isDestroyed)
         {
-            if (col.gameObject.name == "UFO")
+            if (col.gameObject.tag == "CowProjectile")
             {
                 destroyedObject = Instantiate(DestroyedObjectPrefab, transform.position, transform.rotation);
                 destroyedObject.transform.parent = gameObject.transform;
@@ -54,19 +54,19 @@ public class BarnDestruction : MonoBehaviour
         }
         else
         {
-            if (col.gameObject.tag == "Farmer")
-            {
-                co = Repair();
-                StartCoroutine(co);
-            }
+            //if (col.gameObject.tag == "Farmer")
+            //{
+            //    co = Repair();
+            //    StartCoroutine(co);
+            //}
         }
     }
     void OnCollisionExit(Collision collision)
     {
-        if(collision.gameObject.tag == "Farmer")
-        {
-            StopCoroutine(co);
-        }
+        //if(collision.gameObject.tag == "Farmer")
+        //{
+        //    StopCoroutine(co);
+        //}
     }
     protected IEnumerator Repair()
     {
