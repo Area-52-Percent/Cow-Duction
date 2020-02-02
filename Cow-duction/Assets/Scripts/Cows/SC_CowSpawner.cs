@@ -13,11 +13,14 @@ using System.Collections.Generic;
 public class SC_CowSpawner : MonoBehaviour
 {
     public GameObject cowPrefab;
+    public GameObject chocolateCowPrefab;
+    public GameObject strawberryCowPrefab;
     [SerializeField] private GameObject[] cows = null; // Set up in inspector
     [SerializeField] private float[] cowSpawnRatios = null; // Set up in inspector (as decimal out of 1, last ratio should be 1 to guarantee something spawns)
     public int maxCowAmount = 10;
     public float radius = 10.0f;
     public float spawnRate = 5f;
+    public float specialRate = 20f;
     public int intialSpawnAmount = 9;
     [SerializeField] private float randomFactor = 0.1f;
     private List<GameObject> spawnPoints;
@@ -36,9 +39,9 @@ public class SC_CowSpawner : MonoBehaviour
 
     // Start is called before the first frame update
     void Start()
-    {           
+    {
         // Error checking
-        if (cowPrefab == null)
+        if (cowPrefab == null || chocolateCowPrefab == null || strawberryCowPrefab == null)
             Debug.LogError("Cow prefab not assigned");
         if (cows.Length < 1)
             Debug.LogError("No cows assigned");
@@ -49,7 +52,7 @@ public class SC_CowSpawner : MonoBehaviour
         
         foreach (GameObject spawnPoint in spawnPoints)
         {
-            SpawnCows(spawnPoint, intialSpawnAmount / spawnPoints.Count);
+            SpawnCows(spawnPoint, intialSpawnAmount / spawnPoints.Count, false);
         }
     }
 
@@ -62,26 +65,34 @@ public class SC_CowSpawner : MonoBehaviour
         {
             //Compare spawnpoints elapsed time
             float[] ElapsedTimes = new float[spawnPoints.Count];
+            float[] SpecialElapsedTimes = new float[spawnPoints.Count];
             for (int i = 0; i < spawnPoints.Count; i++)
             {
                 // ((1 + (k/n)) ^ n) / e ^ k where n is the distance between the ufo a given spawn
                 float fx = ( (Mathf.Pow(1 + (5 / Vector3.Distance(spawnPoints[i].transform.position, UFOLoc.transform.position)), Vector3.Distance(spawnPoints[i].transform.position, UFOLoc.transform.position)) / Mathf.Exp(5)));
                 // Debug.Log(i + "?" + Vector3.Distance(spawnPoints[i].transform.position, UFOLoc.transform.position) + "-" + fx);
                 ElapsedTimes[i] = spawnPoints[i].GetComponent<SpawnPointTimer>().elapsedTime * fx;
+                SpecialElapsedTimes[i] = spawnPoints[i].GetComponent<SpawnPointTimer>().specialElapsedTime * fx;
             }
             float MaxSinceLastSpawn = Mathf.Max(ElapsedTimes);
             if(MaxSinceLastSpawn > spawnRate)
             {
                 int SpawnLoc = System.Array.IndexOf(ElapsedTimes, Mathf.Max(ElapsedTimes));
                 spawnPoints[SpawnLoc].GetComponent<SpawnPointTimer>().elapsedTime = 0.0f;
-                SpawnCows(spawnPoints[SpawnLoc], 1) ;
+                SpawnCows(spawnPoints[SpawnLoc], 1, false) ;
             }
-
+            float SpecialMaxSinceLastSpawn = Mathf.Max(SpecialElapsedTimes);
+            if (SpecialMaxSinceLastSpawn > specialRate)
+            {
+                int SpawnLoc = System.Array.IndexOf(SpecialElapsedTimes, Mathf.Max(SpecialElapsedTimes));
+                spawnPoints[SpawnLoc].GetComponent<SpawnPointTimer>().specialElapsedTime = 0.0f;
+                SpawnCows(spawnPoints[SpawnLoc], 1, true);
+            }
         }
     }
 
     // Spawn <Amount> number of cows at <spawnPoint> position
-    private void SpawnCows(GameObject spawnPoint, int Amount)
+    private void SpawnCows(GameObject spawnPoint, int Amount, bool Special)
     {
         for (int i = 0; i < Amount; i++)
         {
@@ -91,10 +102,31 @@ public class SC_CowSpawner : MonoBehaviour
             {
                 if (Random.value <= cowSpawnRatios[c])
                 {
-                    GameObject cowClone = Instantiate(cows[c], new Vector3(xPos, spawnPoint.transform.position.y, zPos), Quaternion.identity);
-                    RandomizeCow(cowClone);
-                    cowClone.transform.parent = this.transform;
-                    break;
+                    if (Special)
+                    {
+                        float whichCow = Random.value * 2;
+                        if (whichCow > 1.5)
+                        {
+                            GameObject cowClone = Instantiate(cows[3], new Vector3(xPos, spawnPoint.transform.position.y, zPos), Quaternion.identity);
+                            RandomizeCow(cowClone);
+                            cowClone.transform.parent = this.transform;
+                            break;
+                        }
+                        else
+                        {
+                            GameObject cowClone = Instantiate(cows[2], new Vector3(xPos, spawnPoint.transform.position.y, zPos), Quaternion.identity);
+                            RandomizeCow(cowClone);
+                            cowClone.transform.parent = this.transform;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        GameObject cowClone = Instantiate(cows[c], new Vector3(xPos, spawnPoint.transform.position.y, zPos), Quaternion.identity);
+                        RandomizeCow(cowClone);
+                        cowClone.transform.parent = this.transform;
+                        break;
+                    }
                 }
             }
         }

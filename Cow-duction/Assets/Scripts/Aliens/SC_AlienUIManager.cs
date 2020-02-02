@@ -24,6 +24,8 @@ public class SC_AlienUIManager : MonoBehaviour
     private MeshRenderer[] ufoMesh;
     private AudioSource ufoAudioSource;
     private int score;
+    private bool inScoreMultiplier = false;
+    private int scoreMultiplier = 1;
     private float fuel; // Percentage of 100
     private float fuelDepletionRate = 0.5f;
     private float fuelWarnAmount = 25.0f;
@@ -54,9 +56,11 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private Image waypointIcon = null;
     [Space] // Flight status
     [SerializeField] private Text scoreText = null; // Set up in inspector
+    [SerializeField] private Text mulitiplierText = null; // Set up in inspector
     [SerializeField] private Text speedText = null; // Set up in inspector
     [SerializeField] private Text altitudeText = null; // Set up in inspector
     [SerializeField] private Text timeText = null; // Set up in inspector
+    [SerializeField] private Text achievementText = null; // Set up in inspector
     [SerializeField] private Text fuelWarnText = null; // Set up in inspector
     [SerializeField] private Slider fuelMeter = null; // Set up in inspector
     [SerializeField] private Image fuelMeterFill = null; // Set up in inspector
@@ -294,14 +298,45 @@ public class SC_AlienUIManager : MonoBehaviour
         }
     }
 
+    private IEnumerator RunScoreMultiplier(int CowScore)
+    {
+        score = score + (scoreMultiplier * CowScore);
+        scoreMultiplier = scoreMultiplier + 1;
+        mulitiplierText.text = scoreMultiplier.ToString("D1");
+        scoreText.text = score.ToString("D2");
+        yield return new WaitForSeconds(10);
+        inScoreMultiplier = false;
+        scoreMultiplier = 1;
+        mulitiplierText.text = scoreMultiplier.ToString("D1");
+    }
+
     // Increase score and fuel
-    public void IncreaseScore(float milk)
+    public void IncreaseScore(float milk, GameObject cow)
     {
         StartCoroutine(AnimateIncreaseScore());
+        int cowScore = 1;
+        if (cow.GetComponent<SC_CowBrain>().cowType == "Normal")
+        {
+            cowScore = 1;
+        }
+        else if(cow.GetComponent<SC_CowBrain>().cowType == "Chocolate Cow")
+        {
+            cowScore = 2;
+        }
+        else if(cow.GetComponent<SC_CowBrain>().cowType == "Strawberry Cow")
+        {
+            cowScore = 3;
+        }
+        if (inScoreMultiplier)
+        {
+            StopCoroutine("RunScoreMultiplier");
+            StartCoroutine(RunScoreMultiplier(cowScore));
+        }
+        else {
+            StartCoroutine(RunScoreMultiplier(cowScore));
+            inScoreMultiplier = true;
+        }
 
-        score += 1;
-        scoreText.text = score.ToString("D2");
-        
         if (fuel <= 0.0f)
             fuelWarnText.enabled = false;
 
