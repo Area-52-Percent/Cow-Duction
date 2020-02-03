@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5336471832858346358}
   - component: {fileID: 5336471832858346355}
   - component: {fileID: 5336471832858346356}
-  m_Layer: 0
+  m_Layer: 15
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,8 +91,8 @@ GameObject:
   - component: {fileID: 4693818801996781241}
   - component: {fileID: 6743251068334711868}
   - component: {fileID: 6893230566167100661}
-  m_Layer: 0
-  m_Name: Projectile
+  m_Layer: 15
+  m_Name: Projectile Potato
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -128,7 +128,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!136 &5336471833384703353
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -137,7 +137,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5336471833384703356}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2
@@ -155,9 +155,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 0
+  sceneId: 535523113
   serverOnly: 0
-  m_AssetId: ac61cf315a270426cb923db51a43e328
+  m_AssetId: 
 --- !u!114 &6743251068334711868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -193,4 +193,7 @@ MonoBehaviour:
   syncInterval: 0.1
   destroyAfter: 5
   rigidBody: {fileID: 5336471833384703354}
-  force: 500
+  force: 250
+  milkLeak: {fileID: 3012827781637457126, guid: 49dfbc03e97ca41798e370e8aa978301,
+    type: 3}
+  projectileHit: {fileID: 8300000, guid: 2d383d0fb481a4b8daf0e141a0d5f0da, type: 3}

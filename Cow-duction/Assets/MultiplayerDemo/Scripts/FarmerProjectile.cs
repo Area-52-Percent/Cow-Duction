@@ -8,6 +8,9 @@ public class FarmerProjectile : NetworkBehaviour
     public Rigidbody rigidBody;
     public float force = 1000;
 
+    public GameObject milkLeak;
+    public AudioClip projectileHit;
+
     public override void OnStartServer()
     {
         Invoke(nameof(DestroySelf), destroyAfter);
@@ -32,6 +35,14 @@ public class FarmerProjectile : NetworkBehaviour
     [ServerCallback]
     void OnTriggerEnter(Collider co)
     {
+        if (co.gameObject.GetComponent<MultiPlayerSpaceshipController>())
+        {
+            co.gameObject.GetComponent<MultiPlayerSpaceshipController>().AddImpulseForce(rigidBody.velocity.normalized, force * rigidBody.mass);
+
+            GameObject milkLeakClone = Instantiate(milkLeak, transform.position, transform.rotation);
+            NetworkServer.Spawn(milkLeakClone);
+            milkLeakClone.AddComponent<AudioSource>().PlayOneShot(projectileHit, 0.25f);
+        }
         NetworkServer.Destroy(gameObject);
     }
 }

@@ -223,14 +223,14 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
 
                 // Waypoint tracks position of attached object, clamped to the screen
                 Vector3 waypointIconPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, attachedObject.transform.position);
-                if (waypointIconPosition.x < waypointIcon.rect.width)
-                    waypointIconPosition.x = waypointIcon.rect.width;
-                else if (waypointIconPosition.x > Screen.width - waypointIcon.rect.width)
-                    waypointIconPosition.x = Screen.width - waypointIcon.rect.width;
-                if (waypointIconPosition.y < waypointIcon.rect.height)
-                    waypointIconPosition.y = waypointIcon.rect.height;
-                else if (waypointIconPosition.y > Screen.height - waypointIcon.rect.height)
-                    waypointIconPosition.y = Screen.height - waypointIcon.rect.height;
+                if (waypointIconPosition.x < waypointIcon.rect.width / 2)
+                    waypointIconPosition.x = waypointIcon.rect.width / 2;
+                else if (waypointIconPosition.x > Screen.width - (waypointIcon.rect.width / 2))
+                    waypointIconPosition.x = Screen.width - (waypointIcon.rect.width / 2);
+                if (waypointIconPosition.y < waypointIcon.rect.height / 2)
+                    waypointIconPosition.y = waypointIcon.rect.height / 2;
+                else if (waypointIconPosition.y > Screen.height - (waypointIcon.rect.height / 2))
+                    waypointIconPosition.y = Screen.height - (waypointIcon.rect.height / 2);
                 waypointIcon.position = waypointIconPosition;
             }
         }

@@ -121781,6 +121781,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8528067897341029532, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
+        type: 3}
+      propertyPath: m_Name
+      value: NetworkAddressField
+      objectReference: {fileID: 0}
     - target: {fileID: 7247412637386390867, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
         type: 3}
       propertyPath: m_Name
@@ -121843,6 +121848,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7247412637386390864, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
         type: 3}
+      propertyPath: spawnPrefabs.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7247412637386390864, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
+        type: 3}
       propertyPath: spaceshipSpawn
       value: 
       objectReference: {fileID: 540933438}
@@ -121866,6 +121876,12 @@ PrefabInstance:
       propertyPath: farmerSpawns.Array.data[3]
       value: 
       objectReference: {fileID: 137691939}
+    - target: {fileID: 7247412637386390864, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
+        type: 3}
+      propertyPath: spawnPrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 3548555650585113165, guid: fae10533dbb5e462784fe99a2bbed39d,
+        type: 3}
     - target: {fileID: 7247412638114670675, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
         type: 3}
       propertyPath: m_LocalPosition.z
@@ -121874,12 +121890,17 @@ PrefabInstance:
     - target: {fileID: 7247412638114670671, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7247412637386390868, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
         type: 3}
       propertyPath: showGUI
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7247412638120903507, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65f4c949bc3a44725a49cae9c4a0fee5, type: 3}

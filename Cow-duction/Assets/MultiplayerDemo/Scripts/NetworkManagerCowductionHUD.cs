@@ -1,173 +1,181 @@
 ﻿using System.ComponentModel;
 using UnityEngine;
+using UnityEngine.UI;
+using Mirror;
 
-namespace Mirror
+/// <summary>
+/// An extension for the NetworkManager that displays a default HUD for controlling the network state of the game.
+/// <para>This component also shows useful internal state for the networking system in the inspector window of the editor. It allows users to view connections, networked objects, message handlers, and packet statistics. This information can be helpful when debugging networked games.</para>
+/// </summary>
+[RequireComponent(typeof(NetworkManagerCowduction))]
+[EditorBrowsable(EditorBrowsableState.Never)]
+public class NetworkManagerCowductionHUD : MonoBehaviour
 {
+    NetworkManagerCowduction manager;
+
     /// <summary>
-    /// An extension for the NetworkManager that displays a default HUD for controlling the network state of the game.
-    /// <para>This component also shows useful internal state for the networking system in the inspector window of the editor. It allows users to view connections, networked objects, message handlers, and packet statistics. This information can be helpful when debugging networked games.</para>
+    /// Whether to show the default control HUD at runtime.
     /// </summary>
-    [RequireComponent(typeof(NetworkManagerCowduction))]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public class NetworkManagerCowductionHUD : MonoBehaviour
+    public bool showGUI = true;
+
+    [Header("Custom GUI")]
+    public GameObject mainMenu;
+    public InputField networkAddressField;
+    public GameObject pauseMenu;
+
+    void Awake()
     {
-        NetworkManagerCowduction manager;
+        manager = GetComponent<NetworkManagerCowduction>();
+        mainMenu.SetActive(true);
+        pauseMenu.SetActive(false);
 
-        /// <summary>
-        /// Whether to show the default control HUD at runtime.
-        /// </summary>
-        public bool showGUI = true;
+        networkAddressField.text = "localhost";
+    }
 
-        [Header("Custom GUI")]
-        public GameObject mainMenu;
-        public GameObject pauseMenu;
+    void OnGUI()
+    {
+        if (!showGUI)
+            return;
 
-        void Awake()
+        GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height));
+        if (!NetworkClient.isConnected && !NetworkServer.active)
         {
-            manager = GetComponent<NetworkManagerCowduction>();
-            mainMenu.SetActive(true);
-            pauseMenu.SetActive(false);
-        }
-
-        void OnGUI()
-        {
-            if (!showGUI)
-                return;
-
-            GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height));
-            if (!NetworkClient.isConnected && !NetworkServer.active)
+            if (!NetworkClient.active)
             {
-                if (!NetworkClient.active)
+                // LAN Host
+                if (Application.platform != RuntimePlatform.WebGLPlayer)
                 {
-                    // LAN Host
-                    if (Application.platform != RuntimePlatform.WebGLPlayer)
+                    if (GUILayout.Button("LAN Host"))
                     {
-                        if (GUILayout.Button("LAN Host"))
-                        {
-                            manager.StartHost();
-                        }
+                        manager.StartHost();
                     }
+                }
 
-                    // LAN Client + IP
-                    GUILayout.BeginHorizontal();
-                    if (GUILayout.Button("LAN Client"))
-                    {
-                        manager.StartClient();
-                    }
-                    manager.networkAddress = GUILayout.TextField(manager.networkAddress);
-                    GUILayout.EndHorizontal();
+                // LAN Client + IP
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("LAN Client"))
+                {
+                    manager.StartClient();
+                }
+                manager.networkAddress = GUILayout.TextField(manager.networkAddress);
+                GUILayout.EndHorizontal();
 
-                    // LAN Server Only
-                    if (Application.platform == RuntimePlatform.WebGLPlayer)
-                    {
-                        // cant be a server in webgl build
-                        GUILayout.Box("(  WebGL cannot be server  )");
-                    }
-                    else
-                    {
-                        if (GUILayout.Button("LAN Server Only")) manager.StartServer();
-                    }
+                // LAN Server Only
+                if (Application.platform == RuntimePlatform.WebGLPlayer)
+                {
+                    // cant be a server in webgl build
+                    GUILayout.Box("(  WebGL cannot be server  )");
                 }
                 else
                 {
-                    // Connecting
-                    GUILayout.Label("Connecting to " + manager.networkAddress + "..");
-                    if (GUILayout.Button("Cancel Connection Attempt"))
-                    {
-                        manager.StopClient();
-                    }
+                    if (GUILayout.Button("LAN Server Only")) manager.StartServer();
                 }
             }
             else
             {
-                // server / client status message
-                if (NetworkServer.active)
+                // Connecting
+                GUILayout.Label("Connecting to " + manager.networkAddress + "..");
+                if (GUILayout.Button("Cancel Connection Attempt"))
                 {
-                    GUILayout.Label("Server: active. Transport: " + Transport.activeTransport);
-                }
-                if (NetworkClient.isConnected)
-                {
-                    GUILayout.Label("Client: address=" + manager.networkAddress);
+                    manager.StopClient();
                 }
             }
-
-            // client ready
-            if (NetworkClient.isConnected && !ClientScene.ready)
-            {
-                if (GUILayout.Button("Client Ready"))
-                {
-                    ClientScene.Ready(NetworkClient.connection);
-
-                    if (ClientScene.localPlayer == null)
-                    {
-                        ClientScene.AddPlayer();
-                    }
-                }
-            }
-
-            // stop
-            if (NetworkServer.active || NetworkClient.isConnected)
-            {
-                if (GUILayout.Button("Stop"))
-                {
-                    manager.StopHost();
-                }
-            }
-
-            GUILayout.EndArea();
         }
-
-        void Update()
+        else
         {
-            if (!NetworkClient.isConnected && !NetworkServer.active)
+            // server / client status message
+            if (NetworkServer.active)
             {
-                if (!NetworkClient.active)
-                {
-                    if (!mainMenu.activeSelf)
-                    {
-                        mainMenu.SetActive(true);
-                    }
-                }
+                GUILayout.Label("Server: active. Transport: " + Transport.activeTransport);
             }
-            if (Input.GetButtonDown("Cancel"))
+            if (NetworkClient.isConnected)
             {
-                if (mainMenu.activeSelf) return;
-
-                if (pauseMenu.activeSelf)
-                    pauseMenu.SetActive(false);
-                else
-                    pauseMenu.SetActive(true);
+                GUILayout.Label("Client: address=" + manager.networkAddress);
             }
         }
 
-        public void PlayAsSpaceShip()
+        // client ready
+        if (NetworkClient.isConnected && !ClientScene.ready)
         {
-            manager.StartHost();
-            mainMenu.SetActive(false);
+            if (GUILayout.Button("Client Ready"))
+            {
+                ClientScene.Ready(NetworkClient.connection);
+
+                if (ClientScene.localPlayer == null)
+                {
+                    ClientScene.AddPlayer();
+                }
+            }
         }
 
-        public void PlayAsFarmer()
+        // stop
+        if (NetworkServer.active || NetworkClient.isConnected)
         {
-            manager.StartClient();
-            mainMenu.SetActive(false);
-        }
-
-        public void ExitToMainMenu()
-        {
-            if (NetworkServer.active || NetworkClient.isConnected)
+            if (GUILayout.Button("Stop"))
             {
                 manager.StopHost();
             }
-            pauseMenu.SetActive(false);
         }
 
-        public void ExitGame()
+        GUILayout.EndArea();
+    }
+
+    void Update()
+    {
+        if (!NetworkClient.isConnected && !NetworkServer.active)
         {
-#if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+            if (!NetworkClient.active)
+            {
+                if (!mainMenu.activeSelf)
+                {
+                    mainMenu.SetActive(true);
+                }
+            }
         }
+        if (Input.GetButtonDown("Cancel"))
+        {
+            TogglePauseMenu();
+        }
+    }
+
+    public void PlayAsSpaceShip()
+    {
+        manager.StartHost();
+        mainMenu.SetActive(false);
+    }
+
+    public void PlayAsFarmer()
+    {
+        manager.networkAddress = networkAddressField.text;
+        manager.StartClient();
+        mainMenu.SetActive(false);
+    }
+
+    public void TogglePauseMenu()
+    {
+        if (mainMenu.activeSelf) return;
+
+        if (pauseMenu.activeSelf)
+            pauseMenu.SetActive(false);
+        else
+            pauseMenu.SetActive(true);
+    }
+
+    public void ExitToMainMenu()
+    {
+        if (NetworkServer.active || NetworkClient.isConnected)
+        {
+            manager.StopHost();
+        }
+        pauseMenu.SetActive(false);
+    }
+
+    public void ExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
 }
