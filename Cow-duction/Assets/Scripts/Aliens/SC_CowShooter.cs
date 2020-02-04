@@ -19,7 +19,6 @@ public class SC_CowShooter : MonoBehaviour
     }
     private void Update()
     {
-        Debug.Log(obtainedCows);
         if (Input.GetMouseButtonDown(1) && Time.timeScale > Mathf.Epsilon)
         {
             if (obtainedCows >= 0)
