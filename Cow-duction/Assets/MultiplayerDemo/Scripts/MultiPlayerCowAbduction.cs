@@ -106,6 +106,8 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     // FixedUpdate is called in fixed time intervals
     private void FixedUpdate()
     {
+        if (!isLocalPlayer) return;
+
         // Left click casts a raycast in the direction of the cursor position.
         if (isFiring && Time.timeScale > Mathf.Epsilon)
         {

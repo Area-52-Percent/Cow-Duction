@@ -8,6 +8,7 @@ public class FarmerProjectile : NetworkBehaviour
     public Rigidbody rigidBody;
     public float force = 1000;
 
+    [Header("Hit Feedback")]
     public GameObject milkLeak;
     public AudioClip projectileHit;
 
