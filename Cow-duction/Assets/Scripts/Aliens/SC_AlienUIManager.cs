@@ -21,7 +21,7 @@ public class SC_AlienUIManager : MonoBehaviour
     private SC_HudReticleFollowCursor reticleFollowCursor;
     private TransformWrapper transformWrapper;
     private Rigidbody _rbUFO;
-    private MeshRenderer[] ufoMesh;
+    [SerializeField] private MeshRenderer[] ufoMesh;
     private AudioSource ufoAudioSource;
     private int score;
     private bool inScoreMultiplier = false;
@@ -102,7 +102,7 @@ public class SC_AlienUIManager : MonoBehaviour
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         mainCamera = Camera.main;
         _rbUFO = GameObject.Find("UFO").GetComponent<Rigidbody>();
-        ufoMesh = _rbUFO.GetComponentsInChildren<MeshRenderer>();
+        // ufoMesh = _rbUFO.GetComponentsInChildren<MeshRenderer>();
         ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
         transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
         reticleFollowCursor = reticle.GetComponent<SC_HudReticleFollowCursor>();
