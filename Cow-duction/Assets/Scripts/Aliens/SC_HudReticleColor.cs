@@ -20,7 +20,6 @@ public class SC_HudReticleColor : MonoBehaviour
     {
         image = GetComponent<Image>();
         rend = GetComponent<Renderer>();
-        Debug.Log(rend);
         initColor = image.color;
         maxViewLength = 50;
     }

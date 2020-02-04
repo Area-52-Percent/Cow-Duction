@@ -19,6 +19,7 @@ public class SC_AlienUIManager : MonoBehaviour
     private GameManager gameManager;
     private Camera mainCamera;
     private SC_HudReticleFollowCursor reticleFollowCursor;
+    private SC_CowShooter cowShooter;
     private TransformWrapper transformWrapper;
     private Rigidbody _rbUFO;
     private MeshRenderer[] ufoMesh;
@@ -106,6 +107,7 @@ public class SC_AlienUIManager : MonoBehaviour
         ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
         transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
         reticleFollowCursor = reticle.GetComponent<SC_HudReticleFollowCursor>();
+        cowShooter = _rbUFO.GetComponent<SC_CowShooter>();
     }
 
     // Start is called before the first frame update
@@ -313,6 +315,7 @@ public class SC_AlienUIManager : MonoBehaviour
     // Increase score and fuel
     public void IncreaseScore(float milk, GameObject cow)
     {
+        cowShooter.AddCow();
         StartCoroutine(AnimateIncreaseScore());
         int cowScore = 1;
         if (cow.GetComponent<SC_CowBrain>().cowType == "Normal")
@@ -449,6 +452,8 @@ public class SC_AlienUIManager : MonoBehaviour
         ufoAudioSource.Play();
 
         timeRemaining = Mathf.Infinity;
+
+        SkipIntro();
 
         // Hard-coded timing, seemingly no way around it for now
         while (playingIntro && ufoAudioSource.isPlaying)
