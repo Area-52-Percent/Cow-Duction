@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 7510877250499661381}
   - component: {fileID: 6704976071375942063}
   - component: {fileID: -265028131768668521}
+  - component: {fileID: 1528649228599377089}
   - component: {fileID: 6106865226898448461}
   - component: {fileID: -1425196209200007091}
   - component: {fileID: 4928104880894512320}
@@ -215,6 +216,25 @@ MonoBehaviour:
   localEulerAnglesSensitivity: 0.01
   localScaleSensitivity: 0.01
   compressRotation: 1
+--- !u!114 &1528649228599377089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11462927149525122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86b09ddc6979bef449863e559e25deea, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: JimBob
+  kill: 0
+  rollPosModifier: 0
+  pitchPosModifier: 0
+  useTransformRotation: 1
+  rollAmpFactor: 2
+  smoothSpeed: 1
 --- !u!114 &6106865226898448461
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,16 +269,14 @@ MonoBehaviour:
   maxHeight: 50
   moveSpeed: 20
   movementMultiplier: 1
-  rotateSpeed: 1
-  rotateMovingSpeed: 0.5
-  rotateCorrectionSpeed: 1.5
+  rotateSpeed: 60
   maxRotation: 30
-  maxMoveRotation: 15
+  maxMoveRotation: 10
   invertY: 0
   horizontal: 0
   vertical: 0
-  turnHorizontal: 0
-  turnVertical: 0
+  yaw: 0
+  pitch: 0
   roll: 0
   lift: 0
 --- !u!114 &4928104880894512320
@@ -1043,6 +1061,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 4f8da539cd08047c882787e9b39ea105, type: 2}
+    - target: {fileID: 348385769364920362, guid: ae570223ea803491b9cf80167448e975,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ae570223ea803491b9cf80167448e975, type: 3}
 --- !u!4 &8939859309337719305 stripped

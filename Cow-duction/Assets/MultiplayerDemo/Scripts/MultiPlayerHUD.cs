@@ -16,7 +16,7 @@ public class MultiPlayerHUD : NetworkBehaviour
         {
             hud.enabled = true;
             if (thirdPersonMesh != null)
-                thirdPersonMesh.SetActive(false);
+                thirdPersonMesh.GetComponent<SkinnedMeshRenderer>().enabled = false;
         }
         else if (hud.enabled)
         {

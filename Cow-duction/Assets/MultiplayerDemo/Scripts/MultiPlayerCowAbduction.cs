@@ -383,8 +383,12 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         if (hit.transform.tag == "Cow")
         {
             MultiPlayerCowBrain cowBrain = hit.transform.gameObject.GetComponent<MultiPlayerCowBrain>();
-            Rigidbody cowRigidbody = hit.transform.gameObject.AddComponent<Rigidbody>();
-            cowRigidbody.mass = cowBrain.mass;
+            Rigidbody cowRigidBody = hit.transform.gameObject.GetComponent<Rigidbody>();
+            if (!cowRigidBody)
+            {
+                cowRigidBody = hit.transform.gameObject.AddComponent<Rigidbody>();
+                cowRigidBody.mass = cowBrain.mass;
+            }
         }
 
         if (hit.rigidbody)

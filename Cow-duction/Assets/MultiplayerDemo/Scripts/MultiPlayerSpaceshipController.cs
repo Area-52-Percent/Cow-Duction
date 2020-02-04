@@ -12,22 +12,26 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
     public float maxHeight = 50f;
     public float moveSpeed = 20f;
     public float movementMultiplier = 1f;
-    public float rotateSpeed = 1f;
-    public float rotateMovingSpeed = .5f;
-    public float rotateCorrectionSpeed = 1.5f;
-    [Range(0f, 360f)]
-    public float maxRotation = 30f;
-    [Range(0f, 360f)]
-    public float maxMoveRotation = 10f;
+    public float rotateSpeed = 60f; // In degrees per second
+    [Range(0, 360)]
+    public float maxRotation = 40f;
+    [Range(0, 360)]
+    public float maxMoveRotation = 20f;
     public bool invertY = true;
 
     [Header("Diagnostics")]
-    public float horizontal;     // Controller: (LeftJoystick X-axis)  Keyboard: (D)(A)
-    public float vertical;       // Controller: (LeftJoystick Y-axis)  Keyboard: (W)(S)
-    public float turnHorizontal; // Controller: (RightJoystick X-axis) Keyboard: (Right)(Left)
-    public float turnVertical;   // Controller: (RightJoystick Y-axis) Keyboard: (Up)(Down)
-    public float roll;           // Controller: (RT)(LT)               Keyboard: (E)(Q)
-    public float lift;           // Controller: (RB)(LB)               Keyboard: (Z)(C)
+    [Range(-1, 1)]
+    public float horizontal; // Controller: (L-Joystick X-axis) Keyboard: (D)(A)
+    [Range(-1, 1)]
+    public float vertical;   // Controller: (L-Joystick Y-axis) Keyboard: (W)(S)
+    [Range(-1, 1)]
+    public float yaw;        // Controller: (R-Joystick X-axis) Keyboard: (Right)(Left)
+    [Range(-1, 1)]
+    public float pitch;      // Controller: (R-Joystick Y-axis) Keyboard: (Up)(Down)
+    [Range(-1, 1)]
+    public float roll;       // Controller: (RT)(LT)            Keyboard: (E)(Q)
+    [Range(-1, 1)]
+    public float lift;       // Controller: (RB)(LB)            Keyboard: (Z)(C)
 
     // OnStartLocalPlayer is called when the local player object is set up
     public override void OnStartLocalPlayer()
@@ -57,6 +61,7 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rotateSpeed *= Mathf.Deg2Rad;
     }
 
     // Update is called once per frame
@@ -66,8 +71,8 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
 
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
-        turnHorizontal = Input.GetAxis("TurnHorizontal");
-        turnVertical = Input.GetAxis("TurnVertical");
+        yaw = Input.GetAxis("TurnHorizontal");
+        pitch = Input.GetAxis("TurnVertical");
         roll = Input.GetAxis("Roll");
         lift = Input.GetAxis("Lift");
     }
@@ -84,40 +89,37 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
         if (Mathf.Abs(horizontal) > 0f)
         {
             Vector3 direction = new Vector3(transform.right.x, 0, transform.right.z).normalized;
-            Move(direction * horizontal * moveSpeed * Time.fixedDeltaTime);
-            rb.AddRelativeTorque(Vector3.back * horizontal * rotateMovingSpeed, ForceMode.Acceleration);
+            Move(direction * horizontal);
+            Rotate(Vector3.back * horizontal);
         }
         if (Mathf.Abs(vertical) > 0f)
         {
             Vector3 direction = new Vector3(transform.forward.x, 0, transform.forward.z).normalized;
-            Move(direction * vertical * moveSpeed * Time.fixedDeltaTime);
-            rb.AddRelativeTorque(Vector3.right * vertical * rotateMovingSpeed, ForceMode.Acceleration);
+            Move(direction * vertical);
+            Rotate(Vector3.right * vertical);
         }
         if (Mathf.Abs(lift) > 0f)
         {
             if (lift > 0 && transform.position.y >= maxHeight) return;
 
-            Move(transform.up * lift * moveSpeed * Time.fixedDeltaTime);
+            Move(transform.up * lift);
         }
 
         // Rotational movement
-        if (Mathf.Abs(turnHorizontal) > 0f)
+        if (Mathf.Abs(yaw) > 0f)
         {
-            rb.AddRelativeTorque(Vector3.up * turnHorizontal * rotateSpeed, ForceMode.Acceleration);
+            Rotate(Vector3.up * yaw);
         }
-        if (Mathf.Abs(turnVertical) > 0f)
+        if (Mathf.Abs(pitch) > 0f)
         {
-            rb.AddRelativeTorque((invertY ? Vector3.right : Vector3.left) * turnVertical * rotateSpeed, ForceMode.Acceleration);
+            Rotate((invertY ? Vector3.right : Vector3.left) * pitch);
         }
         if (Mathf.Abs(roll) > 0f)
         {
-            rb.AddRelativeTorque(Vector3.back * roll * rotateSpeed, ForceMode.Acceleration);
+            Rotate(Vector3.back * roll);
         }
-    }
 
-    // LateUpdate is called after each Update call
-    private void LateUpdate()
-    {
+        // Clamp rotation based on whether spaceship is moving or not
         if (Mathf.Abs(horizontal) > 0f || Mathf.Abs(vertical) > 0f)
         {
             ClampRotation(maxMoveRotation);
@@ -129,9 +131,15 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
     }
 
     // Apply a velocity change in the specified direction
-    public void Move(Vector3 direction)
+    public void Move(Vector3 dir)
     {
-        rb.AddForce(direction * movementMultiplier, ForceMode.VelocityChange);
+        rb.AddForce(dir * moveSpeed * movementMultiplier * Time.fixedDeltaTime, ForceMode.VelocityChange);
+    }
+
+    // Apply a relative torque in the specified direction
+    private void Rotate(Vector3 torque)
+    {
+        rb.AddRelativeTorque(torque * rotateSpeed * Time.fixedDeltaTime, ForceMode.VelocityChange);
     }
 
     // Apply an instant force on the rigidbody with specified direction and magnitude
@@ -150,39 +158,41 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
     private void ClampRotation(float max)
     {
         float correctionMultiplier = 1f;
-        if (Mathf.Sign(horizontal) == Mathf.Sign(roll) ||
-            Mathf.Sign(vertical) == Mathf.Sign(turnVertical))
+        // Double multiplier if input applies double rotation in the same direction
+        if (Mathf.Abs(horizontal) > 0 && Mathf.Abs(roll) > 0 && Mathf.Sign(horizontal) == Mathf.Sign(roll) ||
+            Mathf.Abs(vertical) > 0 && Mathf.Abs(pitch) > 0 && Mathf.Sign(vertical) == Mathf.Sign(invertY ? pitch : -pitch))
         {
-            correctionMultiplier = 2f;
+            correctionMultiplier *= 2f;
         }
         
+        // Correct pitch
         if (transform.localEulerAngles.x > MAXANGLE / 2)
         {
             if (transform.localEulerAngles.x < MAXANGLE - max)
             {
-                rb.AddRelativeTorque(Vector3.right * rotateCorrectionSpeed * correctionMultiplier, ForceMode.Acceleration);
+                Rotate(Vector3.right * correctionMultiplier);
             }
         }
         else
         {
             if (transform.localEulerAngles.x > max)
             {
-                rb.AddRelativeTorque(-Vector3.right * rotateCorrectionSpeed * correctionMultiplier, ForceMode.Acceleration);
+                Rotate(-Vector3.right * correctionMultiplier);
             }
         }
-
+        // Correct roll
         if (transform.localEulerAngles.z > MAXANGLE / 2)
         {
             if (transform.localEulerAngles.z < MAXANGLE - max)
             {
-                rb.AddRelativeTorque(-Vector3.back * rotateCorrectionSpeed * correctionMultiplier, ForceMode.Acceleration);
+                Rotate(-Vector3.back * correctionMultiplier);
             }
         }
         else
         {
             if (transform.localEulerAngles.z > max)
             {
-                rb.AddRelativeTorque(Vector3.back * rotateCorrectionSpeed * correctionMultiplier, ForceMode.Acceleration);
+                Rotate(Vector3.back * correctionMultiplier);
             }
         }
     }
