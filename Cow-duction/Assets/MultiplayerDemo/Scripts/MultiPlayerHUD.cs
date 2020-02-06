@@ -7,6 +7,43 @@ public class MultiPlayerHUD : NetworkBehaviour
     public GameObject[] thirdPersonMeshes;
     [Tooltip("The Canvas component which should only be visible to this object")]
     public Canvas hud;
+    public Camera cameraTransform;
+
+    private void OnValidate()
+    {
+        if (cameraTransform == null)
+            cameraTransform = GetComponentInChildren<Camera>();
+    }
+
+    // OnStartLocalPlayer is called when the local player object is set up
+    public override void OnStartLocalPlayer()
+    {
+        base.OnStartLocalPlayer();
+
+        // Parent main camera to cameraTransform
+        Camera.main.orthographic = false;
+        Camera.main.transform.SetParent(cameraTransform.transform);
+        Camera.main.transform.localPosition = Vector3.zero;
+        Camera.main.transform.localEulerAngles = Vector3.zero;
+
+        Camera.main.cullingMask = ~(1 << LayerMask.NameToLayer("UI"));
+        cameraTransform.enabled = true;
+    }
+
+    // OnDisable is called when the object is removed from the server
+    private void OnDisable()
+    {
+        if (isLocalPlayer)
+        {
+            // Return main camera to starting position
+            Camera.main.transform.SetParent(null);
+            Camera.main.transform.localPosition = new Vector3(0f, 10f, -10f);
+            Camera.main.transform.localEulerAngles = Vector3.zero;
+
+            Camera.main.cullingMask = -1;
+            cameraTransform.enabled = false;
+        }
+    }
 
     // Start is called before the first frame update
     private void Start()

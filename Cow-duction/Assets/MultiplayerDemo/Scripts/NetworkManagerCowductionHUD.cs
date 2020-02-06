@@ -130,6 +130,10 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
                 {
                     mainMenu.SetActive(true);
                 }
+                if (pauseMenu.activeSelf)
+                {
+                    pauseMenu.SetActive(false);
+                }
             }
         }
         if (Input.GetButtonDown("Cancel"))

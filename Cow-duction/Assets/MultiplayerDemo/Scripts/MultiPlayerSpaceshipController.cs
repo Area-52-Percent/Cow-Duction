@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 using Mirror;
 
+[RequireComponent(typeof(NetworkTransform))]
 public class MultiPlayerSpaceshipController : NetworkBehaviour
 {
     private Rigidbody rb;
     private const float MAXANGLE = 360;
-
-    public Transform cameraTransform;
 
     [Header("Parameters")]
     public float maxHeight = 50f;
@@ -32,30 +31,6 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
     public float roll;       // Controller: (RT)(LT)            Keyboard: (E)(Q)
     [Range(-1, 1)]
     public float lift;       // Controller: (RB)(LB)            Keyboard: (Z)(C)
-
-    // OnStartLocalPlayer is called when the local player object is set up
-    public override void OnStartLocalPlayer()
-    {
-        base.OnStartLocalPlayer();
-
-        // Parent main camera to spaceship
-        Camera.main.orthographic = false;
-        Camera.main.transform.SetParent(transform);
-        Camera.main.transform.localPosition = cameraTransform.localPosition;
-        Camera.main.transform.localEulerAngles = cameraTransform.localEulerAngles;
-    }
-
-    // OnDisable is called when the object is removed from the server
-    private void OnDisable()
-    {
-        if (isLocalPlayer)
-        {
-            // Return main camera to starting position
-            Camera.main.transform.SetParent(null);
-            Camera.main.transform.localPosition = new Vector3(0f, 10f, -10f);
-            Camera.main.transform.localEulerAngles = Vector3.zero;
-        }
-    }
 
     // Start is called before the first frame update
     private void Start()

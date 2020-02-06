@@ -7,7 +7,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
 {
     public CharacterController characterController;
     public Animator animator;
-    [Tooltip("An empty transform which the main camera will align with")]
+    [Tooltip("UI camera which the main camera will align with")]
     public Transform cameraTransform;
     [Tooltip("The transform of the farmer's gun")]
     public Transform gunTransform;
@@ -18,16 +18,12 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public float turnSensitivity = 20f;
     public float tiltSensitivity = 16f;
     public float touchSensitivity = 5f;
-    public float tapTime = 0.25f;
-    // public float projectileSpeed = 100f;
     public bool invertY = false;
 
     [Header("Touch Diagnostics")]
     public float touchX = 0f;
     public float touchY = 0f;
     public Vector2 positionTouchBegan;
-    public double timeTouchBegan = 0f;
-    public double timeTouchEnded = 0f;
     public int touchMove = -1;
     public int touchAim = -1;
     public Touch touch;
@@ -58,10 +54,6 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     {
         base.OnStartLocalPlayer();
 
-        Camera.main.transform.SetParent(cameraTransform);
-        Camera.main.transform.localPosition = Vector3.zero;
-        Camera.main.transform.localEulerAngles = Vector3.zero;
-
         LockCursor(true);
     }
 
@@ -70,10 +62,6 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     {
         if (isLocalPlayer)
         {
-            Camera.main.transform.SetParent(null);
-            Camera.main.transform.localPosition = new Vector3(0f, 10f, -10f);
-            Camera.main.transform.localEulerAngles = Vector3.zero;
-
             LockCursor(false);
         }
     }
@@ -96,7 +84,6 @@ public class MultiPlayerFarmerController : NetworkBehaviour
                 switch (touch.phase)
                 {
                     case TouchPhase.Began:
-                        timeTouchBegan = NetworkTime.time;
                         positionTouchBegan = touch.position;
 
                         if (touch.position.x < Screen.width / 2)
@@ -123,14 +110,6 @@ public class MultiPlayerFarmerController : NetworkBehaviour
                         }
                         break;
                     case TouchPhase.Ended:
-                        timeTouchEnded = NetworkTime.time;
-                        // Tap to fire
-                        if (timeTouchEnded - timeTouchBegan <= tapTime &&
-                            Mathf.Abs(positionTouchBegan.x - touch.position.x) == 0 && 
-                            Mathf.Abs(positionTouchBegan.y - touch.position.y) == 0)
-                        {
-                            CmdFireProjectile();
-                        }
                         if (touchMove > -1)
                             touchMove = -1;
                         if (touchAim > -1)
@@ -201,7 +180,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     }
 
     [Command]
-    private void CmdFireProjectile()
+    public void CmdFireProjectile()
     {
         GameObject projectileClone = Instantiate(projectile, cameraTransform.position + cameraTransform.forward, cameraTransform.rotation);
         NetworkServer.Spawn(projectileClone);
