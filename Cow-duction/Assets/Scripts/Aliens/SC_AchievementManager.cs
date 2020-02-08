@@ -15,8 +15,8 @@ public class SC_AchievementManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        CreateAchievement("AchievementDisplay", "The First of Many" ,"You've grabbed your first cow!");
-        CreateAchievement("AchievementDisplay", "An Experienced Alien", "You've reached a score of 3!");
+        CreateAchievement("Achievement", "The First of Many" ,"You've grabbed your first cow!");
+        CreateAchievement("Achievement", "An Experienced Alien", "You've reached a score of 3!");
     }
 
     // Update is called once per frame
