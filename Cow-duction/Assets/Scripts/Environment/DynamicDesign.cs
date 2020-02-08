@@ -20,7 +20,7 @@ public class DynamicDesign : MonoBehaviour
         //if (Random.Range(0.0f, 1000.0f) <= 500.0f)
         //{
         environments[0].gameObject.SetActive(true);
-        environments[1].gameObject.SetActive(false);
+        //environments[1].gameObject.SetActive(false);
         //}
         //else
         //{
