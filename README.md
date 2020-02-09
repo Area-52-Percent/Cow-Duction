@@ -1,14 +1,16 @@
 <p align="center">
-  <img width="500px" src="./Images/Cowduction_logo_v04_tagline.png" alt="Cow-Duction logo">
+  <img width="500px" src="./Images/cow-duction-logo.png" alt="Cow-Duction logo">
 </p>
 
-# Cow-Duction: The Milkening
+# Cow-Duction
 
-Cow-Duction is a fun and charming two player co-op experience where you play as part of an alien duo abducting cows inside a motion simulation platform. While being attacked by farmers, you must protect your ship and milk as many cows as possible. In the end you must return to your home planet, Lactaidia.
+Cow-Duction is a wacky, cartoonish, and interactive theme park attraction for multiple players. Two people experience the game inside a motion simulator, cooperatively piloting an alien spaceship to abduct dairy cows in a 3D environment. People waiting in line can use mobile devices to defend the cows from the dairy-deficient aliens. This attraction creates a unique, asymmetrical player-versus-player experience that’s fast-paced fun for everyone!
 
-### Area 52%
+# Area 52%
 
-We're a team of 10 students at Drexel University, tasked with building a game for the [Voyager motion platform](https://vimeo.com/mosimlab) in Game Development: Workshop II. We were originally a team of 7 (with an additional 2 freelancers) during Game Development: Workshop I.
+We're a team of 10 students (+ 6 freelancers) at Drexel University, tasked with building a game for the [Voyager motion platform](https://vimeo.com/mosimlab) in Game Development: Workshop II. 
+
+View our full team roster [here](https://www.area52p.com/team).
 
 ## How to Play Cow-Duction
 
