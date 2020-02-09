@@ -2213,7 +2213,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -175, y: -49.80005}
+  m_AnchoredPosition: {x: -175, y: -65}
   m_SizeDelta: {x: 120, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &935920296761142606
@@ -2292,7 +2292,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 160, y: -51.19995}
+  m_AnchoredPosition: {x: 160, y: -65}
   m_SizeDelta: {x: 140, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &935920296789737294
@@ -2452,7 +2452,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9fb760004d4484d48ac14f98a30a04c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ufoMesh: []
+  _rbUFO: {fileID: 1669819204808798203}
   CowSpawner: {fileID: 0}
   playTime: 270
   topDownCamera: {fileID: 935920298437802654}
@@ -3221,7 +3221,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: -0.3999939}
+  m_AnchoredPosition: {x: 0, y: -0.4000244}
   m_SizeDelta: {x: 150, y: 50}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &935920297977032881
@@ -16094,8 +16094,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 49.9, y: 35.5}
-  m_SizeDelta: {x: 39.4, y: 50}
+  m_AnchoredPosition: {x: 50, y: 55}
+  m_SizeDelta: {x: 40, y: 25}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &5651338446006510593
 CanvasRenderer:
@@ -26871,6 +26871,11 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6462153523027569646, guid: 4a3b2ee5357b29a4d94029fe516f646a,
+        type: 3}
+      propertyPath: m_Text
+      value: Testing
+      objectReference: {fileID: 0}
     - target: {fileID: 2178591753215923130, guid: 4a3b2ee5357b29a4d94029fe516f646a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -26975,11 +26980,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6462153523027569646, guid: 4a3b2ee5357b29a4d94029fe516f646a,
-        type: 3}
-      propertyPath: m_Text
-      value: Testing
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a3b2ee5357b29a4d94029fe516f646a, type: 3}
