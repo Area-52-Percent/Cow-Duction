@@ -20,7 +20,7 @@ public class SC_AlienUIManager : MonoBehaviour
     private Camera mainCamera;
     private SC_HudReticleFollowCursor reticleFollowCursor;
     private TransformWrapper transformWrapper;
-    private Rigidbody _rbUFO;
+    [SerializeField] private Rigidbody _rbUFO;
     private MeshRenderer[] ufoMesh;
     private AudioSource ufoAudioSource;
     private int score;
@@ -42,6 +42,7 @@ public class SC_AlienUIManager : MonoBehaviour
     public float playTime = 270.0f;
 
     // Serialized private variables
+    
     [SerializeField] private Camera topDownCamera = null; // Set up in inspector
     [SerializeField] private Color fuelStartColor = Color.white; // (Optional) Set up in inspector
     [SerializeField] private Color fuelDepletedColor = Color.red; // (Optional) Set up in inspector
@@ -101,7 +102,6 @@ public class SC_AlienUIManager : MonoBehaviour
     {
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         mainCamera = Camera.main;
-        _rbUFO = GameObject.Find("UFO").GetComponent<Rigidbody>();
         ufoMesh = _rbUFO.GetComponentsInChildren<MeshRenderer>();
         ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
         transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
@@ -111,41 +111,7 @@ public class SC_AlienUIManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        // Initialize values for private variables
-        score = 0;
-        scoreText.text = score.ToString("D2");
-        reticle.sprite = normalReticle;
-        fuel = 100.0f;
-        fuelMeter.value = fuel;
-        abilityCooldown = 100.0f;
-        cooldownMeter.value = abilityCooldown;
-        cooldownActive = false; 
-        if (timeScaleFactor <= Mathf.Epsilon)
-            timeScaleFactor = 1.0f;
-        Time.timeScale = timeScaleFactor;
-
-        if (cropSplatter.gameObject.activeSelf)
-            cropSplatter.gameObject.SetActive(false);
-
-        // Deactivate non-gameplay menus
-        endScreen.SetActive(false);
-        parameterScreen.SetActive(false);
-        helpScreen.SetActive(false);
-
-        paused = false;
-
-        if (!controllerScreen.gameObject.activeSelf)
-            controllerScreen.gameObject.SetActive(true);
-        controllerScreen.CrossFadeAlpha(0f, 0f, false);
-
-        if (holoCow.activeSelf)
-            holoCow.SetActive(false);
-        if (holoFarmer.activeSelf)
-            holoFarmer.SetActive(false);
-
-        if (gameplayScreen.activeSelf)
-            gameplayScreen.SetActive(false);
-        topDownCamera.gameObject.SetActive(false);
+        ResetGame();
     }
 
     // Update is called once per frame
@@ -455,6 +421,8 @@ public class SC_AlienUIManager : MonoBehaviour
         {
             if (ufoAudioSource.time > 20f)
             {
+                if (!controllerScreen.gameObject.activeSelf)
+                    controllerScreen.gameObject.SetActive(true);
                 controllerScreen.CrossFadeAlpha(1f, 0.5f, false);
             }
 
@@ -700,7 +668,40 @@ public class SC_AlienUIManager : MonoBehaviour
     {
         if (playingIntro)
             SkipIntro();
-        Start();
+        // Initialize values for private variables
+        score = 0;
+        scoreText.text = score.ToString("D2");
+        reticle.sprite = normalReticle;
+        fuel = 100.0f;
+        fuelMeter.value = fuel;
+        abilityCooldown = 100.0f;
+        cooldownMeter.value = abilityCooldown;
+        cooldownActive = false; 
+        if (timeScaleFactor <= Mathf.Epsilon)
+            timeScaleFactor = 1.0f;
+        Time.timeScale = timeScaleFactor;
+
+        if (cropSplatter.gameObject.activeSelf)
+            cropSplatter.gameObject.SetActive(false);
+
+        // Deactivate non-gameplay menus
+        endScreen.SetActive(false);
+        parameterScreen.SetActive(false);
+        helpScreen.SetActive(false);
+
+        paused = false;
+
+        if (controllerScreen.gameObject.activeSelf)
+            controllerScreen.gameObject.SetActive(false);
+
+        if (holoCow.activeSelf)
+            holoCow.SetActive(false);
+        if (holoFarmer.activeSelf)
+            holoFarmer.SetActive(false);
+
+        if (gameplayScreen.activeSelf)
+            gameplayScreen.SetActive(false);
+        topDownCamera.gameObject.SetActive(false);
     }
 
     public void StartGame()
