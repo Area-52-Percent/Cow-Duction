@@ -38,6 +38,7 @@ public class SC_CowAbduction : MonoBehaviour
     public int numberOfJoints = 3;
     public float captureSpeed = 5.0f;
     public float reticleAttractionForce = 3.0f;
+    public string player;
 
     // Serialized private variables
     [SerializeField] private GameObject reticle = null; // Set up in inspector
@@ -94,6 +95,10 @@ public class SC_CowAbduction : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if(Input.GetButtonDown("j2Fire1"))
+        {
+            print("hello");
+        }
         // Left click casts a raycast in the direction of the cursor position.
         if (Input.GetButtonDown("Fire1") && Time.timeScale > Mathf.Epsilon)
         {

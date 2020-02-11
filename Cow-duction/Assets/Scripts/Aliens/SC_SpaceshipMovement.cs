@@ -29,6 +29,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public float autoRotationForce = 0.05f;
     public float maxRotation = 20.0f;
     public bool invertLook = false;
+    public string player;
     
     // Start is called before the first frame update
     void Start()
