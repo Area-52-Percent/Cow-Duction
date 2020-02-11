@@ -30,4 +30,6 @@ public class SwitchScene : MonoBehaviour
             SceneManager.LoadScene(1, LoadSceneMode.Single);
         }
     }
+
+
 }
