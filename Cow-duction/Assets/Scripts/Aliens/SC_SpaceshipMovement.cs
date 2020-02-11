@@ -7,6 +7,7 @@
  */
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 public class SC_SpaceshipMovement : MonoBehaviour
@@ -17,6 +18,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     private float movementMultiplier = 1f;
     private bool movementEnabled;
     private bool grounded;
+    private InputMaster controls;
 
     // Public variables
     public float horizontalSpeed = 10.0f;
@@ -29,8 +31,28 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public float autoRotationForce = 0.05f;
     public float maxRotation = 20.0f;
     public bool invertLook = false;
-    public string player;
-    
+
+    private void Awake()
+    {
+        controls = new InputMaster();
+        controls.Driver.Movement.performed += context => Move();
+    }
+
+    void Move()
+    {
+        Debug.Log("moved");
+    }
+
+    private void OnEnable()
+    {
+        controls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        controls.Disable();
+    }
+
     // Start is called before the first frame update
     void Start()
     {
