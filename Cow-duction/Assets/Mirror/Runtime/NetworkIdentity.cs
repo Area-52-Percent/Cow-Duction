@@ -112,8 +112,7 @@ namespace Mirror
         /// <summary>
         /// Obsolete: Use <see cref="connectionToClient" /> instead
         /// </summary>
-        // Deprecated 11/03/2019
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use connectionToClient instead")]
+        [Obsolete("Use connectionToClient instead")]
         public NetworkConnectionToClient clientAuthorityOwner => connectionToClient;
 
         /// <summary>
@@ -192,8 +191,7 @@ namespace Mirror
         /// <summary>
         /// Obsolete: Use <see cref="GetSceneIdentity(ulong)" /> instead
         /// </summary>
-        // Deprecated 01/23/2020
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use GetSceneIdentity instead")]
+        [Obsolete("Use GetSceneIdentity instead")]
         public static NetworkIdentity GetSceneIdenity(ulong id) => GetSceneIdentity(id);
 
         /// <summary>
@@ -1053,7 +1051,6 @@ namespace Mirror
             }
         }
 
-        // Deprecated 09/25/2019
         /// <summary>
         /// Obsolete: Use <see cref="RemoveClientAuthority()"/> instead
         /// </summary>
@@ -1174,45 +1171,47 @@ namespace Mirror
             if (observers != null && observers.Count > 0)
             {
                 // one writer for owner, one for observers
-                using (PooledNetworkWriter ownerWriter = NetworkWriterPool.GetWriter(), observersWriter = NetworkWriterPool.GetWriter())
+                NetworkWriter ownerWriter = NetworkWriterPool.GetWriter();
+                NetworkWriter observersWriter = NetworkWriterPool.GetWriter();
+
+                // serialize all the dirty components and send (if any were dirty)
+                OnSerializeAllSafely(false, ownerWriter, out int ownerWritten, observersWriter, out int observersWritten);
+                if (ownerWritten > 0 || observersWritten > 0)
                 {
-                    // serialize all the dirty components and send (if any were dirty)
-                    OnSerializeAllSafely(false, ownerWriter, out int ownerWritten, observersWriter, out int observersWritten);
-                    if (ownerWritten > 0 || observersWritten > 0)
+                    // populate cached UpdateVarsMessage and send
+                    varsMessage.netId = netId;
+
+                    // send ownerWriter to owner
+                    // (only if we serialized anything for owner)
+                    // (only if there is a connection (e.g. if not a monster),
+                    //  and if connection is ready because we use SendToReady
+                    //  below too)
+                    if (ownerWritten > 0)
                     {
-                        // populate cached UpdateVarsMessage and send
-                        varsMessage.netId = netId;
-
-                        // send ownerWriter to owner
-                        // (only if we serialized anything for owner)
-                        // (only if there is a connection (e.g. if not a monster),
-                        //  and if connection is ready because we use SendToReady
-                        //  below too)
-                        if (ownerWritten > 0)
-                        {
-                            varsMessage.payload = ownerWriter.ToArraySegment();
-                            if (connectionToClient != null && connectionToClient.isReady)
-                                NetworkServer.SendToClientOfPlayer(this, varsMessage);
-                        }
-
-                        // send observersWriter to everyone but owner
-                        // (only if we serialized anything for observers)
-                        if (observersWritten > 0)
-                        {
-                            varsMessage.payload = observersWriter.ToArraySegment();
-                            NetworkServer.SendToReady(this, varsMessage, false);
-                        }
-
-                        // clear dirty bits only for the components that we serialized
-                        // DO NOT clean ALL component's dirty bits, because
-                        // components can have different syncIntervals and we don't
-                        // want to reset dirty bits for the ones that were not
-                        // synced yet.
-                        // (we serialized only the IsDirty() components, or all of
-                        //  them if initialState. clearing the dirty ones is enough.)
-                        ClearDirtyComponentsDirtyBits();
+                        varsMessage.payload = ownerWriter.ToArraySegment();
+                        if (connectionToClient != null && connectionToClient.isReady)
+                            NetworkServer.SendToClientOfPlayer(this, varsMessage);
                     }
+
+                    // send observersWriter to everyone but owner
+                    // (only if we serialized anything for observers)
+                    if (observersWritten > 0)
+                    {
+                        varsMessage.payload = observersWriter.ToArraySegment();
+                        NetworkServer.SendToReady(this, varsMessage, false);
+                    }
+
+                    // clear dirty bits only for the components that we serialized
+                    // DO NOT clean ALL component's dirty bits, because
+                    // components can have different syncIntervals and we don't
+                    // want to reset dirty bits for the ones that were not
+                    // synced yet.
+                    // (we serialized only the IsDirty() components, or all of
+                    //  them if initialState. clearing the dirty ones is enough.)
+                    ClearDirtyComponentsDirtyBits();
                 }
+                NetworkWriterPool.Recycle(ownerWriter);
+                NetworkWriterPool.Recycle(observersWriter);
             }
             else
             {

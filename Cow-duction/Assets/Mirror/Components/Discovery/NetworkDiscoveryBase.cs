@@ -158,20 +158,22 @@ namespace Mirror.Discovery
 
             UdpReceiveResult udpReceiveResult = await udpClient.ReceiveAsync();
 
-            using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(udpReceiveResult.Buffer))
+            NetworkReader networkReader = NetworkReaderPool.GetReader(udpReceiveResult.Buffer);
+
+            long handshake = networkReader.ReadInt64();
+            if (handshake != secretHandshake)
             {
-                long handshake = networkReader.ReadInt64();
-                if (handshake != secretHandshake)
-                {
-                    // message is not for us
-                    throw new ProtocolViolationException("Invalid handshake");
-                }
-
-                Request request = new Request();
-                request.Deserialize(networkReader);
-
-                ProcessClientRequest(request, udpReceiveResult.RemoteEndPoint);
+                // message is not for us
+                NetworkReaderPool.Recycle(networkReader);
+                throw new ProtocolViolationException("Invalid handshake");
             }
+
+            Request request = new Request();
+            request.Deserialize(networkReader);
+
+            ProcessClientRequest(request, udpReceiveResult.RemoteEndPoint);
+
+            NetworkReaderPool.Recycle(networkReader);
         }
 
         /// <summary>
@@ -190,23 +192,26 @@ namespace Mirror.Discovery
             if (info == null)
                 return;
 
-            using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
+            NetworkWriter writer = NetworkWriterPool.GetWriter();
+
+            try
             {
-                try
-                {
-                    writer.WriteInt64(secretHandshake);
+                writer.WriteInt64(secretHandshake);
 
-                    info.Serialize(writer);
+                info.Serialize(writer);
 
-                    ArraySegment<byte> data = writer.ToArraySegment();
-                    // signature matches
-                    // send response
-                    serverUdpClient.Send(data.Array, data.Count, endpoint);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex, this);
-                }
+                ArraySegment<byte> data = writer.ToArraySegment();
+                // signature matches
+                // send response
+                serverUdpClient.Send(data.Array, data.Count, endpoint);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex, this);
+            }
+            finally
+            {
+                NetworkWriterPool.Recycle(writer);
             }
         }
 
@@ -299,24 +304,27 @@ namespace Mirror.Discovery
 
             IPEndPoint endPoint = new IPEndPoint(IPAddress.Broadcast, serverBroadcastListenPort);
 
-            using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
+            NetworkWriter writer = NetworkWriterPool.GetWriter();
+
+            writer.WriteInt64(secretHandshake);
+
+            try
             {
-                writer.WriteInt64(secretHandshake);
+                Request request = GetRequest();
 
-                try
-                {
-                    Request request = GetRequest();
+                request.Serialize(writer);
 
-                    request.Serialize(writer);
+                ArraySegment<byte> data = writer.ToArraySegment();
 
-                    ArraySegment<byte> data = writer.ToArraySegment();
-
-                    clientUdpClient.SendAsync(data.Array, data.Count, endPoint);
-                }
-                catch (Exception)
-                {
-                    // It is ok if we can't broadcast to one of the addresses
-                }
+                clientUdpClient.SendAsync(data.Array, data.Count, endPoint);
+            }
+            catch (Exception)
+            {
+                // It is ok if we can't broadcast to one of the addresses
+            }
+            finally
+            {
+                NetworkWriterPool.Recycle(writer);
             }
         }
 
@@ -336,16 +344,20 @@ namespace Mirror.Discovery
 
             UdpReceiveResult udpReceiveResult = await udpClient.ReceiveAsync();
 
-            using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(udpReceiveResult.Buffer))
+            NetworkReader networkReader = NetworkReaderPool.GetReader(udpReceiveResult.Buffer);
+
+            if (networkReader.ReadInt64() != secretHandshake)
             {
-                if (networkReader.ReadInt64() != secretHandshake)
-                    return;
-
-                Response response = new Response();
-                response.Deserialize(networkReader);
-
-                ProcessResponse(response, udpReceiveResult.RemoteEndPoint);
+                NetworkReaderPool.Recycle(networkReader);
+                return;
             }
+
+            Response response = new Response();
+            response.Deserialize(networkReader);
+
+            ProcessResponse(response, udpReceiveResult.RemoteEndPoint);
+
+            NetworkReaderPool.Recycle(networkReader);
         }
 
         /// <summary>

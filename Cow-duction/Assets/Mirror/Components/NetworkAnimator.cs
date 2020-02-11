@@ -91,11 +91,11 @@ namespace Mirror
                     continue;
                 }
 
-                using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
-                {
-                    WriteParameters(writer);
-                    SendAnimationMessage(stateHash, normalizedTime, i, writer.ToArray());
-                }
+                NetworkWriter writer = NetworkWriterPool.GetWriter();
+                WriteParameters(writer);
+
+                SendAnimationMessage(stateHash, normalizedTime, i, writer.ToArray());
+                NetworkWriterPool.Recycle(writer);
             }
         }
 
@@ -140,11 +140,12 @@ namespace Mirror
             {
                 sendTimer = Time.time + syncInterval;
 
-                using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
+                NetworkWriter writer = NetworkWriterPool.GetWriter();
+                if (WriteParameters(writer))
                 {
-                    if (WriteParameters(writer))
-                        SendAnimationParametersMessage(writer.ToArray());
+                    SendAnimationParametersMessage(writer.ToArray());
                 }
+                NetworkWriterPool.Recycle(writer);
             }
         }
 
@@ -453,22 +454,22 @@ namespace Mirror
             if (LogFilter.Debug) Debug.Log("OnAnimationMessage for netId=" + netId);
 
             // handle and broadcast
-            using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(parameters))
-            {
-                HandleAnimMsg(stateHash, normalizedTime, layerId, networkReader);
-                RpcOnAnimationClientMessage(stateHash, normalizedTime, layerId, parameters);
-            }
+            NetworkReader networkReader = NetworkReaderPool.GetReader(parameters);
+            HandleAnimMsg(stateHash, normalizedTime, layerId, networkReader);
+            NetworkReaderPool.Recycle(networkReader);
+
+            RpcOnAnimationClientMessage(stateHash, normalizedTime, layerId, parameters);
         }
 
         [Command]
         void CmdOnAnimationParametersServerMessage(byte[] parameters)
         {
             // handle and broadcast
-            using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(parameters))
-            {
-                HandleAnimParamsMsg(networkReader);
-                RpcOnAnimationParametersClientMessage(parameters);
-            }
+            NetworkReader networkReader = NetworkReaderPool.GetReader(parameters);
+            HandleAnimParamsMsg(networkReader);
+            NetworkReaderPool.Recycle(networkReader);
+
+            RpcOnAnimationParametersClientMessage(parameters);
         }
 
         [Command]
@@ -494,15 +495,17 @@ namespace Mirror
         [ClientRpc]
         void RpcOnAnimationClientMessage(int stateHash, float normalizedTime, int layerId, byte[] parameters)
         {
-            using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(parameters))
-                HandleAnimMsg(stateHash, normalizedTime, layerId, networkReader);
+            NetworkReader networkReader = NetworkReaderPool.GetReader(parameters);
+            HandleAnimMsg(stateHash, normalizedTime, layerId, networkReader);
+            NetworkReaderPool.Recycle(networkReader);
         }
 
         [ClientRpc]
         void RpcOnAnimationParametersClientMessage(byte[] parameters)
         {
-            using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(parameters))
-                HandleAnimParamsMsg(networkReader);
+            NetworkReader networkReader = NetworkReaderPool.GetReader(parameters);
+            HandleAnimParamsMsg(networkReader);
+            NetworkReaderPool.Recycle(networkReader);
         }
 
         [ClientRpc]

@@ -155,10 +155,8 @@ namespace Mirror
         public abstract bool ServerDisconnect(int connectionId);
 
         /// <summary>
-        /// Obsolete: Use <see cref="ServerGetClientAddress(int)"/> instead
+        /// Deprecated: Use ServerGetClientAddress(int connectionId) instead
         /// </summary>
-        // Removed 2/17/2019 and restored 3/2/2019
-        // Deprecated 03/02/2019
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use ServerGetClientAddress(int connectionId) instead")]
         public virtual bool GetConnectionInfo(int connectionId, out string address)
         {

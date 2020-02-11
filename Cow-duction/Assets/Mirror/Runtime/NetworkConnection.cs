@@ -64,8 +64,7 @@ namespace Mirror
         /// <summary>
         /// Obsolete: use <see cref="identity"/> instead
         /// </summary>
-        // Deprecated 09/18/2019
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use NetworkConnection.identity instead")]
+        [Obsolete("Use NetworkConnection.identity instead")]
         public NetworkIdentity playerController
         {
             get
@@ -104,13 +103,11 @@ namespace Mirror
 
         // this is always true for regular connections, false for local
         // connections because it's set in the constructor and never reset.
-        // Deprecated 02/26/2019
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("isConnected will be removed because it's pointless. A NetworkConnection is always connected.")]
         public bool isConnected { get; protected set; }
 
         // this is always 0 for regular connections, -1 for local
         // connections because it's set in the constructor and never reset.
-        // Deprecated 02/26/2019
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("hostId will be removed because it's not needed ever since we removed LLAPI as default. It's always 0 for regular connections and -1 for local connections. Use connection.GetType() == typeof(NetworkConnection) to check if it's a regular or local connection.")]
         public int hostId = -1;
 
@@ -166,9 +163,8 @@ namespace Mirror
             messageHandlers = handlers;
         }
 
-        // Deprecated 04/09/2019
         /// <summary>
-        /// Obsolete: Use <see cref="NetworkClient.RegisterHandler{T}"/> or <see cref="NetworkServer.RegisterHandler{T}"/> instead
+        /// Obsolete: Use NetworkClient/NetworkServer.RegisterHandler{T} instead
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never), Obsolete("Use NetworkClient/NetworkServer.RegisterHandler<T> instead")]
         public void RegisterHandler(short msgType, NetworkMessageDelegate handler)
@@ -180,7 +176,6 @@ namespace Mirror
             messageHandlers[msgType] = handler;
         }
 
-        // Deprecated 04/09/2019
         /// <summary>
         /// Obsolete: Use <see cref="NetworkClient.UnregisterHandler{T}"/> and <see cref="NetworkServer.UnregisterHandler{T}"/> instead
         /// </summary>
@@ -190,11 +185,10 @@ namespace Mirror
             messageHandlers.Remove(msgType);
         }
 
-        // Deprecated 03/03/2019
         /// <summary>
         /// Obsolete: use <see cref="Send{T}(T, int)"/> instead
         /// </summary>
-        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("use Send<T>(msg, channelId) instead")]
+        [EditorBrowsable(EditorBrowsableState.Never), Obsolete("use Send<T> instead")]
         public bool Send(int msgType, MessageBase msg, int channelId = Channels.DefaultReliable)
         {
             // pack message and send
@@ -211,15 +205,15 @@ namespace Mirror
         /// <returns></returns>
         public bool Send<T>(T msg, int channelId = Channels.DefaultReliable) where T : IMessageBase
         {
-            using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
-            {
-                // pack message and send allocation free
-                MessagePacker.Pack(msg, writer);
-                NetworkDiagnostics.OnSend(msg, channelId, writer.Position, 1);
-                bool result = Send(writer.ToArraySegment(), channelId);
+            NetworkWriter writer = NetworkWriterPool.GetWriter();
 
-                return result;
-            }
+            // pack message and send allocation free
+            MessagePacker.Pack(msg, writer);
+            NetworkDiagnostics.OnSend(msg, channelId, writer.Position, 1);
+            bool result = Send(writer.ToArraySegment(), channelId);
+
+            NetworkWriterPool.Recycle(writer);
+            return result;
         }
 
         // validate packet size before sending. show errors if too big/small.
@@ -283,7 +277,6 @@ namespace Mirror
             visList.Clear();
         }
 
-        // Deprecated 04/03/2019
         /// <summary>
         /// Obsolete: Use <see cref="InvokeHandler(int, NetworkReader, int)"/> instead
         /// </summary>
@@ -322,19 +315,23 @@ namespace Mirror
         public bool InvokeHandler<T>(T msg, int channelId) where T : IMessageBase
         {
             // get writer from pool
-            using (PooledNetworkWriter writer = NetworkWriterPool.GetWriter())
-            {
-                // if it is a value type,  just use typeof(T) to avoid boxing
-                // this works because value types cannot be derived
-                // if it is a reference type (for example IMessageBase),
-                // ask the message for the real type
-                int msgType = MessagePacker.GetId(typeof(T).IsValueType ? typeof(T) : msg.GetType());
+            NetworkWriter writer = NetworkWriterPool.GetWriter();
 
-                MessagePacker.Pack(msg, writer);
-                ArraySegment<byte> segment = writer.ToArraySegment();
-                using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(segment))
-                    return InvokeHandler(msgType, networkReader, channelId);
-            }
+            // if it is a value type,  just use typeof(T) to avoid boxing
+            // this works because value types cannot be derived
+            // if it is a reference type (for example IMessageBase),
+            // ask the message for the real type
+            int msgType = MessagePacker.GetId(typeof(T).IsValueType ? typeof(T) : msg.GetType());
+
+            MessagePacker.Pack(msg, writer);
+            ArraySegment<byte> segment = writer.ToArraySegment();
+            NetworkReader networkReader = NetworkReaderPool.GetReader(segment);
+            bool result = InvokeHandler(msgType, networkReader, channelId);
+            NetworkReaderPool.Recycle(networkReader);
+
+            // recycle writer and return
+            NetworkWriterPool.Recycle(writer);
+            return result;
         }
 
         // note: original HLAPI HandleBytes function handled >1 message in a while loop, but this wasn't necessary
@@ -350,25 +347,25 @@ namespace Mirror
         internal void TransportReceive(ArraySegment<byte> buffer, int channelId)
         {
             // unpack message
-            using (PooledNetworkReader networkReader = NetworkReaderPool.GetReader(buffer))
+            NetworkReader networkReader = NetworkReaderPool.GetReader(buffer);
+            if (MessagePacker.UnpackMessage(networkReader, out int msgType))
             {
-                if (MessagePacker.UnpackMessage(networkReader, out int msgType))
-                {
-                    // logging
-                    if (logNetworkMessages) Debug.Log("ConnectionRecv " + this + " msgType:" + msgType + " content:" + BitConverter.ToString(buffer.Array, buffer.Offset, buffer.Count));
+                // logging
+                if (logNetworkMessages) Debug.Log("ConnectionRecv " + this + " msgType:" + msgType + " content:" + BitConverter.ToString(buffer.Array, buffer.Offset, buffer.Count));
 
-                    // try to invoke the handler for that message
-                    if (InvokeHandler(msgType, networkReader, channelId))
-                    {
-                        lastMessageTime = Time.time;
-                    }
-                }
-                else
+                // try to invoke the handler for that message
+                if (InvokeHandler(msgType, networkReader, channelId))
                 {
-                    Debug.LogError("Closed connection: " + this + ". Invalid message header.");
-                    Disconnect();
+                    lastMessageTime = Time.time;
                 }
             }
+            else
+            {
+                Debug.LogError("Closed connection: " + this + ". Invalid message header.");
+                Disconnect();
+            }
+
+            NetworkReaderPool.Recycle(networkReader);
         }
 
         internal void AddOwnedObject(NetworkIdentity obj)

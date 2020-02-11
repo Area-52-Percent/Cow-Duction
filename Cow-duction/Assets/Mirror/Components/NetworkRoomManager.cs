@@ -540,7 +540,6 @@ namespace Mirror
             base.OnServerAddPlayer(conn);
         }
 
-        // Deprecated 12/17/2019
         /// <summary>
         /// Obsolete: Use <see cref="OnRoomServerCreateGamePlayer(NetworkConnection, GameObject)"/> instead.
         /// </summary>

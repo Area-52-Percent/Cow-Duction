@@ -55,15 +55,12 @@ namespace Mirror.Weaver
             // after that, all assemblies will be weaved by the event
             if (!SessionState.GetBool("MIRROR_WEAVED", false))
             {
-                // reset session flag
                 SessionState.SetBool("MIRROR_WEAVED", true);
-                SessionState.SetBool("MIRROR_WEAVE_SUCCESS", true);
-
                 WeaveExistingAssemblies();
             }
         }
 
-        public static void WeaveExistingAssemblies()
+        static void WeaveExistingAssemblies()
         {
             foreach (UnityAssembly assembly in CompilationPipeline.GetAssemblies())
             {
@@ -72,12 +69,12 @@ namespace Mirror.Weaver
                     OnCompilationFinished(assembly.outputPath, new CompilerMessage[0]);
                 }
             }
-
 #if UNITY_2019_3_OR_NEWER
             EditorUtility.RequestScriptReload();
 #else
             UnityEditorInternal.InternalEditorUtility.RequestScriptReload();
 #endif
+
         }
 
         static string FindMirrorRuntime()
@@ -166,9 +163,6 @@ namespace Mirror.Weaver
             }
             else
             {
-                // Set false...will be checked in \Editor\EnterPlayModeSettingsCheck.CheckSuccessfulWeave()
-                SessionState.SetBool("MIRROR_WEAVE_SUCCESS", false);
-
                 WeaveFailed = true;
                 if (UnityLogEnabled) Debug.LogError("Weaving failed for: " + assemblyPath);
             }
