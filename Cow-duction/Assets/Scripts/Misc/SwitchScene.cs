@@ -30,7 +30,9 @@ public class SwitchScene : MonoBehaviour
         Debug.Log("moving in scene");
         SceneManager.LoadScene(1, LoadSceneMode.Single);
 
-    }private void OnEnable()
+    }
+    
+    private void OnEnable()
     {
         controls.Enable();
     }
