@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8938136958561200545
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8938136958561200547}
+  - component: {fileID: 8938136958561200546}
+  m_Layer: 0
+  m_Name: CowSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8938136958561200547
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8938136958561200545}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8938136958561200546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8938136958561200545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e51c16d20520a4c4ba6f4d0770a88619, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cowPrefab: {fileID: 5314257958602278042, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8,
+    type: 3}
+  chocolateCowPrefab: {fileID: 8490994651392897677, guid: e3041086f1ea49d4680fd063798f7386,
+    type: 3}
+  strawberryCowPrefab: {fileID: 7154485404801791974, guid: c2cad1b9c03e9b44e865575f182b9700,
+    type: 3}
+  cows:
+  - {fileID: 5314257958602278042, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8, type: 3}
+  - {fileID: 5314257958602278042, guid: a70dbc107da234ee08ef1b0b905f6768, type: 3}
+  - {fileID: 8490994651392897677, guid: e3041086f1ea49d4680fd063798f7386, type: 3}
+  - {fileID: 7154485404801791974, guid: c2cad1b9c03e9b44e865575f182b9700, type: 3}
+  cowSpawnRatios:
+  - 0.9
+  - 1
+  maxCowAmount: 10
+  radius: 10
+  spawnRate: 10
+  specialRate: 20
+  intialSpawnAmount: 10
+  randomFactor: 0.25
+  UFOLoc: {fileID: 0}
+  cowAmount: 0
