@@ -14,6 +14,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(SC_SpaceshipMovement))]
 [RequireComponent(typeof(Rigidbody))]
@@ -30,7 +31,8 @@ public class SC_CowAbduction : MonoBehaviour
     private GameObject probeClone;
     private float captureLength;
     private bool grappling;
-    
+    private InputMaster controls;
+
     // Public variables
     public float grappleTime = 0.5f;
     public float grappleCooldown = 0.5f;
@@ -66,6 +68,23 @@ public class SC_CowAbduction : MonoBehaviour
     {
         spaceshipMovement = GetComponent<SC_SpaceshipMovement>();
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
+        controls = new InputMaster();
+        controls.Shooter.Shoot.performed += context => Shoot();
+    }
+
+    void Shoot()
+    {
+        Debug.Log("Shoot!");
+    }
+
+    private void OnEnable()
+    {
+        controls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        controls.Disable();
     }
 
     // Start is called before the first frame update
