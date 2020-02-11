@@ -42,6 +42,7 @@ public class SC_CowBrain : MonoBehaviour
     [Space]
     [SerializeField] private AudioClip cowMoo = null; // Set up in inspector
     [SerializeField] private float milk = 10.0f;
+    [SerializeField] public string cowType;
 
     // Awake is called after all objects are initialized
     private void Awake()
