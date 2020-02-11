@@ -24,7 +24,11 @@ public class cornrotate : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         //Debug.Log("Collided with "+ this.ToString());
-        KnockDown();
+        if (collision.gameObject.name != "UFO")
+        {
+            KnockDown();
+        }
+        
     }
     void KnockDown()
     {
