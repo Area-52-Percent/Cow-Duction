@@ -70,6 +70,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
         {
             Debug.Log("someone pressed B");
         }
+
         if (!gameManager.GetGameStarted())
         {
             _rb.AddForce(Vector3.up * -Physics.gravity.y, ForceMode.Acceleration);
