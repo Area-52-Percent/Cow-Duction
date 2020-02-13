@@ -35,7 +35,8 @@ public class SC_SpaceshipMovement : MonoBehaviour
     private void Awake()
     {
         controls = new InputMaster();
-        controls.Driver.Movement.performed += context => Move(context.ReadValue<Vector2>());
+        controls.Player.Movement.performed += context => Move(context.ReadValue<Vector2>());
+        Debug.Log(controls.Player.Movement.controls);
     }
 
     void Move(Vector2 direction)
@@ -65,12 +66,6 @@ public class SC_SpaceshipMovement : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        Gamepad p1 = InputSystem.GetDevice<Gamepad>();
-        if (p1.bButton.wasPressedThisFrame)
-        {
-            Debug.Log("someone pressed B");
-        }
-
         if (!gameManager.GetGameStarted())
         {
             _rb.AddForce(Vector3.up * -Physics.gravity.y, ForceMode.Acceleration);

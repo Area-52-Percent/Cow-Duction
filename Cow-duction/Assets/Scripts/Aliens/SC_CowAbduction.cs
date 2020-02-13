@@ -69,7 +69,7 @@ public class SC_CowAbduction : MonoBehaviour
         spaceshipMovement = GetComponent<SC_SpaceshipMovement>();
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
         controls = new InputMaster();
-        controls.Shooter.Shoot.performed += context => Shoot();
+        controls.Player.Shoot.performed += context => Shoot();
     }
 
     void Shoot()
@@ -114,10 +114,6 @@ public class SC_CowAbduction : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if(Input.GetButtonDown("j2Fire1"))
-        {
-            print("hello");
-        }
         // Left click casts a raycast in the direction of the cursor position.
         if (Input.GetButtonDown("Fire1") && Time.timeScale > Mathf.Epsilon)
         {
