@@ -32,6 +32,9 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public float maxRotation = 20.0f;
     public bool invertLook = false;
 
+    [Header("Diagnostics")]
+    public Vector2 movementVector;
+
     private void Awake()
     {
         controls = new InputMaster();
@@ -42,6 +45,11 @@ public class SC_SpaceshipMovement : MonoBehaviour
     void Move(Vector2 direction)
     {
         Debug.Log("moved " + direction);
+    }
+
+    void OnMovement(InputValue value)
+    {
+        movementVector = value.Get<Vector2>();
     }
 
     private void OnEnable()
@@ -73,8 +81,10 @@ public class SC_SpaceshipMovement : MonoBehaviour
         }
 
         Vector3 horizontalForce = Vector3.zero;
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        // float horizontalInput = Input.GetAxis("Horizontal");
+        // float verticalInput = Input.GetAxis("Vertical");
+        float horizontalInput = movementVector.x;
+        float verticalInput = movementVector.y;
         float turnHorizontalInput = Input.GetAxis("TurnHorizontal");
         float turnVerticalInput = Input.GetAxis("TurnVertical");
         float rollInput = Input.GetAxis("Roll");

@@ -28,7 +28,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": ""Movement"",
-                    ""type"": ""Button"",
+                    ""type"": ""Value"",
                     ""id"": ""00e5e9c5-ef18-4bea-8583-aec4b38ad4ae"",
                     ""expectedControlType"": """",
                     ""processors"": """",
