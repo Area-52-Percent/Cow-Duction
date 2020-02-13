@@ -38,7 +38,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     private void Awake()
     {
         controls = new InputMaster();
-        controls.Player.Movement.performed += context => Move(context.ReadValue<Vector2>());
+        controls.Player.Movement.performed += context => OnMovement(context.ReadValue<Vector2>());
         Debug.Log(controls.Player.Movement.controls);
     }
 
@@ -47,9 +47,9 @@ public class SC_SpaceshipMovement : MonoBehaviour
         Debug.Log("moved " + direction);
     }
 
-    void OnMovement(InputValue value)
+    void OnMovement(Vector2 value)
     {
-        movementVector = value.Get<Vector2>();
+        movementVector = value;
     }
 
     private void OnEnable()
