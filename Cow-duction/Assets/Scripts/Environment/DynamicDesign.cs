@@ -16,11 +16,10 @@ public class DynamicDesign : MonoBehaviour
     void Start()
     {
         styleSelector = Mathf.RoundToInt(Random.Range(0.0f, 2.0f));
-        Debug.Log("Dynamic Design started");
         //if (Random.Range(0.0f, 1000.0f) <= 500.0f)
         //{
         environments[0].gameObject.SetActive(true);
-        environments[1].gameObject.SetActive(false);
+        //environments[1].gameObject.SetActive(false);
         //}
         //else
         //{
@@ -32,8 +31,6 @@ public class DynamicDesign : MonoBehaviour
         barnSpawnPoints.AddRange(GameObject.FindGameObjectsWithTag("Barn"));
         treeSpawnPoints = new List<GameObject>();
         treeSpawnPoints.AddRange(GameObject.FindGameObjectsWithTag("Tree"));
-
-        Debug.Log(barnSpawnPoints.Count);
 
         foreach (GameObject spawnPoint in barnSpawnPoints)
         {

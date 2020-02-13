@@ -8,7 +8,6 @@ public class SC_HudReticleColor : MonoBehaviour
     private Color color;
     private Color initColor;
     private Image image;
-    public Renderer rend;
     public Camera cam;
     public Transform reticle;
     public Transform grappleOrigin;
@@ -19,7 +18,6 @@ public class SC_HudReticleColor : MonoBehaviour
     void Start()
     {
         image = GetComponent<Image>();
-        rend = GetComponent<Renderer>();
         initColor = image.color;
         maxViewLength = 50;
     }

@@ -23,7 +23,7 @@ public class cornrotate : MonoBehaviour
     }
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collided with "+ this.ToString());
+        //Debug.Log("Collided with "+ this.ToString());
         KnockDown();
     }
     void KnockDown()
