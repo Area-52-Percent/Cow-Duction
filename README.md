@@ -68,8 +68,8 @@ To contribute to the project, submit an issue or pull request. Ideally, you woul
 Clone the repository:
 
 ```shell
-git clone https://github.com/kadeo13/Area52Percent.git
-cd Area52Percent
+git clone https://github.com/Area-52-Percent/Cow-Duction.git
+cd Cow-Duction
 ```
 
 Update the source code to the latest commit:
