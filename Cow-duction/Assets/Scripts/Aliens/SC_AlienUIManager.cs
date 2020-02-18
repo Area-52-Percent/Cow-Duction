@@ -18,6 +18,7 @@ public class SC_AlienUIManager : MonoBehaviour
     // Private variables
     private GameManager gameManager;
     private Camera mainCamera;
+    public Animator shipAnim;
     private SC_HudReticleFollowCursor reticleFollowCursor;
     private TransformWrapper transformWrapper;
     [SerializeField] private Rigidbody _rbUFO;
@@ -32,6 +33,7 @@ public class SC_AlienUIManager : MonoBehaviour
     private float abilityActiveTime = 3.0f;
     private float abilityCooldown; // Percentage of 100
     private float cooldownRegenerationRate = 5.0f;
+    private Coroutine co;
     private bool cooldownActive;
     private float timeRemaining; // In seconds
     private float timeScaleFactor;
@@ -42,7 +44,7 @@ public class SC_AlienUIManager : MonoBehaviour
     public float playTime = 270.0f;
 
     // Serialized private variables
-    
+
     [SerializeField] private Camera topDownCamera = null; // Set up in inspector
     [SerializeField] private Color fuelStartColor = Color.white; // (Optional) Set up in inspector
     [SerializeField] private Color fuelDepletedColor = Color.red; // (Optional) Set up in inspector
@@ -119,7 +121,7 @@ public class SC_AlienUIManager : MonoBehaviour
     {
         if (gameManager.GetGameStarting())
             return;
-        
+
         // Toggle parameter screen
         if (Input.GetButtonDown("Cancel"))
         {
@@ -171,7 +173,7 @@ public class SC_AlienUIManager : MonoBehaviour
                 }
                 else if (fuel > fuelWarnAmount)
                     fuelWarnText.enabled = false;
-                
+
                 fuel -= Time.deltaTime * fuelDepletionRate;
                 fuelMeterFill.color = Color.Lerp(fuelDepletedColor, fuelStartColor, fuel / 100f);
                 fuelMeter.value = fuel;
@@ -285,21 +287,22 @@ public class SC_AlienUIManager : MonoBehaviour
         {
             cowScore = 1;
         }
-        else if(cow.GetComponent<SC_CowBrain>().cowType == "Chocolate Cow")
+        else if (cow.GetComponent<SC_CowBrain>().cowType == "Chocolate Cow")
         {
             cowScore = 2;
         }
-        else if(cow.GetComponent<SC_CowBrain>().cowType == "Strawberry Cow")
+        else if (cow.GetComponent<SC_CowBrain>().cowType == "Strawberry Cow")
         {
             cowScore = 3;
         }
         if (inScoreMultiplier)
         {
-            StopCoroutine("RunScoreMultiplier");
-            StartCoroutine(RunScoreMultiplier(cowScore));
+            StopCoroutine(co);
+            co = StartCoroutine(RunScoreMultiplier(cowScore));
         }
-        else {
-            StartCoroutine(RunScoreMultiplier(cowScore));
+        else
+        {
+            co = StartCoroutine(RunScoreMultiplier(cowScore));
             inScoreMultiplier = true;
         }
 
@@ -309,7 +312,7 @@ public class SC_AlienUIManager : MonoBehaviour
         fuel += milk;
         if (fuel > 100.0f)
             fuel = 100.0f;
-        
+
         if (fuel > 0.0f)
             if (_rbUFO.GetComponent<SC_SpaceshipMovement>())
                 _rbUFO.GetComponent<SC_SpaceshipMovement>().AllowMovement(true);
@@ -337,13 +340,13 @@ public class SC_AlienUIManager : MonoBehaviour
         timeText.CrossFadeAlpha(cloakedOpacity, abilityActiveTime / 10f, false);
 
         // Disable UFO mesh
-        foreach(MeshRenderer mr in ufoMesh)
+        foreach (MeshRenderer mr in ufoMesh)
         {
             mr.enabled = false;
         }
 
         yield return new WaitForSeconds(abilityActiveTime);
-        
+
         ufoAudioSource.PlayOneShot(activateAbility, 0.3f);
 
         // Fade in HUD elements
@@ -355,7 +358,7 @@ public class SC_AlienUIManager : MonoBehaviour
         timeText.CrossFadeAlpha(1f, abilityActiveTime / 10f, false);
 
         // Enable UFO mesh
-        foreach(MeshRenderer mr in ufoMesh)
+        foreach (MeshRenderer mr in ufoMesh)
         {
             mr.enabled = true;
         }
@@ -482,9 +485,10 @@ public class SC_AlienUIManager : MonoBehaviour
         holoCow.SetActive(false);
         holoFarmer.SetActive(false);
         milkText.CrossFadeAlpha(0f, 1f, true);
-        
+
         if (ufoAudioSource.isPlaying)
             ufoAudioSource.Stop();
+
 
         GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
         if (farmers.Length > 0)
@@ -496,9 +500,15 @@ public class SC_AlienUIManager : MonoBehaviour
                     farmerBrain.peaceful = false;
             }
         }
+        StartCoroutine(playStartCutscene());
+    }
 
+    private IEnumerator playStartCutscene()
+    {
+        shipAnim.Play("UFO Intro");
+        yield return new WaitForSeconds(3.1f);
         timeRemaining = playTime;
-
+        shipAnim.enabled = false;
         playingIntro = false;
     }
 
@@ -549,7 +559,7 @@ public class SC_AlienUIManager : MonoBehaviour
         }
 
         gameManager.SetMusicVolume(0.1f);
-        
+
         finalScoreText.text = score + "\n\nRating: " + rating;
         endScreen.SetActive(true);
     }
@@ -596,7 +606,7 @@ public class SC_AlienUIManager : MonoBehaviour
     // Set parameter using input name and value
     public void SetParameter(string name, float value)
     {
-        switch(name)
+        switch (name)
         {
             case "HorizontalSpeedSlider":
                 _rbUFO.GetComponent<SC_SpaceshipMovement>().horizontalSpeed = value;
@@ -613,7 +623,7 @@ public class SC_AlienUIManager : MonoBehaviour
             case "RotationForceSlider":
                 _rbUFO.GetComponent<SC_SpaceshipMovement>().rotationForce = value;
                 break;
-            case "MainCameraFovSlider": 
+            case "MainCameraFovSlider":
                 Camera.main.fieldOfView = value;
                 break;
             case "RadarCameraFovSlider":
@@ -676,7 +686,7 @@ public class SC_AlienUIManager : MonoBehaviour
         fuelMeter.value = fuel;
         abilityCooldown = 100.0f;
         cooldownMeter.value = abilityCooldown;
-        cooldownActive = false; 
+        cooldownActive = false;
         if (timeScaleFactor <= Mathf.Epsilon)
             timeScaleFactor = 1.0f;
         Time.timeScale = timeScaleFactor;
