@@ -179,7 +179,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""b806b6c8-814e-453a-b3bd-aa65f0d018cf"",
-                    ""path"": ""<XInputController>{Player1}/leftStick"",
+                    ""path"": ""<Gamepad>/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
