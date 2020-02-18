@@ -509,7 +509,7 @@ public class SC_AlienUIManager : MonoBehaviour
         yield return new WaitForSeconds(3.1f);
         timeRemaining = playTime;
         shipAnim.enabled = false;
-        playingIntro = false;
+        playingIntro = true;
     }
 
     // Show the endscreen (TO-DO: Replace hard-coded values)
@@ -677,7 +677,7 @@ public class SC_AlienUIManager : MonoBehaviour
     public void ResetGame()
     {
         if (playingIntro)
-            SkipIntro();
+            StartGame();
         // Initialize values for private variables
         score = 0;
         scoreText.text = score.ToString("D2");
@@ -712,6 +712,17 @@ public class SC_AlienUIManager : MonoBehaviour
         if (gameplayScreen.activeSelf)
             gameplayScreen.SetActive(false);
         topDownCamera.gameObject.SetActive(false);
+
+        if (shipAnim.enabled != true)
+        {
+            shipAnim.enabled = true;
+        }
+        else
+        {
+            shipAnim.StopPlayback();
+        }
+        
+        
     }
 
     public void StartGame()

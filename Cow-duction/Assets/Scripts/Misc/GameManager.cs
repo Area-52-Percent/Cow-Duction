@@ -14,6 +14,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     private GameObject ufo;
+    [SerializeField] private GameObject ufoStartLocation;
     [SerializeField] private Camera startCamera;
     [SerializeField] private GameObject startScreen;
     private Camera mainCamera;
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         ufo = GameObject.Find("UFO");
+        ufoStartLocation = GameObject.Find("UFOOriginalLoc");
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
         musicAudioSource = GetComponent<AudioSource>();
         SetMusicVolume(0.5f);
@@ -141,6 +143,8 @@ public class GameManager : MonoBehaviour
     {
         musicAudioSource.clip = menuMusic;
         musicAudioSource.Play();
+
+        ufo.transform.localPosition = ufoStartLocation.transform.localPosition;
 
         startScreen = GameObject.Find("Start Screen");
         startCamera = GameObject.Find("Start Camera").GetComponent<Camera>();
