@@ -50,7 +50,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""path"": ""<XInputController>{Player2}/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -61,7 +61,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>{Player2}/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
@@ -83,7 +83,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>{Player1}/leftStick/up"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -94,7 +94,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>{Player1}/leftStick/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -105,7 +105,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>{Player1}/leftStick/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -116,7 +116,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>{Player1}/leftStick/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -138,7 +138,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>{Player1}/dpad/up"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -149,7 +149,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>{Player1}/dpad/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -160,7 +160,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>{Player1}/dpad/left"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -171,7 +171,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""path"": ""<Gamepad>{Player1}/dpad/right"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -182,7 +182,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""path"": ""<XInputController>{Player1}/leftStick"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
