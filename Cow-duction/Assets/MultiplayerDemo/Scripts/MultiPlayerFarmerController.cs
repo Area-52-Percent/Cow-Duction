@@ -183,6 +183,12 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public void CmdFireProjectile()
     {
         GameObject projectileClone = Instantiate(projectile, cameraTransform.position + cameraTransform.forward, cameraTransform.rotation);
+        if(projectileClone.GetComponent<FarmerProjectilePotato>())
+            projectileClone.GetComponent<FarmerProjectilePotato>().owner = gameObject;
+        if (projectileClone.GetComponent<FarmerProjectileCorn>())
+            projectileClone.GetComponent<FarmerProjectileCorn>().owner = gameObject;
+        if (projectileClone.GetComponent<FarmerProjectileCarrot>())
+            projectileClone.GetComponent<FarmerProjectileCarrot>().owner = gameObject;
         NetworkServer.Spawn(projectileClone);
     }
 
