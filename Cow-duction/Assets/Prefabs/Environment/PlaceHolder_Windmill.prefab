@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2539210471260248779}
   - component: {fileID: 1721297946884202060}
   - component: {fileID: 3250813850921655839}
+  - component: {fileID: 651186168452878836}
   m_Layer: 0
   m_Name: Top_Motor_Back
   m_TagString: Untagged
@@ -77,6 +78,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &651186168452878836
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2416754202847756865}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3.5148344, y: 6.2068853, z: 3.613784}
+  m_Center: {x: 0.00000029802322, y: -1.0584927, z: -0.3068878}
 --- !u!1 &4597043525082588995
 GameObject:
   m_ObjectHideFlags: 0
@@ -88,6 +102,7 @@ GameObject:
   - component: {fileID: 2276466983012583816}
   - component: {fileID: 7463561220503300097}
   - component: {fileID: 8193265425616888564}
+  - component: {fileID: 1063127130327468210}
   m_Layer: 0
   m_Name: Blade_3
   m_TagString: Untagged
@@ -154,6 +169,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &1063127130327468210
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4597043525082588995}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.1113799, y: 13.000003, z: 1.0829116}
+  m_Center: {x: 0.0000072111816, y: 7.016448, z: 0}
 --- !u!1 &6093262654048211047
 GameObject:
   m_ObjectHideFlags: 0
@@ -165,6 +193,7 @@ GameObject:
   - component: {fileID: 8568714258319096482}
   - component: {fileID: 2791926236483964627}
   - component: {fileID: 4057854543803923509}
+  - component: {fileID: 7050861578323954194}
   m_Layer: 0
   m_Name: Blade_1
   m_TagString: Untagged
@@ -231,6 +260,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &7050861578323954194
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6093262654048211047}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.1113782, y: 13.000006, z: 1.0829118}
+  m_Center: {x: 0.000030517578, y: 7.0164456, z: -0.000030517578}
 --- !u!1 &6161529663937389605
 GameObject:
   m_ObjectHideFlags: 0
@@ -322,6 +364,7 @@ GameObject:
   - component: {fileID: 4774911018693607090}
   - component: {fileID: 1785111696066099286}
   - component: {fileID: 2617985566343189217}
+  - component: {fileID: 5198864995901782980}
   m_Layer: 0
   m_Name: Blade_2
   m_TagString: Untagged
@@ -388,6 +431,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &5198864995901782980
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6263063363082195602}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.1113799, y: 13.000003, z: 1.0829116}
+  m_Center: {x: 0.00000041821284, y: 7.0164633, z: 0}
 --- !u!1 &6430351379318288988
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,6 +456,7 @@ GameObject:
   - component: {fileID: 1314327498328930937}
   - component: {fileID: 4684276386593474176}
   - component: {fileID: 138600706972577077}
+  - component: {fileID: 6295461087744730914}
   m_Layer: 0
   m_Name: PlaceHolder_Windmill
   m_TagString: Untagged
@@ -416,7 +473,7 @@ Transform:
   m_GameObject: {fileID: 6430351379318288988}
   m_LocalRotation: {x: 0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 237.75052, y: 14.041359, z: 300.73016}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
+  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
   m_Children:
   - {fileID: 2539210471260248779}
   - {fileID: 2437905937857827209}
@@ -487,3 +544,16 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!65 &6295461087744730914
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6430351379318288988}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 4.150785, y: 34.28719, z: 4.150785}
+  m_Center: {x: 0, y: 18.356405, z: 0}
