@@ -14,19 +14,15 @@ public class Controller : MonoBehaviour
 
     private void OnMovement(InputValue inputValue)
     {
-        Debug.Log(inputValue);
+        Debug.Log("moving");
+        Debug.Log(inputValue.Get());
         _OnMovement?.Invoke(inputValue);
     }
 
     private void OnShoot(InputValue inputValue)
     {
         Debug.Log("shoot");
+        Debug.Log(inputValue.Get());
         _OnShoot?.Invoke(inputValue);
-    }
-
-    private void OnTest(InputValue inputValue)
-    {
-        Debug.Log("OnTestEvent");
-        _OnTest?.Invoke(inputValue);
     }
 }

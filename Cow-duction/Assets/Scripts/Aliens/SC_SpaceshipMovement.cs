@@ -238,7 +238,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
 
     private void OnShoot(InputValue inputValue)
     {
-        Debug.Log("shoot");
+        Debug.Log("hello");
     }
     #endregion
 
