@@ -18,7 +18,6 @@ public class SC_SpaceshipMovement : MonoBehaviour
     private float movementMultiplier = 1f;
     private bool movementEnabled;
     private bool grounded;
-    private InputMaster controls;
 
     // Public variables
     public float horizontalSpeed = 10.0f;
@@ -31,36 +30,11 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public float autoRotationForce = 0.05f;
     public float maxRotation = 20.0f;
     public bool invertLook = false;
-
-    [Header("Diagnostics")]
-    public Vector2 movementVector;
-
-    private void Awake()
-    {
-        controls = new InputMaster();
-        controls.Player.Movement.performed += context => OnMovement(context.ReadValue<Vector2>());
-        Debug.Log(controls.Player.Movement.controls);
-    }
-
-    void Move(Vector2 direction)
-    {
-        Debug.Log("moved " + direction);
-    }
-
-    void OnMovement(Vector2 value)
-    {
-        movementVector = value;
-    }
-
-    private void OnEnable()
-    {
-        controls.Enable();
-    }
-
-    private void OnDisable()
-    {
-        controls.Disable();
-    }
+    public float horizontalInput;
+    public float verticalInput;
+    public int playerNumber;
+    public Controller controller1;
+    public Controller controller2;
 
     // Start is called before the first frame update
     void Start()
@@ -69,6 +43,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Confined;
         movementEnabled = true;
+        MapControls();
     }
 
     // Update is called once per frame
@@ -81,10 +56,8 @@ public class SC_SpaceshipMovement : MonoBehaviour
         }
 
         Vector3 horizontalForce = Vector3.zero;
-        // float horizontalInput = Input.GetAxis("Horizontal");
-        // float verticalInput = Input.GetAxis("Vertical");
-        float horizontalInput = movementVector.x;
-        float verticalInput = movementVector.y;
+        //float horizontalInput = Input.GetAxis("Horizontal");
+        //float verticalInput = Input.GetAxis("Vertical");
         float turnHorizontalInput = Input.GetAxis("TurnHorizontal");
         float turnVerticalInput = Input.GetAxis("TurnVertical");
         float rollInput = Input.GetAxis("Roll");
@@ -207,6 +180,11 @@ public class SC_SpaceshipMovement : MonoBehaviour
         _rb.AddForce(Vector3.up * -Physics.gravity.y, ForceMode.Acceleration);
     }
 
+    private void OnDestroy()
+    {
+        UnMapControls();
+    }
+
     // Toggles invert look for camera up and down rotation
     public void ToggleInvertLook()
     {
@@ -251,4 +229,43 @@ public class SC_SpaceshipMovement : MonoBehaviour
         _rb.MoveRotation(Quaternion.identity);
         AllowMovement(true);
     }
+
+    #region Player Abilities
+    private void OnMovement(InputValue inputValue)
+    {
+        Debug.Log("hi");
+    }
+
+    private void OnShoot(InputValue inputValue)
+    {
+        Debug.Log("shoot");
+    }
+    #endregion
+
+    #region Input Mapping
+    //Mapping controls
+    private void MapControls()
+    {
+        controller1 = GameControllers.Instance.controllers.GetController(0);
+        controller2 = GameControllers.Instance.controllers.GetController(1);
+        if (controller1 != null && controller2 != null)
+        {
+            controller1.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player");
+            controller2.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player");
+            Debug.Log(controller1);
+            controller1._OnMovement += OnMovement;
+            controller2._OnShoot += OnShoot;
+        }
+        Debug.Log("controllermapped");
+    }
+
+    private void UnMapControls()
+    {
+        if (controller1 != null && controller2 != null)
+        {
+            controller1._OnMovement -= OnMovement;
+            controller2._OnShoot -= OnShoot;
+        }
+    }
+    #endregion
 }

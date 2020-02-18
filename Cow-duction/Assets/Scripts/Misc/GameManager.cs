@@ -10,6 +10,7 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioClip startSFX = null;
     [SerializeField] private AudioClip menuMusic = null;
     [SerializeField] private AudioClip gameplayMusic = null;
+    private Gamepad gamepad;
 
     private bool gameStarting = false;
     private bool gameStarted = false;
@@ -48,9 +50,8 @@ public class GameManager : MonoBehaviour
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
         musicAudioSource = GetComponent<AudioSource>();
         SetMusicVolume(0.5f);
-
+        gamepad = new Gamepad();
         mainCamera = Camera.main;
-
         SoftReset();
     }
 
@@ -59,7 +60,7 @@ public class GameManager : MonoBehaviour
     {
         if (!gameStarted && !gameStarting && Time.timeScale > Mathf.Epsilon)
         {
-            if (Input.anyKey && !Input.GetKey(KeyCode.Escape))
+            if (Gamepad.current.startButton.isPressed)
             {
                 musicAudioSource.PlayOneShot(startSFX);
                 StartCoroutine(StartGame());
