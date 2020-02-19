@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEditor.Experimental.Rendering;
 
 public class CornRotate : MonoBehaviour
 {
@@ -16,5 +17,10 @@ public class CornRotate : MonoBehaviour
     void KnockDown()
     {
         transform.localEulerAngles = new Vector3(90f, Random.Range(-180f, 180f), 0);
+        foreach(Renderer renderer in GetComponentsInChildren<Renderer>())
+        {
+            Debug.Log(renderer.material.color);
+            renderer.material.SetColor("_BaseColor", new Color(.8f, .1f, .1f, .5f));
+        }
     }
 }
