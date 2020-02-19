@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
 public class FollowPath : MonoBehaviour
@@ -15,8 +13,8 @@ public class FollowPath : MonoBehaviour
     void Start()
     {
         if (agent == null) agent = GetComponent<NavMeshAgent>();
-        nextWaypoint = waypointSystem.waypoints[currentWaypointIndex];
-        agent.SetDestination(nextWaypoint.position);
+
+        UpdateWaypoint();
     }
 
     // Update is called once per frame
@@ -27,9 +25,14 @@ public class FollowPath : MonoBehaviour
             if (Vector3.Distance(transform.position, agent.destination) <= agent.stoppingDistance)
             {
                 currentWaypointIndex++;
-                nextWaypoint = waypointSystem.waypoints[currentWaypointIndex];
-                agent.SetDestination(nextWaypoint.position);
+                UpdateWaypoint();
             }
         }
+    }
+
+    void UpdateWaypoint()
+    {
+        nextWaypoint = waypointSystem.waypoints[currentWaypointIndex];
+        agent.SetDestination(nextWaypoint.position);
     }
 }

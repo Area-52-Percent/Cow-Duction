@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
@@ -10,7 +9,12 @@ public class WaypointSystem : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (waypoints.Capacity > 0)
+        InitializeWaypoints();
+    }
+
+    void InitializeWaypoints()
+    {
+        if (waypoints.Capacity > transform.childCount)
             waypoints.Clear();
         
         foreach(Transform child in transform)
@@ -22,13 +26,7 @@ public class WaypointSystem : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        if (waypoints.Capacity > 0)
-            waypoints.Clear();
-        
-        foreach(Transform child in transform)
-        {
-            waypoints.Add(child);
-        }
+        InitializeWaypoints();
 
         Gizmos.color = Color.cyan;
         if (waypoints.Capacity > 0)
