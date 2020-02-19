@@ -166,7 +166,7 @@ GameObject:
   - component: {fileID: 5727815384553886985}
   - component: {fileID: 60115254368145761}
   m_Layer: 0
-  m_Name: cornstalk
+  m_Name: CornStalk_Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -200,6 +200,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ce6ea5dbc7537e4e8547461e9a90a33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  deadColor: {r: 0.8, g: 0.4, b: 0.1, a: 0.5}
+  canDie: 1
+  animate: 1
+  rebound: 1
 --- !u!65 &60115254368145761
 BoxCollider:
   m_ObjectHideFlags: 0

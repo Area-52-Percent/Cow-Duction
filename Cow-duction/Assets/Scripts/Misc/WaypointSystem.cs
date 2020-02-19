@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class WaypointSystem : MonoBehaviour
 {
     public List<Transform> waypoints;
@@ -14,8 +13,7 @@ public class WaypointSystem : MonoBehaviour
 
     void InitializeWaypoints()
     {
-        if (waypoints.Capacity > transform.childCount)
-            waypoints.Clear();
+        waypoints.Clear();
         
         foreach(Transform child in transform)
         {
@@ -23,19 +21,18 @@ public class WaypointSystem : MonoBehaviour
         }
     }
 
-#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
-        InitializeWaypoints();
+        if (transform.childCount != waypoints.Count)
+            InitializeWaypoints();
 
         Gizmos.color = Color.cyan;
-        if (waypoints.Capacity > 0)
+        if (waypoints.Count > 1)
         {
-            for (int i = 0; i < waypoints.Capacity - 1; i++)
+            for (int i = 1; i < waypoints.Count; i++)
             {
-                Gizmos.DrawLine(waypoints[i].position, waypoints[i + 1].position);
+                Gizmos.DrawLine(waypoints[i - 1].position, waypoints[i].position);
             }
         }
     }
-#endif
 }
