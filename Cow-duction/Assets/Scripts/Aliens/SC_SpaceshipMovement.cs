@@ -105,7 +105,8 @@ public class SC_SpaceshipMovement : MonoBehaviour
         }
 
         // Tilt forward and backward
-        if (Mathf.Abs(turnVerticalInput) > 0.0f)
+        if ((turnVerticalInput < 0.0f && (transform.localEulerAngles.x < maxRotation || transform.localEulerAngles.x > 270.0f)) || 
+            (turnVerticalInput > 0.0f && (transform.localEulerAngles.x > 360.0f - maxRotation || transform.localEulerAngles.x < 90.0f)))
         {
             _rb.AddRelativeTorque((invertLook ? Vector3.right : Vector3.left) * turnVerticalInput * rotationForce, ForceMode.Acceleration);
         }
@@ -212,7 +213,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     // Reset spaceship to starting position and enable movement
     public void ResetGame()
     {
-        _rb.MovePosition(Vector3.up * 20.0f);
+        _rb.MovePosition(new Vector3(65f, 40f, -70f));
         _rb.velocity = Vector3.zero;
         _rb.MoveRotation(Quaternion.identity);
         AllowMovement(true);
