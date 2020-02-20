@@ -10,13 +10,11 @@ public class Controller : MonoBehaviour
 
     public event InputEventHandler _OnMovement;
     public event InputEventHandler _OnShoot;
-    public event InputEventHandler _OnTest;
 
     private void OnMovement(InputValue inputValue)
     {
         Debug.Log("moving");
-        Debug.Log(inputValue.Get());
-        _OnMovement?.Invoke(inputValue);
+        //_OnMovement?.Invoke(inputValue.GetComponents<InputValue>()[0]);
     }
 
     private void OnShoot(InputValue inputValue)

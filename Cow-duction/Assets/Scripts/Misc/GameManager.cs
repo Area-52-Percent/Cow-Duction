@@ -23,7 +23,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private AudioClip startSFX = null;
     [SerializeField] private AudioClip menuMusic = null;
     [SerializeField] private AudioClip gameplayMusic = null;
-    private Gamepad gamepad;
 
     private bool gameStarting = false;
     private bool gameStarted = false;
@@ -50,7 +49,6 @@ public class GameManager : MonoBehaviour
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
         musicAudioSource = GetComponent<AudioSource>();
         SetMusicVolume(0.5f);
-        gamepad = new Gamepad();
         mainCamera = Camera.main;
         SoftReset();
     }

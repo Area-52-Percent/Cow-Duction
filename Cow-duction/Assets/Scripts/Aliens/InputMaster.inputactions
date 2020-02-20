@@ -2,17 +2,9 @@
     "name": "InputMaster",
     "maps": [
         {
-            "name": "Player",
+            "name": "Player1",
             "id": "aff4a64e-364f-45fd-824b-f7e41c89d50d",
             "actions": [
-                {
-                    "name": "Shoot",
-                    "type": "Button",
-                    "id": "33aef77b-7bcc-45a8-8da8-4797e4b4535c",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "Tap"
-                },
                 {
                     "name": "Movement",
                     "type": "Value",
@@ -25,23 +17,39 @@
             "bindings": [
                 {
                     "name": "",
-                    "id": "58a323d8-6e5b-4b34-a431-6f77732a64ac",
-                    "path": "<XInputController>/buttonSouth",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "Shoot",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "007726e1-57ab-4121-bd33-53a19efc065d",
                     "path": "<XInputController>/leftStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Movement",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Player2",
+            "id": "93177a07-5fad-44ed-abd9-96ad2127b2eb",
+            "actions": [
+                {
+                    "name": "Shoot",
+                    "type": "Button",
+                    "id": "8c784095-0fa7-4733-8403-a2d98fdac56d",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c2b7f2c6-8ea5-4d26-8293-8df930a99b38",
+                    "path": "<XInputController>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "Shoot",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

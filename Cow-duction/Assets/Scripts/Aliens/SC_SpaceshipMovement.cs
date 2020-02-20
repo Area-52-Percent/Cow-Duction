@@ -233,7 +233,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     #region Player Abilities
     private void OnMovement(InputValue inputValue)
     {
-        Debug.Log("hi");
+        Debug.Log(inputValue);
     }
 
     private void OnShoot(InputValue inputValue)
@@ -250,9 +250,8 @@ public class SC_SpaceshipMovement : MonoBehaviour
         controller2 = GameControllers.Instance.controllers.GetController(1);
         if (controller1 != null && controller2 != null)
         {
-            controller1.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player");
-            controller2.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player");
-            Debug.Log(controller1);
+            controller1.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player1");
+            controller2.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player2");
             controller1._OnMovement += OnMovement;
             controller2._OnShoot += OnShoot;
         }
