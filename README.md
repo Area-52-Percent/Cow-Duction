@@ -82,3 +82,5 @@ git pull
 After downloading the source code or `Cow-duction` project folder, make sure you have **Unity 2019.1.8** installed in order to build the game. To create a local build, open the project in Unity and go to `File` > `Build and Run`. The current target platform is Windows (x64), but this can be changed through `File` > `Build Settings`.
 
 Note that for Windows builds, the data folder *must* be in the same folder as the executable in order for it to run. Keep this in mind when moving files to different locations.
+
+Copyright (c) 2019-2020 Area 52%
