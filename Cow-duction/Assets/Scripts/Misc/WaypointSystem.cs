@@ -3,21 +3,20 @@ using UnityEngine;
 
 public class WaypointSystem : MonoBehaviour
 {
-    public List<Transform> waypoints;
+    public List<Vector3> waypoints;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Awake()
     {
         InitializeWaypoints();
     }
 
-    void InitializeWaypoints()
+    private void InitializeWaypoints()
     {
         waypoints.Clear();
         
         foreach(Transform child in transform)
         {
-            waypoints.Add(child);
+            waypoints.Add(child.position);
         }
     }
 
@@ -31,7 +30,7 @@ public class WaypointSystem : MonoBehaviour
         {
             for (int i = 1; i < waypoints.Count; i++)
             {
-                Gizmos.DrawLine(waypoints[i - 1].position, waypoints[i].position);
+                Gizmos.DrawLine(waypoints[i - 1], waypoints[i]);
             }
         }
     }

@@ -213,7 +213,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 0}
   waypointSystem: {fileID: 4744980122297447243}
-  nextWaypoint: {fileID: 0}
+  nextWaypoint: {x: 0, y: 0, z: 0}
   currentWaypointIndex: 0
   precision: 1
 --- !u!1 &1271324051506333299
@@ -323,8 +323,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints:
-  - {fileID: 4744980120740207093}
-  - {fileID: 6397371647139449438}
+  - {x: 0, y: 0, z: -1}
+  - {x: 0, y: 0, z: 1}
 --- !u!1001 &6136853864250016120
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -332,11 +332,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4486393276296035577}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 5454526abd4844622bf5fe52fc3cbed6,
-        type: 3}
-      propertyPath: m_Name
-      value: Cow_GameExport
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 5454526abd4844622bf5fe52fc3cbed6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -406,6 +401,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 5454526abd4844622bf5fe52fc3cbed6,
+        type: 3}
+      propertyPath: m_Name
+      value: Cow_GameExport
       objectReference: {fileID: 0}
     - target: {fileID: -6057140222963153312, guid: 5454526abd4844622bf5fe52fc3cbed6,
         type: 3}
@@ -432,16 +432,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4486393276296035577}
     m_Modifications:
-    - target: {fileID: 7328981208343111244, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
-        type: 3}
-      propertyPath: m_Name
-      value: Radar Point
-      objectReference: {fileID: 0}
-    - target: {fileID: 7328981208343111244, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2287445515127965985, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -511,6 +501,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7328981208343111244, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
+        type: 3}
+      propertyPath: m_Name
+      value: Radar Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 7328981208343111244, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d, type: 3}

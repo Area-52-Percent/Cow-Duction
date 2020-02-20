@@ -1,16 +1,15 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-public class FollowPath : MonoBehaviour
+public class WaypointFollower : MonoBehaviour
 {
     public NavMeshAgent agent;
     public WaypointSystem waypointSystem;
-    public Transform nextWaypoint;
+    public Vector3 nextWaypoint;
     public int currentWaypointIndex = 0;
     public float precision = .5f;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         if (agent == null) agent = GetComponent<NavMeshAgent>();
         agent.stoppingDistance = precision;
@@ -18,8 +17,7 @@ public class FollowPath : MonoBehaviour
         UpdateWaypoint();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
         if (currentWaypointIndex < waypointSystem.waypoints.Count - 1)
         {
@@ -31,9 +29,9 @@ public class FollowPath : MonoBehaviour
         }
     }
 
-    void UpdateWaypoint()
+    private void UpdateWaypoint()
     {
         nextWaypoint = waypointSystem.waypoints[currentWaypointIndex];
-        agent.SetDestination(nextWaypoint.position);
+        agent.SetDestination(nextWaypoint);
     }
 }
