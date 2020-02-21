@@ -6,7 +6,7 @@ Cow-Duction is a wacky, cartoonish, and interactive theme park attraction for mu
 
 # Area 52%
 
-We're a team of 10 students (+ 6 freelancers) at Drexel University, tasked with building a game for the [Voyager motion platform](https://vimeo.com/mosimlab) in Game Development: Workshop II. 
+We are Drexel University students tasked with building a game for the [Voyager motion platform](https://vimeo.com/mosimlab) in Game Development: Workshop I/II.
 
 View our full team roster [here](https://www.area52p.com/team).
 
