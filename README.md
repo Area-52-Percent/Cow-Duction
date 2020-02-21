@@ -1,6 +1,4 @@
-<p align="center">
-  <img width="500px" src="./Images/cow-duction-logo.png" alt="Cow-Duction logo">
-</p>
+![Cow-Duction logo](Images/cow-duction-logo.png)
 
 # Cow-Duction
 
@@ -25,8 +23,8 @@ The latest WebGL build is also available on [our website](https://www.area52p.co
 
 <details>
   <summary> Xbox 360 Controllers </summary>
-  <p align="center">
-    <img src="./Images/joystick-controls.png" alt="Joystick controls">
+  <p>
+    <img src="Images/joystick-controls.png" alt="Joystick controls">
   </p>
 </details>
 
@@ -59,27 +57,27 @@ The latest WebGL build is also available on [our website](https://www.area52p.co
 * `B`      Push cow (if grappled)
 </details>
 
-## For Developers
+## Contributing
 
-To contribute to the project, submit an issue or pull request. Ideally, you would be working on a separate branch and merge it into `dev` after review. We would then test the dev build and merge into `master` when reaching a stable version. Whether you're a contributor or someone outside the team, you can get started by creating a local copy of the project for the purpose of testing or implementing new assets.
+To learn how to contribute to the project, check our [Contributing Guidelines](.github/CONTRIBUTING.md).
 
-### Download the Source Code
+You can get started by creating a local copy of the project for the purpose of testing or implementing new assets.
 
-Clone the repository:
+### Clone the repository
+
+**GitHub Desktop**:
+
+![Image](Images/clone-repository-desktop.png)
+
+**Bash**:
 
 ```shell
-git clone https://github.com/Area-52-Percent/Cow-Duction.git
-cd Cow-Duction
-```
-
-Update the source code to the latest commit:
-```shell
-git pull
+git clone https://github.com/Area-52-Percent/Cow-Duction
 ```
 
 ### Build and Run
 
-After downloading the source code or `Cow-duction` project folder, make sure you have **Unity 2019.1.8** installed in order to build the game. To create a local build, open the project in Unity and go to `File` > `Build and Run`. The current target platform is Windows (x64), but this can be changed through `File` > `Build Settings`.
+Cow-Duction is being made in **Unity 2019.1.8**. To create a local build, open the `Cow-duction` project folder in Unity and go to `File` > `Build and Run`. The current target platform is Windows (x64), but this can be changed through `File` > `Build Settings`.
 
 Note that for Windows builds, the data folder *must* be in the same folder as the executable in order for it to run. Keep this in mind when moving files to different locations.
 
