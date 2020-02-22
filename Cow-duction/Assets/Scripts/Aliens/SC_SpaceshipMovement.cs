@@ -250,8 +250,8 @@ public class SC_SpaceshipMovement : MonoBehaviour
         controller2 = GameControllers.Instance.controllers.GetController(1);
         if (controller1 != null && controller2 != null)
         {
-            controller1.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player1");
-            controller2.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player2");
+            //controller1.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player1");
+            //controller2.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player2");
             controller1._OnMovement += OnMovement;
             controller2._OnShoot += OnShoot;
         }
