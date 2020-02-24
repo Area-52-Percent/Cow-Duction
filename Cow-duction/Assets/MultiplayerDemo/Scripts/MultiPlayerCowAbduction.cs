@@ -19,6 +19,7 @@ using Mirror;
 public class MultiPlayerCowAbduction : NetworkBehaviour
 {
     private MultiPlayerSpaceshipController spaceshipController;
+    private AudioSource audioSource;
     private Rigidbody rb;
     private ConfigurableJoint[] attachedObjectJoints;
     private GameObject attachedObject;
@@ -26,7 +27,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     private GameObject probeClone;
     private float captureLength;
     private bool grappling;
-    
+
     [Header("Parameters")]
     public int grappleJointCount = 5;
     public float grappleTime = 0.25f;
@@ -84,6 +85,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     {
         spaceshipController = GetComponent<MultiPlayerSpaceshipController>();
         rb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Start is called before the first frame update
@@ -141,23 +143,22 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             GrappleRelease();
         }
 
-        AudioSource ufoAudioSource = GetComponent<AudioSource>();
         if (grapplePushPull > 0f || isPulling)
         {
             GrapplePull();
 
             if (attachedObject)
             {
-                if (!ufoAudioSource.isPlaying)
+                if (!audioSource.isPlaying)
                 {
-                    ufoAudioSource.loop = true;
-                    ufoAudioSource.clip = grappleReel;
-                    ufoAudioSource.Play();
+                    audioSource.loop = true;
+                    audioSource.clip = grappleReel;
+                    audioSource.Play();
                 }
             }
-            else if (ufoAudioSource.clip == grappleReel)
+            else if (audioSource.clip == grappleReel)
             {
-                ufoAudioSource.clip = null;
+                audioSource.clip = null;
             }
         }
         else if (grapplePushPull < 0f)
@@ -166,9 +167,9 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         }
         else
         {
-            if (ufoAudioSource.clip == grappleReel)
+            if (audioSource.clip == grappleReel)
             {
-                ufoAudioSource.clip = null;
+                audioSource.clip = null;
             }
         }
 
@@ -183,10 +184,8 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 attachedRigidbody.AddForce(-attachedRigidbody.velocity, ForceMode.Acceleration);
 
             // Check if object has a brain and tugs when grappled
-            SC_CowBrain brain = attachedObject.GetComponent<SC_CowBrain>();
-            if (!brain)
-                brain = attachedObject.GetComponent<SC_FarmerBrain>();
-            if (brain && brain.GetTugWhenGrappled())
+            MultiPlayerCowBrain brain = attachedObject.GetComponent<MultiPlayerCowBrain>();
+            if (brain && brain.tugWhenGrappled)
             {
                 attachedRigidbody.AddForce((attachedObject.transform.position - grappleOrigin.position), ForceMode.Acceleration);
                 rb.AddForce((attachedObject.transform.position - transform.position) / 2, ForceMode.Acceleration);
@@ -204,7 +203,6 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                     ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 }
                 Vector3 worldPoint = ray.origin + (ray.direction * captureLength);
-                Debug.DrawRay(ray.origin, ray.direction * captureLength);
 
                 // Attached object is attracted to reticle postion
                 attachedRigidbody.AddForce((worldPoint - attachedObject.transform.position) * reticleAttractionForce, ForceMode.Acceleration);
@@ -225,14 +223,17 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
 
                 // Waypoint tracks position of attached object, clamped to the screen
                 Vector3 waypointIconPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, attachedObject.transform.position);
+                // Clamp x position
                 if (waypointIconPosition.x < waypointIcon.rect.width / 2)
                     waypointIconPosition.x = waypointIcon.rect.width / 2;
                 else if (waypointIconPosition.x > Screen.width - (waypointIcon.rect.width / 2))
                     waypointIconPosition.x = Screen.width - (waypointIcon.rect.width / 2);
+                // Clamp y position
                 if (waypointIconPosition.y < waypointIcon.rect.height / 2)
                     waypointIconPosition.y = waypointIcon.rect.height / 2;
                 else if (waypointIconPosition.y > Screen.height - (waypointIcon.rect.height / 2))
                     waypointIconPosition.y = Screen.height - (waypointIcon.rect.height / 2);
+                // Set position
                 waypointIcon.position = waypointIconPosition;
             }
         }
@@ -241,10 +242,10 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             if (waypointIcon != null && waypointIcon.gameObject.activeSelf)
                 waypointIcon.gameObject.SetActive(false);
 
-            if (ufoAudioSource.isPlaying && ufoAudioSource.clip == grappleReel)
+            if (audioSource.isPlaying && audioSource.clip == grappleReel)
             {
-                ufoAudioSource.loop = false;
-                ufoAudioSource.clip = null;
+                audioSource.loop = false;
+                audioSource.clip = null;
             }
         }
     }
@@ -338,7 +339,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             NetworkServer.Spawn(probeClone);
         }
         
-        GetComponent<AudioSource>().PlayOneShot(grappleShot, 0.5f);
+        audioSource.PlayOneShot(grappleShot, 0.5f);
         
         // Extend the grapple
         float counter = 0.0f;
@@ -385,11 +386,13 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         if (hit.transform.tag == "Cow")
         {
             MultiPlayerCowBrain cowBrain = hit.transform.gameObject.GetComponent<MultiPlayerCowBrain>();
-            Rigidbody cowRigidBody = hit.transform.gameObject.GetComponent<Rigidbody>();
-            if (!cowRigidBody)
+            if (cowBrain)
             {
-                cowRigidBody = hit.transform.gameObject.AddComponent<Rigidbody>();
-                cowRigidBody.mass = cowBrain.mass;
+                cowBrain.PlayMoo(3f);
+                if (!hit.transform.gameObject.GetComponent<Rigidbody>())
+                {
+                    hit.transform.gameObject.AddComponent<Rigidbody>().mass = cowBrain.mass;
+                }
             }
         }
 
@@ -471,13 +474,6 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 probeClone.transform.localPosition = Vector3.zero;
             }
 
-            // Play distressed moo
-            if (hit.transform.tag == "Cow") {
-                SC_CowBrain cowBrain = hit.transform.GetComponent<SC_CowBrain>();
-                if (cowBrain)
-                    cowBrain.PlayMoo(3f);
-            }
-
             // Play grapple hit sfx
             if (probeClone.GetComponent<AudioSource>())
             {
@@ -519,7 +515,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 Destroy(probeClone);
 
             // Reset movement penalty
-            spaceshipController.SetMovementMultiplier(1f);
+            spaceshipController.SetMovementMultiplier();
 
             // Enable attached object colliders if necessary
             foreach (Collider col in attachedObject.GetComponents<Collider>())
@@ -533,7 +529,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 objNetId.RemoveClientAuthority();
 
             // Play grapple break audio clip
-            GetComponent<AudioSource>().PlayOneShot(grappleBreak, 1f);
+            audioSource.PlayOneShot(grappleBreak, 1f);
 
             attachedObject = null;
             attachedRigidbody.useGravity = true;
@@ -627,18 +623,17 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             
             foreach(ConfigurableJoint cj in attachedObjectJoints)
             {
-                if (cj.gameObject)
-                    Destroy(cj.gameObject);
+                Destroy(cj.gameObject);
             }
 
             attachedObject = null;
             RpcRenderLine(null);
 
             // Reset movement penalty
-            spaceshipController.SetMovementMultiplier(1f);
+            spaceshipController.SetMovementMultiplier();
 
             // Play suction audio
-            GetComponent<AudioSource>().PlayOneShot(cowSuction, 0.5f);
+            audioSource.PlayOneShot(cowSuction, 0.5f);
         }
     }
 }

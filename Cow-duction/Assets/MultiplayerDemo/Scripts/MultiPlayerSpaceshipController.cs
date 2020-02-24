@@ -125,7 +125,7 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
     }
 
     // Set the multiplier affecting the magnitude of the velocity change in Move
-    public void SetMovementMultiplier(float multiplier)
+    public void SetMovementMultiplier(float multiplier = 1f)
     {
         movementMultiplier = multiplier;
     }

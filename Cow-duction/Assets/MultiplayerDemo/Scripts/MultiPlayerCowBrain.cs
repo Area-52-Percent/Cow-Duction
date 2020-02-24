@@ -20,6 +20,10 @@ public class MultiPlayerCowBrain : NetworkBehaviour
     protected bool wandering = false;
     private bool seekingFood = true;
     private bool recovering = false;
+    private float mooTimer = 0f;
+    private float timeBetweenMoos = 0f;
+    [SerializeField] private float maxTimeBetweenMoos = 20f;
+    [SerializeField] private float minTimeBetweenMoos = 10f;
 
     [Header("Parameters")]
     public float fieldRadius = 5f;
@@ -48,17 +52,29 @@ public class MultiPlayerCowBrain : NetworkBehaviour
         m_AudioSource = GetComponent<AudioSource>();
         m_Animator = GetComponentInChildren<Animator>();
         fields = GameObject.FindGameObjectsWithTag("Field");
-        m_Agent.destination = Random.insideUnitSphere * wanderRadius;
-        currentDestination = m_Agent.destination;
-        SeekFood();
+
+        timeBetweenMoos = Random.Range(minTimeBetweenMoos, maxTimeBetweenMoos);
+
+        Wander();
     }
 
     // Update is called once per frame
     private void Update()
     {
+        // Play moo sfx in set intervals
+        if (mooTimer >= timeBetweenMoos)
+        {
+            PlayMoo();
+        }
+        else
+        {
+            mooTimer += Time.deltaTime;
+        }
+
+        // Wander for set amount of time or until reaching destination
         if (m_Agent.enabled && m_Agent.isOnNavMesh)
         {
-            if (wanderTime < maxWanderTime && m_Agent.remainingDistance > fieldRadius)
+            if (wanderTime < maxWanderTime && m_Agent.remainingDistance >= m_Agent.stoppingDistance)
             {
                 wanderTime += Time.deltaTime;
             }
@@ -67,7 +83,6 @@ public class MultiPlayerCowBrain : NetworkBehaviour
                 if (seekingFood)
                 {
                     Wander();
-                    PlayMoo(1f);
                 }
                 else
                 {
@@ -83,6 +98,8 @@ public class MultiPlayerCowBrain : NetworkBehaviour
                 StartCoroutine(Recover());
             }
         }
+
+        // Set animator speed parameter for walking animation
         if (m_Animator)
             m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
     }
@@ -92,7 +109,6 @@ public class MultiPlayerCowBrain : NetworkBehaviour
     {
         if (seekingFood && collision.gameObject.tag == "Field")
         {
-            StartCoroutine(Idle());
             SatisfyHunger();
         }
     }
@@ -107,9 +123,10 @@ public class MultiPlayerCowBrain : NetworkBehaviour
                 m_Agent.enabled = false;
                 if (!GetComponent<Rigidbody>())
                 {
-                    gameObject.AddComponent<Rigidbody>();
-                    GetComponent<Rigidbody>().mass = mass;
+                    gameObject.AddComponent<Rigidbody>().mass = mass;
                 }
+
+                // Become an obstacle that other agents avoid
                 if (!GetComponent<NavMeshObstacle>())
                 {
                     gameObject.AddComponent<NavMeshObstacle>();
@@ -127,6 +144,9 @@ public class MultiPlayerCowBrain : NetworkBehaviour
         if (!m_Agent.enabled)
             return;
         
+        if (seekingFood) seekingFood = false;
+        wandering = true;
+
         NavMeshPath navMeshPath = new NavMeshPath();
         Vector3 targetPosition = transform.position + Random.insideUnitSphere * wanderRadius;
 
@@ -138,7 +158,7 @@ public class MultiPlayerCowBrain : NetworkBehaviour
 
         m_Agent.destination = targetPosition;
         currentDestination = m_Agent.destination;
-        m_Agent.stoppingDistance = 0f;
+
         wanderTime = 0f;
     }
 
@@ -199,13 +219,14 @@ public class MultiPlayerCowBrain : NetworkBehaviour
     }
 
     // Play cow moo sfx at the specified pitch
-    private void PlayMoo(float pitch)
+    public void PlayMoo(float pitch = 1f)
     {
         if (m_AudioSource && cowMoo)
         {
             m_AudioSource.pitch = pitch;
             m_AudioSource.PlayOneShot(cowMoo);
-        }
+        }   
+        mooTimer = 0f;
     }
 
     // Set destination as the closest field
@@ -214,7 +235,12 @@ public class MultiPlayerCowBrain : NetworkBehaviour
         if (!m_Agent.enabled)
             return;
         
+        if (wandering) wandering = false;
         seekingFood = true;
+
+        // Prevent getting stuck looking for food if there are no fields
+        if (fields.Length < 1)
+            return;
 
         // Find the closest field
         float minDist = Mathf.Infinity;
@@ -230,14 +256,12 @@ public class MultiPlayerCowBrain : NetworkBehaviour
         }
         m_Agent.destination = targetArea;
         currentDestination = m_Agent.destination;
-        m_Agent.stoppingDistance = fieldRadius;
     }
 
     // Stop seeking food
     private void SatisfyHunger()
     {
-        seekingFood = false;
-        wandering = true;
+        StartCoroutine(Idle());
         Wander();
     }
 }
