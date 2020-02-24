@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DynamicDesign : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class DynamicDesign : MonoBehaviour
         styleSelector = Mathf.RoundToInt(Random.Range(0.0f, 2.0f));
         //if (Random.Range(0.0f, 1000.0f) <= 500.0f)
         //{
-        environments[0].gameObject.SetActive(true);
+        // environments[0].gameObject.SetActive(true);
         //environments[1].gameObject.SetActive(false);
         //}
         //else
@@ -39,6 +40,11 @@ public class DynamicDesign : MonoBehaviour
         foreach (GameObject spawnPoint in treeSpawnPoints)
         {
             RandomizeTree(spawnPoint);
+        }
+
+        for (int s = 1; s < SceneManager.sceneCountInBuildSettings; s++)
+        {
+            SceneManager.LoadSceneAsync(s, LoadSceneMode.Additive);
         }
     }
 
