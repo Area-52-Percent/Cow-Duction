@@ -19,6 +19,7 @@ GameObject:
   - component: {fileID: 6106865226898448461}
   - component: {fileID: -1425196209200007091}
   - component: {fileID: 4928104880894512320}
+  - component: {fileID: 1007227725829933003}
   m_Layer: 13
   m_Name: Spaceship
   m_TagString: UFO
@@ -213,7 +214,7 @@ MonoBehaviour:
   syncInterval: 0.1
   clientAuthority: 1
   localPositionSensitivity: 0.01
-  localEulerAnglesSensitivity: 0.01
+  localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
   compressRotation: 1
 --- !u!114 &1528649228599377089
@@ -266,13 +267,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  cameraTransform: {fileID: 1475819289059599778}
   maxHeight: 50
-  moveSpeed: 20
+  moveSpeed: 30
   movementMultiplier: 1
-  rotateSpeed: 60
+  rotateSpeed: 30
   maxRotation: 30
-  maxMoveRotation: 10
+  maxMoveRotation: 15
   invertY: 0
   horizontal: 0
   vertical: 0
@@ -317,97 +317,18 @@ MonoBehaviour:
   isFiring: 0
   isPulling: 0
   isReleasingGrapple: 0
---- !u!1 &304930430069614634
-GameObject:
+--- !u!114 &1007227725829933003
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6599397118307255887}
-  - component: {fileID: 6453462835790813647}
-  - component: {fileID: 6954820523267778790}
-  - component: {fileID: 115110579759960198}
-  m_Layer: 13
-  m_Name: Sphere
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &6599397118307255887
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 304930430069614634}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2849777734735732318}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &6453462835790813647
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 304930430069614634}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &6954820523267778790
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 304930430069614634}
+  m_GameObject: {fileID: 11462927149525122}
   m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!135 &115110579759960198
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 304930430069614634}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5
-  m_Center: {x: 0, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d18993e221994b04be681a737f7741c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &513156808240694633
 GameObject:
   m_ObjectHideFlags: 0
@@ -812,7 +733,6 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 6599397118307255887}
   - {fileID: 8939859309337719305}
   m_Father: {fileID: 6357196757770105166}
   m_RootOrder: 0
@@ -950,7 +870,7 @@ Camera:
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: 1
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 32
@@ -1025,7 +945,7 @@ PrefabInstance:
     - target: {fileID: -4216859302048453862, guid: ae570223ea803491b9cf80167448e975,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae570223ea803491b9cf80167448e975,
         type: 3}

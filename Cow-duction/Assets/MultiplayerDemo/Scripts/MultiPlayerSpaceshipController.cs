@@ -9,13 +9,13 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
 
     [Header("Parameters")]
     public float maxHeight = 50f;
-    public float moveSpeed = 20f;
+    public float moveSpeed = 30f;
     public float movementMultiplier = 1f;
-    public float rotateSpeed = 60f; // In degrees per second
+    public float rotateSpeed = 30f; // In degrees per second
     [Range(0, 360)]
-    public float maxRotation = 40f;
+    public float maxRotation = 30f;
     [Range(0, 360)]
-    public float maxMoveRotation = 20f;
+    public float maxMoveRotation = 15f;
     public bool invertY = true;
 
     [Header("Diagnostics")]

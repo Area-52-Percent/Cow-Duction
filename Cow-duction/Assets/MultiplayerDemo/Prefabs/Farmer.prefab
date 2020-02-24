@@ -304,7 +304,7 @@ Camera:
   field of view: 60
   orthographic: 0
   orthographic size: 5
-  m_Depth: 1
+  m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 32
@@ -544,7 +544,7 @@ MonoBehaviour:
   syncInterval: 0.1
   clientAuthority: 1
   localPositionSensitivity: 0.01
-  localEulerAnglesSensitivity: 0.01
+  localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
   compressRotation: 1
 --- !u!114 &6894176291118322267
@@ -563,7 +563,7 @@ MonoBehaviour:
   syncInterval: 0.1
   clientAuthority: 1
   localPositionSensitivity: 0.01
-  localEulerAnglesSensitivity: 0.01
+  localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
   compressRotation: 1
   target: {fileID: 2564912053017645724}
@@ -581,8 +581,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  animator: {fileID: 3652355579825802742}
   clientAuthority: 1
+  animator: {fileID: 3652355579825802742}
 --- !u!114 &5535004947500365903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -626,13 +626,10 @@ MonoBehaviour:
   turnSensitivity: 20
   tiltSensitivity: 16
   touchSensitivity: 5
-  tapTime: 0.25
   invertY: 0
   touchX: 0
   touchY: 0
   positionTouchBegan: {x: 0, y: 0}
-  timeTouchBegan: 0
-  timeTouchEnded: 0
   touchMove: 0
   touchAim: 0
   mouseX: 0

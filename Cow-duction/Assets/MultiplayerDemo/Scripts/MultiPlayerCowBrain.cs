@@ -23,7 +23,7 @@ public class MultiPlayerCowBrain : NetworkBehaviour
 
     [Header("Parameters")]
     public float fieldRadius = 5f;
-    public float wanderRadius = 100f;
+    public float wanderRadius = 20f;
     public float maxWanderTime = 10f;
     public float maxSpeed = 8f;
     public float idleTime = 3f;
@@ -128,7 +128,7 @@ public class MultiPlayerCowBrain : NetworkBehaviour
             return;
         
         NavMeshPath navMeshPath = new NavMeshPath();
-        Vector3 targetPosition = Random.insideUnitSphere * wanderRadius;
+        Vector3 targetPosition = transform.position + Random.insideUnitSphere * wanderRadius;
 
         // Keep looking for a path if it can't reach the destination
         while (navMeshPath.status == NavMeshPathStatus.PathPartial) {
