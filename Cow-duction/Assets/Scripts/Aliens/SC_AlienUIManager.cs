@@ -281,6 +281,7 @@ public class SC_AlienUIManager : MonoBehaviour
     // Increase score and fuel
     public void IncreaseScore(float milk, GameObject cow)
     {
+        _rbUFO.GetComponent<SC_CowShooter>().AddCow();
         StartCoroutine(AnimateIncreaseScore());
         int cowScore = 1;
         if (cow.GetComponent<SC_CowBrain>().cowType == "Normal")
