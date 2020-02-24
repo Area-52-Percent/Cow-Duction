@@ -20,6 +20,8 @@ public class SC_AlienUIManager : MonoBehaviour
     private Camera mainCamera;
     public Animator shipAnim;
     private SC_HudReticleFollowCursor reticleFollowCursor;
+    private SC_CowShooter cowShooter;
+    private JumpPoint jumper;
     private TransformWrapper transformWrapper;
     [SerializeField] private Rigidbody _rbUFO;
     private MeshRenderer[] ufoMesh;
@@ -38,6 +40,7 @@ public class SC_AlienUIManager : MonoBehaviour
     private float timeRemaining; // In seconds
     private float timeScaleFactor;
     private bool paused;
+    public bool resetting = false;
 
     // Public variables
     public GameObject CowSpawner;
@@ -80,7 +83,7 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private GameObject holoFarmer = null; // Intro farmer hologram
     [SerializeField] private Text milkText = null;
     [SerializeField] private Image controllerScreen = null; // Intro controls
-    [SerializeField] private bool playIntro = true;
+    [SerializeField] public bool playIntro = true;
     private bool playingIntro = false;
     [Space] // Outro
     [SerializeField] private AudioClip twoMinuteWarning = null; // Set up in inspector
@@ -104,10 +107,13 @@ public class SC_AlienUIManager : MonoBehaviour
     {
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
         mainCamera = Camera.main;
+        //_rbUFO = GameObject.Find("UFO").GetComponent<Rigidbody>();
         ufoMesh = _rbUFO.GetComponentsInChildren<MeshRenderer>();
         ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
         transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
         reticleFollowCursor = reticle.GetComponent<SC_HudReticleFollowCursor>();
+        cowShooter = _rbUFO.GetComponent<SC_CowShooter>();
+        jumper = _rbUFO.GetComponent<JumpPoint>();
     }
 
     // Start is called before the first frame update
@@ -135,6 +141,21 @@ public class SC_AlienUIManager : MonoBehaviour
         {
             StopCoroutine(PlayIntro());
             SkipIntro();
+        }
+
+        if (Input.GetKeyDown("1"))
+        {
+            _rbUFO.GetComponent<JumpPoint>().JumpAround(1);
+        }
+
+        if (Input.GetKeyDown("2"))
+        {
+            _rbUFO.GetComponent<JumpPoint>().JumpAround(2);
+        }
+
+        if (Input.GetKeyDown("3"))
+        {
+            _rbUFO.GetComponent<JumpPoint>().JumpAround(3);
         }
 
         // Display speed and altitude
@@ -281,7 +302,7 @@ public class SC_AlienUIManager : MonoBehaviour
     // Increase score and fuel
     public void IncreaseScore(float milk, GameObject cow)
     {
-        _rbUFO.GetComponent<SC_CowShooter>().AddCow();
+        cowShooter.AddCow();
         StartCoroutine(AnimateIncreaseScore());
         int cowScore = 1;
         if (cow.GetComponent<SC_CowBrain>().cowType == "Normal")
@@ -509,6 +530,7 @@ public class SC_AlienUIManager : MonoBehaviour
         shipAnim.Play("UFO Intro");
         yield return new WaitForSeconds(3.1f);
         timeRemaining = playTime;
+        shipAnim.Play("idle", -1, 0f);
         shipAnim.enabled = false;
         playingIntro = true;
     }
@@ -677,10 +699,22 @@ public class SC_AlienUIManager : MonoBehaviour
     // Reset gameplay variables to starting values
     public void ResetGame()
     {
-        if (playingIntro)
-            StartGame();
-        // Initialize values for private variables
         score = 0;
+        inScoreMultiplier = false;
+        scoreMultiplier = 1;
+
+        timeRemaining = 270; // In seconds
+
+        playIntro = true;
+        playingIntro = false;
+        //Destroy(GameObject.FindWithTag("GameManager"));
+        if (playingIntro)
+        {
+            StartGame();
+        }
+
+        // Initialize values for private variables
+        mulitiplierText.text = scoreMultiplier.ToString("D1");
         scoreText.text = score.ToString("D2");
         reticle.sprite = normalReticle;
         fuel = 100.0f;
@@ -714,16 +748,21 @@ public class SC_AlienUIManager : MonoBehaviour
             gameplayScreen.SetActive(false);
         topDownCamera.gameObject.SetActive(false);
 
-        if (shipAnim.enabled != true)
+        shipAnim.enabled = true;
+        shipAnim.StopPlayback();
+        shipAnim.Play("idle", -1, 0f);
+
+        if (GameObject.FindGameObjectsWithTag("GameManagerContainer").Length > 1)
         {
-            shipAnim.enabled = true;
+            for (int i = 0; i < GameObject.FindGameObjectsWithTag("GameManagerContainer").Length; i++)
+            {
+                GameObject.FindGameObjectsWithTag("AchievementManager")[i].SetActive(false);
+                GameObject.FindGameObjectsWithTag("DynamicDesign")[i].SetActive(false);
+                GameObject.FindGameObjectsWithTag("GameManager")[i + 1].SetActive(false);
+                GameObject.FindGameObjectsWithTag("CowSpawner")[i].SetActive(false);
+                GameObject.FindGameObjectsWithTag("EventSystem")[i].SetActive(false);
+            }
         }
-        else
-        {
-            shipAnim.StopPlayback();
-        }
-        
-        
     }
 
     public void StartGame()

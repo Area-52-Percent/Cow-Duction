@@ -40,7 +40,6 @@ public class SC_AchievementManager : MonoBehaviour
             SetAchievementInfo("Achievement", title);
             visualAchievement.SetActive(true);
             StartCoroutine(HideAchievement());
-            
         }
     }
 

@@ -120,6 +120,8 @@ public class GameManager : MonoBehaviour
     {
         gameStarted = false;
 
+        uiManager.playIntro = true;
+
         AsyncOperation asyncSceneLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
             while (!asyncSceneLoad.isDone)
                 yield return null;
@@ -135,6 +137,7 @@ public class GameManager : MonoBehaviour
         SC_SpaceshipMovement ufoSM = ufo.GetComponent<SC_SpaceshipMovement>();
         ufoSM.ResetGame();
 
+        uiManager.resetting = false;
         SetMusicVolume(0.5f);
     }
 
