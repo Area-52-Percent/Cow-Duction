@@ -90,7 +90,6 @@ GameObject:
   - component: {fileID: 4419196751125780302}
   - component: {fileID: 3925198825131414670}
   - component: {fileID: 3084411327803909643}
-  - component: {fileID: 2950839008364428994}
   - component: {fileID: 7133034922088235988}
   m_Layer: 15
   m_Name: Projectile Carrot
@@ -156,9 +155,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 0
+  sceneId: 2185616340
   serverOnly: 0
-  m_AssetId: 538170901d7e9f24d97559a9cf6d04da
+  m_AssetId: 
 --- !u!114 &3084411327803909643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,27 +177,6 @@ MonoBehaviour:
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
   compressRotation: 1
---- !u!114 &2950839008364428994
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4419196751125780299}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26472c0de01364733b2e233e51e2150a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  destroyAfter: 5
-  rigidBody: {fileID: 4419196751125780301}
-  force: 250
-  owner: {fileID: 0}
-  milkLeak: {fileID: 3012827781637457126, guid: 49dfbc03e97ca41798e370e8aa978301,
-    type: 3}
-  projectileHit: {fileID: 8300000, guid: 2d383d0fb481a4b8daf0e141a0d5f0da, type: 3}
 --- !u!114 &7133034922088235988
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -215,7 +193,8 @@ MonoBehaviour:
   syncInterval: 0.1
   destroyAfter: 5
   rigidBody: {fileID: 4419196751125780301}
-  force: 400
+  hitForce: 100
+  speedForce: 500
   owner: {fileID: 0}
   milkLeak: {fileID: 3548555650585113165, guid: fae10533dbb5e462784fe99a2bbed39d,
     type: 3}

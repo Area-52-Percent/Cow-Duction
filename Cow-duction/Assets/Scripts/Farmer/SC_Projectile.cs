@@ -40,7 +40,7 @@ public class SC_Projectile : MonoBehaviour
             if (uIManager)
             {
                 targetObject.GetComponent<SC_SpaceshipMovement>().AddImpulseForce(GetComponent<Rigidbody>().velocity.normalized, knockbackForce);
-                uIManager.TakeDamage(projectileDamage, collision.GetContact(0).point);
+                uIManager.TakeDamage(projectileDamage, 'p' /*, collision.GetContact(0).point*/);
                 
                 GameObject milkLeakClone = Instantiate(milkLeak, collision.GetContact(0).point, Quaternion.identity);
                 milkLeakClone.transform.parent = targetObject.transform;

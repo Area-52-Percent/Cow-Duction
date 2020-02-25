@@ -19,6 +19,8 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public float tiltSensitivity = 16f;
     public float touchSensitivity = 5f;
     public bool invertY = false;
+    public int pellets = 5;
+    public float spread = .5f;
 
     [Header("Touch Diagnostics")]
     public float touchX = 0f;
@@ -186,7 +188,17 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         if(projectileClone.GetComponent<FarmerProjectilePotato>())
             projectileClone.GetComponent<FarmerProjectilePotato>().owner = gameObject;
         if (projectileClone.GetComponent<FarmerProjectileCorn>())
+        {
             projectileClone.GetComponent<FarmerProjectileCorn>().owner = gameObject;
+            for ( int i = 1; i < 5; i++)
+            {
+                Vector3 pos = new Vector3(cameraTransform.position.x + Random.Range(-spread, spread), cameraTransform.position.y + Random.Range(-spread, spread), cameraTransform.position.z + Random.Range(-spread, spread)) + cameraTransform.forward;
+                GameObject pelletClone = Instantiate(projectile, pos, cameraTransform.rotation);
+                pelletClone.GetComponent<FarmerProjectileCorn>().owner = gameObject;
+                NetworkServer.Spawn(pelletClone);
+            }
+            
+        }
         if (projectileClone.GetComponent<FarmerProjectileCarrot>())
             projectileClone.GetComponent<FarmerProjectileCarrot>().owner = gameObject;
         NetworkServer.Spawn(projectileClone);

@@ -362,14 +362,28 @@ public class SC_AlienUIManager : MonoBehaviour
     }
 
     // Subtract fuel by amount of damage taken
-    public void TakeDamage(float amount, Vector3 position)
+    public void TakeDamage(float amount,char type /*, Vector3 position*/)
     {
-        StartCoroutine(AnimateDamage(position));
-
+        //StartCoroutine(AnimateDamage(position));
+        if(type == 'p')
+            StartCoroutine(PotatoEffect());
         fuel -= amount;
         fuelMeter.value = fuel;
     }
+    public IEnumerator CarrotEffect()
+    {
+        float curFuelRate = fuelDepletionRate;
+        fuelDepletionRate = fuelDepletionRate * 2;
+        yield return new WaitForSeconds(2f);
+        fuelDepletionRate = curFuelRate;
+    }
 
+    public IEnumerator PotatoEffect()
+    {
+        cropSplatter.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        cropSplatter.gameObject.SetActive(false);
+    }
     // Visual indicator of taking damage
     private IEnumerator AnimateDamage(Vector3 position)
     {
