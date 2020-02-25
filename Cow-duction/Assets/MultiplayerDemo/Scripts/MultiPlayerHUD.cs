@@ -37,7 +37,7 @@ public class MultiPlayerHUD : NetworkBehaviour
         {
             // Return main camera to starting position
             Camera.main.transform.SetParent(null);
-            Camera.main.transform.localPosition = new Vector3(0f, 10f, -10f);
+            Camera.main.transform.localPosition = new Vector3(30f, 15f, -10f); // Hard-coded position
             Camera.main.transform.localEulerAngles = Vector3.zero;
 
             Camera.main.cullingMask = -1;
