@@ -33,8 +33,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public float horizontalInput;
     public float verticalInput;
     public int playerNumber;
-    public Controller controller1;
-    public Controller controller2;
+    public Controller controller;
 
     // Start is called before the first frame update
     void Start()
@@ -233,12 +232,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     #region Player Abilities
     private void OnMovement(InputValue inputValue)
     {
-        Debug.Log(inputValue);
-    }
-
-    private void OnShoot(InputValue inputValue)
-    {
-        Debug.Log("hello");
+        Debug.Log("moving");
     }
     #endregion
 
@@ -246,25 +240,21 @@ public class SC_SpaceshipMovement : MonoBehaviour
     //Mapping controls
     private void MapControls()
     {
-        controller1 = GameControllers.Instance.controllers.GetController(0);
-        controller2 = GameControllers.Instance.controllers.GetController(1);
-        if (controller1 != null && controller2 != null)
+        controller = GameControllers.Instance.controllers.GetController(0);
+        controller.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player");
+        if (controller != null)
         {
-            controller1.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player");
-            controller2.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player");
-            controller1._OnMovement += OnMovement;
-            controller2._OnShoot += OnShoot;
+            controller._OnMovement += OnMovement;
         }
-        Debug.Log("controllermapped");
     }
 
     private void UnMapControls()
     {
-        if (controller1 != null && controller2 != null)
+        if (controller != null)
         {
-            controller1._OnMovement -= OnMovement;
-            controller2._OnShoot -= OnShoot;
+            controller._OnMovement -= OnMovement;
         }
     }
     #endregion
+
 }
