@@ -143,19 +143,29 @@ public class SC_AlienUIManager : MonoBehaviour
             SkipIntro();
         }
 
-        if (Input.GetKeyDown("1"))
+        if (Input.GetKeyDown("1") && Input.GetKey("left shift"))
         {
             _rbUFO.GetComponent<JumpPoint>().JumpAround(1);
+            StartCoroutine(AnimateIncreaseScore());
+            score += 1;
+            scoreText.text = score.ToString("D2");
         }
 
-        if (Input.GetKeyDown("2"))
+        if (Input.GetKeyDown("2") && Input.GetKey("left shift"))
         {
             _rbUFO.GetComponent<JumpPoint>().JumpAround(2);
+            StartCoroutine(AnimateIncreaseScore());
+            score += 2;
+            scoreText.text = score.ToString("D2");
+
         }
 
-        if (Input.GetKeyDown("3"))
+        if (Input.GetKeyDown("3") && Input.GetKey("left shift"))
         {
             _rbUFO.GetComponent<JumpPoint>().JumpAround(3);
+            StartCoroutine(AnimateIncreaseScore());
+            score += 3;
+            scoreText.text = score.ToString("D2");
         }
 
         // Display speed and altitude

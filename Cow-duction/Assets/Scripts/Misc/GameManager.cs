@@ -122,6 +122,7 @@ public class GameManager : MonoBehaviour
 
         uiManager.playIntro = true;
 
+
         AsyncOperation asyncSceneLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
             while (!asyncSceneLoad.isDone)
                 yield return null;

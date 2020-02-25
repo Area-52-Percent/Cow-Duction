@@ -231,6 +231,11 @@ public class SC_FarmerBrain : SC_CowBrain
         Wander();
     }
 
+    public void callWander()
+    {
+        Wander();
+    }
+
     // Destroy the clone after a set amount of time
     private IEnumerator DestroyClone(GameObject clone)
     {

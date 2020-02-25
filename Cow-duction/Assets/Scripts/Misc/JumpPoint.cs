@@ -11,6 +11,7 @@ public class JumpPoint : MonoBehaviour
         string jumpGroup = "Location " + jumpPoint;
         GameObject jumpLocations = GameObject.Find(jumpGroup);
         GameObject.Find("UFO").gameObject.transform.position = jumpLocations.transform.Find("UFO Loc").transform.position;
+        GameObject.Find("UFO").gameObject.transform.rotation = jumpLocations.transform.Find("UFO Loc").transform.rotation;
         for (int j = 0; j < GameObject.FindGameObjectsWithTag("Farmer").Length; j++)
         {
             string farmer;
@@ -25,14 +26,19 @@ public class JumpPoint : MonoBehaviour
                 farmer = "Farmer (" + j + ")";
                 curfarmer = "Farmer " + (j+1) + " Loc";
             }
+
             if (j < 3)
             {
+                Debug.Log("Current Farmer = " + farmer);
+                Debug.Log("Current Farmer Loc Variable = " + curfarmer);
+                Debug.Log("Current Farmer Location = " + GameObject.Find(farmer).gameObject.transform.position);
+                Debug.Log("Farmer going to = " + jumpLocations.transform.Find(curfarmer).transform.position);
+                GameObject.Find(farmer).gameObject.transform.position = new Vector3(0, 0, 0);
                 GameObject.Find(farmer).gameObject.transform.position = jumpLocations.transform.Find(curfarmer).transform.position;
-            }
-            else
-            {
-                GameObject.Find(farmer).gameObject.transform.position = jumpLocations.transform.Find("Farmer 1 Loc").transform.position;
-            }
+                GameObject.Find(farmer).GetComponent<SC_FarmerBrain>().callWander();
+                GameObject.Find(farmer).gameObject.transform.rotation = jumpLocations.transform.Find(curfarmer).transform.rotation;
+                Debug.Log("Farmer at = " + GameObject.Find(farmer).gameObject.transform.position);
+            } 
         }
     }
 }
