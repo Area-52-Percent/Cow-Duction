@@ -17,6 +17,7 @@ public class WindmillEditor : MonoBehaviour
     public float colliderLengthFactor = 50f;
     public float particleRadiusFactor = 10f;
     public float motorPositionFactor = 35f;
+    public float speedPushFactor = 0.5f;
 
     [Header("Objects")]
     [SerializeField] private Transform fan;
@@ -26,6 +27,7 @@ public class WindmillEditor : MonoBehaviour
     [SerializeField] private ParticleSystem windParticles;
 
     private ConstantRotation fanRotation;
+    private EnvironmentWind environmentWind;
     private CapsuleCollider windZoneCollider;
 
     void OnValidate()
@@ -34,6 +36,9 @@ public class WindmillEditor : MonoBehaviour
 
         if (fanRotation == null) fanRotation = fan.GetComponent<ConstantRotation>();
         fanRotation.rotationSpeed = fanSpeed;
+
+        if (environmentWind == null) environmentWind = windZone.GetComponent<EnvironmentWind>();
+        environmentWind.pushForce = fanSpeed * speedPushFactor;
 
         if (windZoneCollider == null) windZoneCollider = windZone.GetComponent<CapsuleCollider>();
         windZoneCollider.center = Vector3.forward * fan.localScale.x * colliderCenterFactor;

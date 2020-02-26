@@ -9,9 +9,9 @@ using UnityEngine;
 [RequireComponent(typeof(AudioSource))]
 public class EnvironmentWind : MonoBehaviour
 {
-    [SerializeField] private float pushForce = 10.0f;
-    [SerializeField] private float maxWindVolume = 0.5f;
-    [SerializeField] private bool pushForward;
+    public float pushForce = 10.0f;
+    public float maxWindVolume = 0.5f;
+    public bool pushForward;
     private AudioSource m_AudioSource;
     private bool triggered = false;
 
