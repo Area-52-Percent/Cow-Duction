@@ -11,8 +11,8 @@ public class EnvironmentWind : MonoBehaviour
 {
     [SerializeField] private float pushForce = 10.0f;
     [SerializeField] private float maxWindVolume = 0.5f;
+    [SerializeField] private bool pushForward;
     private AudioSource m_AudioSource;
-    private Vector3 pushDirection;
     private bool triggered = false;
 
     // Start is called before the first frame update
@@ -20,7 +20,6 @@ public class EnvironmentWind : MonoBehaviour
     {
         m_AudioSource = GetComponent<AudioSource>();
         m_AudioSource.volume = 0f;
-        pushDirection = transform.forward;
     }
 
     // Update is called once per frame
@@ -58,7 +57,7 @@ public class EnvironmentWind : MonoBehaviour
                     m_AudioSource.volume += Time.deltaTime * 0.5f;
                 }
             }
-            otherRigidbody.AddForce(pushForce * pushDirection, ForceMode.Acceleration);
+            otherRigidbody.AddForce(pushForce * (pushForward ? transform.forward : (other.transform.position - transform.position).normalized), ForceMode.Acceleration);
         }
     }
 
