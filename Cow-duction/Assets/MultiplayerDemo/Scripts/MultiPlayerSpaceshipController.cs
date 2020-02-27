@@ -50,6 +50,31 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
         pitch = Input.GetAxis("TurnVertical");
         roll = Input.GetAxis("Roll");
         lift = Input.GetAxis("Lift");
+
+        if (Input.GetKeyDown("1") && Input.GetKey("left shift"))
+        {
+            this.gameObject.GetComponent<JumpPoint>().JumpAround(1);
+            //StartCoroutine(AnimateIncreaseScore());
+            //score += 1;
+            //scoreText.text = score.ToString("D2");
+        }
+
+        if (Input.GetKeyDown("2") && Input.GetKey("left shift"))
+        {
+            this.gameObject.GetComponent<JumpPoint>().JumpAround(2);
+            //StartCoroutine(AnimateIncreaseScore());
+            //score += 2;
+            //scoreText.text = score.ToString("D2");
+
+        }
+
+        if (Input.GetKeyDown("3") && Input.GetKey("left shift"))
+        {
+            this.gameObject.GetComponent<JumpPoint>().JumpAround(3);
+            //StartCoroutine(AnimateIncreaseScore());
+            //score += 3;
+            //scoreText.text = score.ToString("D2");
+        }
     }
 
     // FixedUpdate is called in fixed time intervals
