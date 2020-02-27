@@ -24,8 +24,6 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public float touchX = 0f;
     public float touchY = 0f;
     public Vector2 positionTouchBegan;
-    public int touchMove = -1;
-    public int touchAim = -1;
     public Touch touch;
 
     [Header("Diagnostics")]
@@ -81,40 +79,39 @@ public class MultiPlayerFarmerController : NetworkBehaviour
             {
                 touch = Input.GetTouch(t);
 
-                switch (touch.phase)
+                if (touch.position.x < Screen.width / 2) // Moving
                 {
-                    case TouchPhase.Began:
-                        positionTouchBegan = touch.position;
+                    switch (touch.phase)
+                    {
+                        case TouchPhase.Began:
+                                positionTouchBegan = touch.position;
+                            break;
+                        case TouchPhase.Moved:
+                        case TouchPhase.Stationary:
+                                touchX = (touch.position.x - positionTouchBegan.x) / 100f;
+                                touchY = (touch.position.y - positionTouchBegan.y) / 100f;
 
-                        if (touch.position.x < Screen.width / 2)
-                            touchMove = t;
-                        else
-                            touchAim = t;
-                        break;
-                    case TouchPhase.Moved:
-                        if (touchMove == t) // Moving
-                        {
-                            touchX = touch.position.x - positionTouchBegan.x;
-                            touchY = touch.position.y - positionTouchBegan.y;
-
-                            horizontal = Mathf.Clamp(touchX, -1f, 1f);
-                            vertical = Mathf.Clamp(touchY, -1f, 1f);
-                        }
-                        else if (touchAim == t) // Aiming
-                        {
+                                horizontal = Mathf.Clamp(touchX, -1f, 1f);
+                                vertical = Mathf.Clamp(touchY, -1f, 1f);
+                            break;
+                        case TouchPhase.Ended:
+                                horizontal = 0;
+                                vertical = 0;
+                            break;
+                    }
+                }
+                else // Aiming
+                {
+                    switch (touch.phase)
+                    {
+                        case TouchPhase.Moved:
                             touchX = touch.deltaPosition.x;
                             touchY = touch.deltaPosition.y;
 
                             turn += touchX * touchSensitivity * Time.deltaTime;
                             tilt += (invertY ? touchY : -touchY) * touchSensitivity * Time.deltaTime;
-                        }
-                        break;
-                    case TouchPhase.Ended:
-                        if (touchMove > -1)
-                            touchMove = -1;
-                        if (touchAim > -1)
-                            touchAim = -1;
-                        break;
+                            break;
+                    }
                 }
             }
         }
