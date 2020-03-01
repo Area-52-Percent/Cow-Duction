@@ -9,6 +9,7 @@ public class CornFieldEditor : MonoBehaviour
     public DrawMode drawMode = DrawMode.Selected;
 
     private Vector3[,] cornPositions;
+    private Vector3 lastAngle;
 
     private void OnValidate()
     {
@@ -33,7 +34,7 @@ public class CornFieldEditor : MonoBehaviour
 
     private void DrawGizmoLines()
     {
-        if (cornPositions[0,0] != transform.position)
+        if (cornPositions[0,0] != transform.position || transform.eulerAngles != lastAngle)
         {
             GeneratePositions();
         }
@@ -41,7 +42,7 @@ public class CornFieldEditor : MonoBehaviour
         Gizmos.color = Color.yellow;
         foreach (Vector3 pos in cornPositions)
         {
-            Gizmos.DrawLine(pos, pos + Vector3.up * cornHeightFactor * 4f);
+            Gizmos.DrawLine(pos, pos + transform.up * cornHeightFactor * 4f);
         }
     }
 
@@ -49,7 +50,7 @@ public class CornFieldEditor : MonoBehaviour
     {
         foreach (Vector3 pos in cornPositions)
         {
-            GameObject cornClone = Instantiate(cornstalk, pos, Quaternion.identity, transform);
+            GameObject cornClone = Instantiate(cornstalk, pos, transform.rotation, transform);
             cornClone.transform.localScale = new Vector3(cornSizeFactor, cornHeightFactor, cornSizeFactor);
         }
     }
@@ -64,8 +65,10 @@ public class CornFieldEditor : MonoBehaviour
         {
             for (int w = 0; w < width; w++)
             {
-                cornPositions[l, w] = transform.position + new Vector3(l, 0, w) * cornSizeFactor * pixelSize;
+                cornPositions[l, w] = (transform.position + (transform.right * w) + (transform.forward * l)) * cornSizeFactor * pixelSize;
             }
         }
+
+        lastAngle = transform.eulerAngles;
     }
 }
