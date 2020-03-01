@@ -65,7 +65,7 @@ public class CornFieldEditor : MonoBehaviour
         {
             for (int w = 0; w < width; w++)
             {
-                cornPositions[l, w] = (transform.position + (transform.right * w) + (transform.forward * l)) * cornSizeFactor * pixelSize;
+                cornPositions[l, w] = transform.localPosition + ((transform.right * w + transform.forward * l) * cornSizeFactor * pixelSize);
             }
         }
 
