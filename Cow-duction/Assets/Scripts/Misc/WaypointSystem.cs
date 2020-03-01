@@ -3,7 +3,10 @@ using UnityEngine;
 
 public class WaypointSystem : MonoBehaviour
 {
+    [HideInInspector]
     public List<Vector3> waypoints;
+    public enum DrawMode {Never, Selected, Always};
+    public DrawMode drawMode = DrawMode.Selected;
 
     private void Awake()
     {
@@ -22,7 +25,21 @@ public class WaypointSystem : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        if (transform.childCount != waypoints.Count)
+        if (drawMode != DrawMode.Always) return;
+
+        DrawWaypoints();
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (drawMode == DrawMode.Never) return;
+
+        DrawWaypoints();
+    }
+
+    private void DrawWaypoints()
+    {
+        if (transform.childCount != waypoints.Count || transform.position != waypoints[0])
             InitializeWaypoints();
 
         Gizmos.color = Color.cyan;
