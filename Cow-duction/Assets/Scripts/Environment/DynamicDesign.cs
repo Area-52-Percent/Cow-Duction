@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class DynamicDesign : MonoBehaviour
 {
@@ -40,11 +39,6 @@ public class DynamicDesign : MonoBehaviour
         foreach (GameObject spawnPoint in treeSpawnPoints)
         {
             RandomizeTree(spawnPoint);
-        }
-
-        for (int s = 1; s < SceneManager.sceneCountInBuildSettings; s++)
-        {
-            SceneManager.LoadSceneAsync(s, LoadSceneMode.Additive);
         }
     }
 
