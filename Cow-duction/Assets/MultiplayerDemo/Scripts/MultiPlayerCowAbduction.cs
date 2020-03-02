@@ -571,6 +571,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 // Only suck in cows
                 if (attachedObject.tag == "Cow")
                 {
+                    //Debug.Log("Eating cow");
                     // Release cow if object in between UFO and cow
                     int layerMask = ~(gameObject.layer);
                     if (Physics.Raycast(transform.position, (attachedObject.transform.position - transform.position).normalized, out RaycastHit hit, maxCaptureLength, layerMask))
@@ -628,11 +629,12 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             // Apply force for physical feedback
             spaceshipController.AddImpulseForce(attachedRigidbody.velocity.normalized, Mathf.Clamp(attachedRigidbody.mass * 0.5f, 1f, 10f));
 
+            spaceshipController.IncreaseScore(10f, attachedObject.gameObject);
             // Destroy grappling hook and attached object
             if (probeClone)
                 Destroy(probeClone);
-            
-            foreach(ConfigurableJoint cj in attachedObjectJoints)
+
+            foreach (ConfigurableJoint cj in attachedObjectJoints)
             {
                 Destroy(cj.gameObject);
             }

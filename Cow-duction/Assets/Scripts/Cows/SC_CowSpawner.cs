@@ -155,4 +155,29 @@ public class SC_CowSpawner : MonoBehaviour
         cowBrain.SetMaxSpeed(maxSpeed);
         cowBrain.SetMaxWanderTime(maxWanderTime);
     }
+
+    public void spawnDehydrateCow(GameObject cow)
+    {
+        SC_CowBrain cowBrain = cow.GetComponent<SC_CowBrain>();
+        Rigidbody cowRigidbody = cow.GetComponent<Rigidbody>();
+
+        float mass = cowRigidbody.mass;
+        float size = cow.transform.localScale.x; // Assume scale is uniform
+        float milk = cowBrain.GetMilk();
+        float maxSpeed = cowBrain.GetMaxSpeed();
+        float maxWanderTime = cowBrain.GetMaxWanderTime();
+        float weakCowRandom = randomFactor * 0.3f;
+
+        size = Random.Range(size - (size * randomFactor), size + (size * randomFactor));
+        mass = Random.Range(mass - (mass * randomFactor), mass + (mass * randomFactor)) + size;
+        milk = Random.Range(milk - (milk * weakCowRandom), milk + (milk * weakCowRandom)) + size;
+        maxSpeed = Random.Range(maxSpeed - (maxSpeed * randomFactor), maxSpeed + (maxSpeed * randomFactor)) + size;
+        maxWanderTime = Random.Range(maxWanderTime - (maxWanderTime * randomFactor), maxWanderTime + (maxWanderTime * randomFactor)) - size;
+
+        cowRigidbody.mass = mass;
+        cow.transform.localScale *= size;
+        cowBrain.SetMilk(milk);
+        cowBrain.SetMaxSpeed(maxSpeed);
+        cowBrain.SetMaxWanderTime(maxWanderTime);
+    }
 }
