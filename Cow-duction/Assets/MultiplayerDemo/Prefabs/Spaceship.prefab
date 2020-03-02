@@ -195,9 +195,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 0
+  sceneId: 2147913242
   serverOnly: 0
-  m_AssetId: 3f4a9c49d384741138cf3daac24cf0d8
+  m_AssetId: 
 --- !u!114 &-265028131768668521
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,6 +324,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d18993e221994b04be681a737f7741c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+<<<<<<< HEAD
+=======
+--- !u!114 &3297587865683782829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11462927149525122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba698f5f83901e348ac99a2bbf10992f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!114 &7198973154820510760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11462927149525122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d944ae84a93db194ba39b9f615b0be59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  horizontalSpeed: 10
+  groundSpeed: 1
+  verticalSpeed: 10
+  maxHeight: 50
+  minHeight: 10
+  hoverHeight: 5
+  rotationForce: 0.25
+  autoRotationForce: 0.05
+  maxRotation: 20
+  invertLook: 0
+--- !u!114 &5101101765401722780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 11462927149525122}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6eda318b9af30ca418809ceb6fdbf51a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crosshair: {fileID: 513156808240694633}
+  grappleOrigin: {fileID: 3525946667437174513}
+  mainCam: {fileID: 1706197937580248518}
+  dehydratedCow: {fileID: 7147982868894547673, guid: af66a2eafbc19b44185c6b3c32e79125,
+    type: 3}
+  cow: {fileID: 5314257958602278042, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8, type: 3}
+  ufo: {fileID: 11462927149525122}
+  shotSpeed: 500
+>>>>>>> parent of 137dbb4... Current Update with teleporting and partial cow-shooter mechanics
 --- !u!1 &513156808240694633
 GameObject:
   m_ObjectHideFlags: 0
