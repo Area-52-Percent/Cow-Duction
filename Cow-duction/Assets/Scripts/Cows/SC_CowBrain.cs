@@ -35,8 +35,7 @@ public class SC_CowBrain : MonoBehaviour
     [SerializeField] protected float maxWanderTime = 10.0f;
     [SerializeField] protected float idleTime = 3.0f;
     [SerializeField] protected float maxSpeed = 8.0f;
-    [SerializeField] protected float recoveryTime = 3.0f;
-    [SerializeField] private float randomFactor = 0.1f;
+    [SerializeField] protected float recoveryTime = 3.0f;    
     [SerializeField] protected bool tugWhenGrappled = false;
     [SerializeField] protected bool aiControlled = true;
 
@@ -207,30 +206,6 @@ public class SC_CowBrain : MonoBehaviour
     public void SetTugWhenGrappled(bool _tugWhenGrappled)
     {
         tugWhenGrappled = _tugWhenGrappled;
-    }
-
-    public void setDehydrated()
-    {
-        Rigidbody cowRigidbody = GetComponent<Rigidbody>();
-
-        float mass = cowRigidbody.mass;
-        float size = transform.localScale.x; // Assume scale is uniform
-        float milk = GetMilk();
-        float maxSpeed = GetMaxSpeed();
-        float maxWanderTime = GetMaxWanderTime();
-        float weakCowRandom = randomFactor * 0.3f;
-
-        size = Random.Range(size - (size* randomFactor), size + (size* randomFactor));
-        mass = Random.Range(mass - (mass* randomFactor), mass + (mass* randomFactor)) + size;
-        milk = Random.Range(milk - (milk* weakCowRandom), milk + (milk* weakCowRandom)) + size;
-        maxSpeed = Random.Range(maxSpeed - (maxSpeed* randomFactor), maxSpeed + (maxSpeed* randomFactor)) + size;
-        maxWanderTime = Random.Range(maxWanderTime - (maxWanderTime* randomFactor), maxWanderTime + (maxWanderTime* randomFactor)) - size;
-
-        cowRigidbody.mass = mass;
-        transform.localScale *= size;
-        SetMilk(milk);
-        SetMaxSpeed(maxSpeed);
-        SetMaxWanderTime(maxWanderTime);
     }
 
     // Set destination as the closest field

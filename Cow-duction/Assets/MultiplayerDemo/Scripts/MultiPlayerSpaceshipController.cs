@@ -17,7 +17,6 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
     [Range(0, 360)]
     public float maxMoveRotation = 15f;
     public bool invertY = true;
-    public int score = 0;
 
     [Header("Diagnostics")]
     [Range(-1, 1)]
@@ -51,31 +50,6 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
         pitch = Input.GetAxis("TurnVertical");
         roll = Input.GetAxis("Roll");
         lift = Input.GetAxis("Lift");
-
-        if (Input.GetKeyDown("1") && Input.GetKey("left shift"))
-        {
-            this.gameObject.GetComponent<JumpPoint>().JumpAround(1);
-            //StartCoroutine(AnimateIncreaseScore());
-            //score += 1;
-            //scoreText.text = score.ToString("D2");
-        }
-
-        if (Input.GetKeyDown("2") && Input.GetKey("left shift"))
-        {
-            this.gameObject.GetComponent<JumpPoint>().JumpAround(2);
-            //StartCoroutine(AnimateIncreaseScore());
-            //score += 2;
-            //scoreText.text = score.ToString("D2");
-
-        }
-
-        if (Input.GetKeyDown("3") && Input.GetKey("left shift"))
-        {
-            this.gameObject.GetComponent<JumpPoint>().JumpAround(3);
-            //StartCoroutine(AnimateIncreaseScore());
-            //score += 3;
-            //scoreText.text = score.ToString("D2");
-        }
     }
 
     // FixedUpdate is called in fixed time intervals
@@ -197,48 +171,5 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
                 Rotate(Vector3.back * correctionMultiplier);
             }
         }
-    }
-
-    public void IncreaseScore(float milk, GameObject cow)
-    {
-        //StartCoroutine(AnimateIncreaseScore());
-        int cowScore = 1;
-        if (cow.GetComponent<SC_CowBrain>().cowType == "Normal")
-        {
-            cowScore = 1;
-        }
-        else if (cow.GetComponent<SC_CowBrain>().cowType == "Chocolate Cow")
-        {
-            cowScore = 2;
-        }
-        else if (cow.GetComponent<SC_CowBrain>().cowType == "Strawberry Cow")
-        {
-            cowScore = 3;
-        }
-        score += cowScore;
-        gameObject.GetComponent<SC_CowShooter>().AddCow();
-        /*
-        if (inScoreMultiplier)
-        {
-            StopCoroutine(co);
-            co = StartCoroutine(RunScoreMultiplier(cowScore));
-        }
-        else
-        {
-            co = StartCoroutine(RunScoreMultiplier(cowScore));
-            inScoreMultiplier = true;
-        }
-
-        if (fuel <= 0.0f)
-            fuelWarnText.enabled = false;
-
-        fuel += milk;
-        if (fuel > 100.0f)
-            fuel = 100.0f;
-
-        if (fuel > 0.0f)
-            if (_rbUFO.GetComponent<SC_SpaceshipMovement>())
-                _rbUFO.GetComponent<SC_SpaceshipMovement>().AllowMovement(true);
-        */
     }
 }
