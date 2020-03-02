@@ -386,8 +386,10 @@ public class SC_CowAbduction : MonoBehaviour
                 uiManager.SetWaypointIcon(cowIcon);
 
                 SC_CowBrain cowBrain = hit.transform.GetComponent<SC_CowBrain>();
+                /*
                 if (cowBrain)
                     cowBrain.PlayMoo(3f);
+                    */
             }
             else if (hit.transform.tag == "Farmer" || hit.transform.tag == "Bull")
                 uiManager.SetWaypointIcon(warningIcon);

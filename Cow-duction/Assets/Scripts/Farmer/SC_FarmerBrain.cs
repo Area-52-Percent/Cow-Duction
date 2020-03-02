@@ -35,6 +35,7 @@ public class SC_FarmerBrain : SC_CowBrain
     [SerializeField] private float projectileLife = 5.0f;
     [SerializeField] private float fireRate = 3.0f;
     [SerializeField] private int startingAmmo = 5;
+
     // [SerializeField] private float peaceTime = 45.0f;
 
     // Awake is called after all objects are initialized
@@ -100,6 +101,7 @@ public class SC_FarmerBrain : SC_CowBrain
                     if (m_Agent.remainingDistance <= 1f || wanderTime >= maxWanderTime)
                     {
                         Wander();
+
                     }
                     else if (!peaceful && Vector3.Distance(transform.position, targetTransform.position) <= lockOnDistance)
                     {
@@ -128,20 +130,26 @@ public class SC_FarmerBrain : SC_CowBrain
                     FireWeapon();
                 }
             }
+
         }
 
         if (m_Animator)
                 m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
-    }
 
-    // Refill ammo on collision with field
-    private void OnCollisionStay(Collision collision)
+        
+
+     }
+
+    
+        // Refill ammo on collision with field
+        private void OnCollisionStay(Collision collision)
     {
         if (collision.gameObject.tag == "Field")
         {
             if (seekingAmmo)
                 RefillAmmo();
         }
+       
     }
 
     // Move towards and aim at target
@@ -239,4 +247,5 @@ public class SC_FarmerBrain : SC_CowBrain
         if (clone)
             Destroy(clone);
     }
+   
 }

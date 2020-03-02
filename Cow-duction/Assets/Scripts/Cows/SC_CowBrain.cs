@@ -42,8 +42,10 @@ public class SC_CowBrain : MonoBehaviour
     // Serialized private variables
     [Space]
     [SerializeField] private AudioClip cowMoo = null; // Set up in inspector
+    [SerializeField] private AudioClip cowWalking = null; // Set up in inspector
     [SerializeField] private float milk = 10.0f;
     [SerializeField] public string cowType;
+    public AudioClip[] distressed;
 
     // Awake is called after all objects are initialized
     private void Awake()
@@ -65,6 +67,7 @@ public class SC_CowBrain : MonoBehaviour
             SetPlayerControlled(true);
         }
         SeekFood();
+
     }
 
     // Update is called once per frame
@@ -82,6 +85,7 @@ public class SC_CowBrain : MonoBehaviour
                 {
                     Wander();
                     PlayMoo(1f);
+                    
                 }
                 else
                 {
@@ -91,6 +95,7 @@ public class SC_CowBrain : MonoBehaviour
         }
         if (m_Animator)
             m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
+       
     }
 
     // Satisfy hunger on contact with field
@@ -106,6 +111,20 @@ public class SC_CowBrain : MonoBehaviour
     // Allow agent to be knocked over
     private void OnCollisionEnter(Collision collision)
     {
+        Debug.Log("collision occured with " + collision.gameObject.name);
+        if (collision.transform.name == "Probe(Clone)")
+        {
+            if (m_AudioSource)
+            {
+                /*int soundSelect = (int)Random.Range(0, distressed.Length);
+                Debug.Log("Playing here ProbeClone");
+                Debug.Log("Playing sound " + 1);
+                m_AudioSource.PlayOneShot(distressed[1]);*/
+            }
+                
+                    
+        }
+
         if (collision.rigidbody && (collision.rigidbody.velocity.magnitude * collision.rigidbody.mass) > (GetComponent<Rigidbody>().velocity.magnitude * GetComponent<Rigidbody>().mass))
         {
             if (m_Agent && m_Agent.enabled)
@@ -114,7 +133,32 @@ public class SC_CowBrain : MonoBehaviour
                 if (!GetComponent<NavMeshObstacle>())
                     gameObject.AddComponent<NavMeshObstacle>();
                 StartCoroutine(Recover());
+                if (m_AudioSource)
+                {
+                    /*int soundSelect = (int)Random.Range(0, distressed.Length);
+                    Debug.Log("Playing here");
+                    Debug.Log("Playing sound " + 1);
+                    */m_AudioSource.PlayOneShot(distressed[1]);
+                }
+                    
+
             }
+        }
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+        if (collision.gameObject.name == "Probe(Clone)")
+        {
+            if (m_AudioSource)
+            {
+                int soundSelect = (int)Random.Range(0, distressed.Length);
+              //  Debug.Log("Playing here ProbeClone");
+              //  Debug.Log("Playing sound " + soundSelect);
+                m_AudioSource.PlayOneShot(distressed[soundSelect]);
+            }
+
+
         }
     }
 
@@ -126,6 +170,8 @@ public class SC_CowBrain : MonoBehaviour
             m_AudioSource.PlayOneShot(cowMoo);
         }
     }
+
+    
 
     // Re-enable agent after a set period of time
     public IEnumerator Recover()

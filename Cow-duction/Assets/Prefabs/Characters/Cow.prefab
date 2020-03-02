@@ -99,8 +99,13 @@ MonoBehaviour:
   tugWhenGrappled: 0
   aiControlled: 1
   cowMoo: {fileID: 8300000, guid: dd4141b9b87034b34b09ed67110fc272, type: 3}
+  cowWalking: {fileID: 8300000, guid: d6bde51c2d0601943b57243c29ab7d21, type: 3}
   milk: 10
   cowType: Normal
+  distressed:
+  - {fileID: 8300000, guid: 0caa331213398c947a2db9408e53f2fb, type: 3}
+  - {fileID: 8300000, guid: 884ccac7a157d9646994cdd9e24bc41d, type: 3}
+  - {fileID: 8300000, guid: c508b396dcb957945912000d34922eb1, type: 3}
 --- !u!136 &8363444690370700327
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -141,7 +146,7 @@ AudioSource:
   m_audioClip: {fileID: 8300000, guid: dd4141b9b87034b34b09ed67110fc272, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
-  m_Pitch: 1
+  m_Pitch: -1
   Loop: 0
   Mute: 0
   Spatialize: 0

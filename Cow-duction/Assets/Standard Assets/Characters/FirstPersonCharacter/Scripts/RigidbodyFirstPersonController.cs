@@ -20,6 +20,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             public AnimationCurve SlopeCurveModifier = new AnimationCurve(new Keyframe(-90.0f, 1.0f), new Keyframe(0.0f, 1.0f), new Keyframe(90.0f, 0.0f));
             [HideInInspector] public float CurrentTargetSpeed = 8f;
 
+
 #if !MOBILE_INPUT
             private bool m_Running;
 #endif
@@ -88,7 +89,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
         private float m_YRotation;
         private Vector3 m_GroundContactNormal;
         private bool m_Jump, m_PreviouslyGrounded, m_Jumping, m_IsGrounded;
-
+       
 
         public Vector3 Velocity
         {
@@ -123,6 +124,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             m_RigidBody = GetComponent<Rigidbody>();
             m_Capsule = GetComponent<CapsuleCollider>();
             mouseLook.Init (transform, cam.transform);
+
         }
 
 
@@ -134,6 +136,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
             {
                 m_Jump = true;
             }
+            
         }
 
 
@@ -184,6 +187,7 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 }
             }
             m_Jump = false;
+
         }
 
 
@@ -261,5 +265,6 @@ namespace UnityStandardAssets.Characters.FirstPerson
                 m_Jumping = false;
             }
         }
+        
     }
 }
