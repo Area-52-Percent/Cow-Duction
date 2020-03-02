@@ -19,7 +19,6 @@ public class SC_CowShooter : MonoBehaviour
     public float shotSpeed = 100f;
 
     private GameObject cowClone;
-    private List<GameObject> cowClones;
     private GameObject fullCow;
     private void Awake()
     {
@@ -29,7 +28,7 @@ public class SC_CowShooter : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1) && Time.timeScale > Mathf.Epsilon)
         {
-            if (obtainedCows > 0)
+            if (obtainedCows >= 0)
             {
                 Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, crosshair.GetComponent<RectTransform>().position);
                 Ray ray = Camera.main.ScreenPointToRay(reticlePoint);
@@ -41,16 +40,11 @@ public class SC_CowShooter : MonoBehaviour
                     StartCoroutine(ShootCow(hit));
                 }
             }
-            else
-            {
-                Debug.Log("Missing cows!");
-            }
         }
     }
     public void AddCow()
     {
         obtainedCows++;
-        Debug.Log("Gimme cow");
     }
 
     private IEnumerator ShootCow(RaycastHit hit)
@@ -63,16 +57,15 @@ public class SC_CowShooter : MonoBehaviour
         if (dehydratedCow)
         {
             cowClone = Instantiate(dehydratedCow, grappleOrigin.transform.position, ufo.transform.rotation);
-            cowClones.Add(cowClone);
+            
+            //Vector3 shotLocation = Vector3.Lerp(reticlePoint, grappleHitPoint, 5f);
             cowClone.gameObject.GetComponent<Rigidbody>().AddForce(ray.direction * shotSpeed, ForceMode.Impulse);
-            obtainedCows--;
+            //obtainedCows--;
         }
 
         yield return new WaitForSeconds(3f);
-        Transform cowSpawn = cowClones[0].transform;
-        fullCow = Instantiate(cow, cowSpawn);
-        fullCow.GetComponent<SC_CowBrain>().setDehydrated();
-        Destroy(cowClones[0]);
-        cowClones.RemoveAt(0);
+        //Transform cowSpawn = cowClone.transform;
+        //fullCow = Instantiate(cow, cowSpawn);
+        //Destroy(cowClone);
     }
 }
