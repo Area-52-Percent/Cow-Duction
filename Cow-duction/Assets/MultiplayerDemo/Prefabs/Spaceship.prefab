@@ -20,6 +20,9 @@ GameObject:
   - component: {fileID: -1425196209200007091}
   - component: {fileID: 4928104880894512320}
   - component: {fileID: 1007227725829933003}
+  - component: {fileID: 5101101765401722780}
+  - component: {fileID: 7198973154820510760}
+  - component: {fileID: 39537870840052441}
   m_Layer: 13
   m_Name: Spaceship
   m_TagString: UFO
@@ -195,7 +198,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 2147913242
+  sceneId: 2268052345
   serverOnly: 0
   m_AssetId: 
 --- !u!114 &-265028131768668521
@@ -300,6 +303,7 @@ MonoBehaviour:
   maxCaptureLength: 50
   captureSpeed: 5
   reticleAttractionForce: 1
+  score: 0
   probe: {fileID: 2843867613009940456, guid: 4053a3c25d69b4e27810cb493dbae0ca, type: 3}
   grappleOrigin: {fileID: 7035535239182078772}
   lineRenderer: {fileID: 0}
@@ -324,9 +328,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d18993e221994b04be681a737f7741c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-<<<<<<< HEAD
-=======
---- !u!114 &3297587865683782829
+--- !u!114 &5101101765401722780
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -335,13 +337,19 @@ MonoBehaviour:
   m_GameObject: {fileID: 11462927149525122}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ba698f5f83901e348ac99a2bbf10992f, type: 3}
+  m_Script: {fileID: 11500000, guid: 6eda318b9af30ca418809ceb6fdbf51a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpPoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  crosshair: {fileID: 513156808240694633}
+  grappleOrigin: {fileID: 982272729762589960}
+  mainCam: {fileID: 1706197937580248518}
+  dehydratedCow: {fileID: 7147982868894547673, guid: af66a2eafbc19b44185c6b3c32e79125,
+    type: 3}
+  cow: {fileID: 3647719034498501467, guid: 7f4d5b6d021694fd2b105745efa4a8a7, type: 3}
+  ufo: {fileID: 11462927149525122}
+  shotSpeed: 500
+  shootForce: 0
+  cows: []
 --- !u!114 &7198973154820510760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,7 +357,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 11462927149525122}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d944ae84a93db194ba39b9f615b0be59, type: 3}
   m_Name: 
@@ -364,7 +372,7 @@ MonoBehaviour:
   autoRotationForce: 0.05
   maxRotation: 20
   invertLook: 0
---- !u!114 &5101101765401722780
+--- !u!114 &39537870840052441
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -373,18 +381,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 11462927149525122}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6eda318b9af30ca418809ceb6fdbf51a, type: 3}
+  m_Script: {fileID: 11500000, guid: 302d45272ea9d414f9575a9d45ab66ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crosshair: {fileID: 513156808240694633}
-  grappleOrigin: {fileID: 3525946667437174513}
-  mainCam: {fileID: 1706197937580248518}
-  dehydratedCow: {fileID: 7147982868894547673, guid: af66a2eafbc19b44185c6b3c32e79125,
-    type: 3}
-  cow: {fileID: 5314257958602278042, guid: 3cb1fabc6f1a14d1581868dc5c7b3be8, type: 3}
-  ufo: {fileID: 11462927149525122}
-  shotSpeed: 500
->>>>>>> parent of 137dbb4... Current Update with teleporting and partial cow-shooter mechanics
+  jumpPoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!1 &513156808240694633
 GameObject:
   m_ObjectHideFlags: 0

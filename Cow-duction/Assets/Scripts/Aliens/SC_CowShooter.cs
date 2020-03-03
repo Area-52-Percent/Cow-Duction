@@ -11,47 +11,50 @@ public class SC_CowShooter : MonoBehaviour
     private SC_AlienUIManager uiManager;
     private SC_SpaceshipMovement spaceshipMovement;
     private float obtainedCows;
-
-<<<<<<< HEAD
-    public float shootForce;
+    public GameObject crosshair;
+    public GameObject grappleOrigin;
+    public Camera mainCam;
+    public GameObject dehydratedCow;
     public GameObject cow;
-=======
+    public GameObject ufo;
+    public float shotSpeed = 100f;
+    public float randomFactor = 0.1f;
+
     private GameObject cowClone;
     private GameObject fullCow;
->>>>>>> parent of 137dbb4... Current Update with teleporting and partial cow-shooter mechanics
+    public float shootForce;
+    public List<GameObject> cows = new List<GameObject>();
+
     private void Awake()
     {
-        spaceshipMovement = GetComponent<SC_SpaceshipMovement>();
-        uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
+        //uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
+        //spaceshipMovement = GetComponent<SC_SpaceshipMovement>();
+        //uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
     }
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(1))
-        {
-<<<<<<< HEAD
-            Debug.Log(obtainedCows);
-=======
-            if (obtainedCows >= 0)
+        if (Input.GetMouseButtonDown(1) && Time.timeScale > Mathf.Epsilon)
+            if (Input.GetMouseButtonDown(1))
             {
-                Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, crosshair.GetComponent<RectTransform>().position);
-                Ray ray = Camera.main.ScreenPointToRay(reticlePoint);
-                RaycastHit hit;
-
-                int layerMask = ~(1 << gameObject.layer);
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
+                if (obtainedCows > 0)
                 {
-                    StartCoroutine(ShootCow(hit));
+                    Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, crosshair.GetComponent<RectTransform>().position);
+                    Ray ray = Camera.main.ScreenPointToRay(reticlePoint);
+                    RaycastHit hit;
+
+                    int layerMask = ~(1 << gameObject.layer);
+                    if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
+                    {
+                        StartCoroutine(ShootCow(hit));
+                    }
                 }
+                Debug.Log(obtainedCows);
             }
->>>>>>> parent of 137dbb4... Current Update with teleporting and partial cow-shooter mechanics
-        }
     }
     public void AddCow()
     {
         obtainedCows++;
-<<<<<<< HEAD
-=======
     }
 
     private IEnumerator ShootCow(RaycastHit hit)
@@ -64,16 +67,43 @@ public class SC_CowShooter : MonoBehaviour
         if (dehydratedCow)
         {
             cowClone = Instantiate(dehydratedCow, grappleOrigin.transform.position, ufo.transform.rotation);
-            
+            cows.Add(cowClone);
+
             //Vector3 shotLocation = Vector3.Lerp(reticlePoint, grappleHitPoint, 5f);
             cowClone.gameObject.GetComponent<Rigidbody>().AddForce(ray.direction * shotSpeed, ForceMode.Impulse);
-            //obtainedCows--;
+            obtainedCows--;
         }
 
-        yield return new WaitForSeconds(3f);
-        //Transform cowSpawn = cowClone.transform;
-        //fullCow = Instantiate(cow, cowSpawn);
-        //Destroy(cowClone);
->>>>>>> parent of 137dbb4... Current Update with teleporting and partial cow-shooter mechanics
+        yield return new WaitForSeconds(5f);
+        Transform cowSpawn = cows[0].transform;
+        GameObject curCow = cows[0];
+        cows.Remove(curCow);
+        Destroy(curCow);
+        fullCow = Instantiate(cow, cowSpawn.position, cowSpawn.rotation);
+        RandomizeWeakCow(fullCow);
+    }
+
+    public void RandomizeWeakCow(GameObject cow)
+    {
+        SC_CowBrain cowBrain = cow.GetComponent<SC_CowBrain>();
+        Rigidbody cowRigidbody = cow.GetComponent<Rigidbody>();
+
+        float mass = cowRigidbody.mass;
+        float size = cow.transform.localScale.x; // Assume scale is uniform
+        float milk = cowBrain.GetMilk();
+        float maxSpeed = cowBrain.GetMaxSpeed();
+        float maxWanderTime = cowBrain.GetMaxWanderTime();
+
+        size = (Random.Range(size - (size * randomFactor), size + (size * randomFactor)) / 2);
+        mass = Random.Range(mass - (mass * randomFactor), mass + (mass * randomFactor)) + size;
+        milk = (Random.Range(milk - (milk * randomFactor), milk + (milk * randomFactor)) + size) / 2;
+        maxSpeed = Random.Range(maxSpeed - (maxSpeed * randomFactor), maxSpeed + (maxSpeed * randomFactor)) + size;
+        maxWanderTime = Random.Range(maxWanderTime - (maxWanderTime * randomFactor), maxWanderTime + (maxWanderTime * randomFactor)) - size;
+
+        cowRigidbody.mass = mass;
+        cow.transform.localScale *= size;
+        cowBrain.SetMilk(milk);
+        cowBrain.SetMaxSpeed(maxSpeed);
+        cowBrain.SetMaxWanderTime(maxWanderTime);
     }
 }
