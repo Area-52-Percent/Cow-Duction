@@ -8,6 +8,7 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
     private const float MAXANGLE = 360;
 
     [Header("Parameters")]
+    public float minHeight = 2f;
     public float maxHeight = 50f;
     public float moveSpeed = 30f;
     public float movementMultiplier = 1f;

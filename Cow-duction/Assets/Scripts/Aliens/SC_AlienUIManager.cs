@@ -703,7 +703,7 @@ public class SC_AlienUIManager : MonoBehaviour
 
         if (controllerScreen.gameObject.activeSelf)
             controllerScreen.gameObject.SetActive(false);
-
+        
         if (holoCow.activeSelf)
             holoCow.SetActive(false);
         if (holoFarmer.activeSelf)

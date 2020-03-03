@@ -32,13 +32,14 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     private bool grappling;
 
     [Header("Parameters")]
+    public MultiPlayerAlienUIManager UIManager;
     public int grappleJointCount = 5;
     public float grappleTime = 0.25f;
     public float grappleCooldown = 0.5f;
     public float maxCaptureLength = 50.0f;
     public float captureSpeed = 5.0f;
     public float reticleAttractionForce = 1.0f;
-    public int score = 0;
+    //public int score = 0;
 
     [Tooltip("A prefab which will spawn when firing the grapple")]
     public GameObject probe = null;
@@ -626,7 +627,8 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     {
         if(col.gameObject.tag == "Cow" && col.gameObject == attachedObject)
         {
-            score++;
+            //score++;
+            UIManager.IncreaseScore(col.gameObject.GetComponent<MultiPlayerCowBrain>().milk , col.gameObject);
             GetComponent<SC_CowShooter>().AddCow();
             // Apply force for physical feedback
             spaceshipController.AddImpulseForce(attachedRigidbody.velocity.normalized, Mathf.Clamp(attachedRigidbody.mass * 0.5f, 1f, 10f));
