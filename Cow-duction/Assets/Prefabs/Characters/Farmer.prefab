@@ -4793,7 +4793,7 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8219112530923827582}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: f6fa7d6399aa03d4594625dda3139d0c, type: 3}
@@ -4897,7 +4897,7 @@ MonoBehaviour:
   footAudioSource: {fileID: -6733359753510195697}
   footsteps:
   - {fileID: 8300000, guid: f6fa7d6399aa03d4594625dda3139d0c, type: 3}
-  stepInterval: 0.25
+  stepInterval: 0.5
 --- !u!1 &8241288612912357705
 GameObject:
   m_ObjectHideFlags: 0
@@ -5655,11 +5655,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5725052138915875787}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
-        type: 3}
-      propertyPath: m_Name
-      value: Farmer_Hat
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5714,6 +5709,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -2.546
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
+        type: 3}
+      propertyPath: m_Name
+      value: Farmer_Hat
       objectReference: {fileID: 0}
     - target: {fileID: 3791376661586708882, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
         type: 3}
