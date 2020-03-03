@@ -17,19 +17,23 @@ public class SC_Projectile : MonoBehaviour
     // Private variables
     private SC_AlienUIManager uIManager;
     private GameObject targetObject;
+    private AudioSource farmerAudioSource;
 
     // Serialized private variables
     [SerializeField] private GameObject milkLeak = null; // Set up in inspector    
     [SerializeField] private AudioClip projectileHit = null; // Set up in inspector
+    [SerializeField] private AudioClip trigger15Hits = null; // Set up in inspector
     [Space]
     [SerializeField] private float projectileDamage = 5.0f;
     [SerializeField] private float knockbackForce = 3.0f;
+    private float totalDamage = 0.0f;
 
     // Start is called before the first frame update
     void Start()
     {
         uIManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
         targetObject = GameObject.Find("UFO");
+        totalDamage += projectileDamage;
     }    
 
     // Destroy projectile on collision
@@ -50,4 +54,23 @@ public class SC_Projectile : MonoBehaviour
             }
         }
     }
+    private void Update()
+    {
+        totalDamage += projectileDamage;
+
+        if (totalDamage == 5.0f)
+        {
+            if (!damageAudioPlayed)
+            {
+                damageAudioPlayed = true;
+                farmerAudioSource.PlayOneShot(trigger15Hits);
+            }
+            else if (!farmerAudioSource.isPlaying)
+            {
+                damageAudioPlayed = false;
+            }
+        }
+    }
+    bool damageAudioPlayed = false;
 }
+

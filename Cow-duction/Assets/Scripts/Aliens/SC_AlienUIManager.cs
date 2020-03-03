@@ -87,6 +87,7 @@ public class SC_AlienUIManager : MonoBehaviour
     [SerializeField] private AudioClip thirtySecondWarning = null; // Set up in inspector
     [SerializeField] private AudioClip loseAudio = null; // Set up in inspector
     [SerializeField] private AudioClip winAudio = null; // Set up in inspector
+    [SerializeField] private AudioClip trigger5Cows = null; // Set up in inspector
     [SerializeField] private Text finalScoreText = null; // Set up in inspector
 
     public bool GetPaused()
@@ -194,14 +195,17 @@ public class SC_AlienUIManager : MonoBehaviour
 
                 if (minutes < 1 && seconds <= 30)
                 {
+//                    print("Play 30 sec warning");
                     if (timeText.color != Color.red)
                     {
                         timeText.color = Color.red;
+                        print("Play 30 sec warning");
                         ufoAudioSource.PlayOneShot(thirtySecondWarning);
                         gameManager.SetMusicVolume(0.1f);
                     }
                     else if (!ufoAudioSource.isPlaying)
-                        gameManager.SetMusicVolume(0.25f);
+                        print("Done Play 30 sec warning");
+                    gameManager.SetMusicVolume(0.25f);
                 }
                 else if (minutes < 2)
                 {
@@ -232,7 +236,22 @@ public class SC_AlienUIManager : MonoBehaviour
             if (fuelWarnText.enabled)
                 fuelWarnText.enabled = false;
         }
+
+        if (score == 5) {
+            if (!scoreAudioPlayed)
+            {
+                scoreAudioPlayed = true;
+                ufoAudioSource.PlayOneShot(thirtySecondWarning);
+                gameManager.SetMusicVolume(0.1f);
+            }
+            else if (!ufoAudioSource.isPlaying)
+            {
+                scoreAudioPlayed = false;
+                gameManager.SetMusicVolume(0.25f);
+            }
+        }
     }
+    bool scoreAudioPlayed = false;
 
     // Toggle reticle size
     public void ToggleReticle()

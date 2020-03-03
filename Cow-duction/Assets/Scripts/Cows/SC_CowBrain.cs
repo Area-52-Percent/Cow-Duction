@@ -112,19 +112,7 @@ public class SC_CowBrain : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         Debug.Log("collision occured with " + collision.gameObject.name);
-        if (collision.transform.name == "Probe(Clone)")
-        {
-            if (m_AudioSource)
-            {
-                /*int soundSelect = (int)Random.Range(0, distressed.Length);
-                Debug.Log("Playing here ProbeClone");
-                Debug.Log("Playing sound " + 1);
-                m_AudioSource.PlayOneShot(distressed[1]);*/
-            }
-                
-                    
-        }
-
+        
         if (collision.rigidbody && (collision.rigidbody.velocity.magnitude * collision.rigidbody.mass) > (GetComponent<Rigidbody>().velocity.magnitude * GetComponent<Rigidbody>().mass))
         {
             if (m_Agent && m_Agent.enabled)
@@ -132,16 +120,7 @@ public class SC_CowBrain : MonoBehaviour
                 m_Agent.enabled = false;
                 if (!GetComponent<NavMeshObstacle>())
                     gameObject.AddComponent<NavMeshObstacle>();
-                StartCoroutine(Recover());
-                if (m_AudioSource)
-                {
-                    /*int soundSelect = (int)Random.Range(0, distressed.Length);
-                    Debug.Log("Playing here");
-                    Debug.Log("Playing sound " + 1);
-                    */m_AudioSource.PlayOneShot(distressed[1]);
-                }
-                    
-
+                StartCoroutine(Recover());                                  
             }
         }
     }
@@ -157,8 +136,6 @@ public class SC_CowBrain : MonoBehaviour
               //  Debug.Log("Playing sound " + soundSelect);
                 m_AudioSource.PlayOneShot(distressed[soundSelect]);
             }
-
-
         }
     }
 

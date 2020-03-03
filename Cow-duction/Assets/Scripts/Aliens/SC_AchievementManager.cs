@@ -24,7 +24,7 @@ public class SC_AchievementManager : MonoBehaviour
     {
         if (GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>().GetScore() >= 1)
         {
-            EarnAchievement("The First of Many");
+            EarnAchievement("The First of Many");           
         }
         if (GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>().GetScore() >= 3)
         {
