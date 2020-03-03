@@ -2,7 +2,7 @@
 using Mirror;
 
 // Copy of Projectile.cs from Mirror.Examples.Tanks
-public class FarmerProjectileCarrot : FarmerProjectile
+public class FarmerProjectilePumpkin : FarmerProjectile
 {
     // ServerCallback because we don't want a warning if OnTriggerEnter is
     // called on the client
@@ -12,7 +12,7 @@ public class FarmerProjectileCarrot : FarmerProjectile
         if (co.gameObject.GetComponent<MultiPlayerSpaceshipController>())
         {
             co.gameObject.GetComponent<MultiPlayerSpaceshipController>().AddImpulseForce(rigidBody.velocity.normalized, hitForce * rigidBody.mass);
-            spaceshipCanvas.TakeDamage(projectileDamage, 'r');
+            spaceshipCanvas.TakeDamage(projectileDamage, 'p');
             GameObject milkLeakClone = Instantiate(milkLeak, transform.position, transform.rotation);
             NetworkServer.Spawn(milkLeakClone);
             milkLeakClone.AddComponent<AudioSource>().PlayOneShot(projectileHit, 0.25f);

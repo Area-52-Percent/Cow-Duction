@@ -38,6 +38,7 @@ public class SpaceshipCanvas : MonoBehaviour
     public Sprite waypointIconCow, waypointIconThreat, waypointIconUnknown;
 
     [Header("Crop Splatter")]
+    public Camera mainCamera;
     public Image cropSplatter;
 
     [Header("Ammo Effects")]
@@ -135,16 +136,19 @@ public class SpaceshipCanvas : MonoBehaviour
 
     public void TakeDamage(float amount, char type)
     {
-        //StartCoroutine(AnimateDamage(position));
         if (!effected)
         {
             if (type == 'p')
-                StartCoroutine(PotatoEffect());
+                StartCoroutine(PumpkinEffect());
             if (type == 'r')
                 StartCoroutine(CarrotEffect());
             if (type == 'c')
                 StartCoroutine(CornEffect());
         }
+    }
+    public void TakeDamage(float amount, Vector3 pos)
+    {
+        StartCoroutine(ScreenSplatter(effectCD, .5f, pos));
         fuel -= amount;
         fuelMeter.value = fuel;
     }
@@ -158,7 +162,7 @@ public class SpaceshipCanvas : MonoBehaviour
         effected = false;
     }
 
-    public IEnumerator PotatoEffect()
+    public IEnumerator PumpkinEffect()
     {
         effected = true;
         fullscreenSplatter.SetActive(true);
@@ -170,13 +174,26 @@ public class SpaceshipCanvas : MonoBehaviour
     public IEnumerator CornEffect()
     {
         effected = true;
-        ufoMovement.AddImpulseForce(new Vector3(0, -1f, 0), 250f);
+        ufoMovement.AddImpulseForce(new Vector3(0, -1f, 0), 15f);
         yield return new WaitForSeconds(effectCD);
         effected = false;
     }
 
-    public IEnumerator ScreenSplatter(float stickDuration, float fadeDuration)
+    public IEnumerator ScreenSplatter(float stickDuration, float fadeDuration,Vector3 position)
     {
+        RectTransform splatterRectTransform = cropSplatter.rectTransform;
+        Vector3 splatterPosition = RectTransformUtility.WorldToScreenPoint(mainCamera, position);
+        if (splatterPosition.x < 0)
+            splatterPosition.x = 0;
+        else if (splatterPosition.x > Screen.width)
+            splatterPosition.x = Screen.width;
+        if (splatterPosition.y < 0)
+            splatterPosition.y = 0;
+        else if (splatterPosition.y > Screen.height)
+            splatterPosition.y = Screen.height;
+
+        cropSplatter.rectTransform.position = splatterPosition;
+
         cropSplatter.gameObject.SetActive(true);
 
         // Reset transparency
