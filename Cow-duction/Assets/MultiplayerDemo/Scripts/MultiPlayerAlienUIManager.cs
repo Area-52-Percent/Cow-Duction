@@ -16,7 +16,7 @@ using UnityEngine.UI;
 public class MultiPlayerAlienUIManager : MonoBehaviour
 {
     // Private variables
-    private GameManager gameManager;
+    private MultiPlayerGameManager gameManager;
     private Camera mainCamera;
     public Animator shipAnim;
     private SC_HudReticleFollowCursor reticleFollowCursor;
@@ -102,12 +102,14 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     // Awake is called after all objects are initialized
     void Awake()
     {
-        //gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        gameManager = GameObject.FindWithTag("GameManager").GetComponent<MultiPlayerGameManager>();
+        gameManager.StartListening();
         mainCamera = Camera.main;
         ufoMesh = _rbUFO.GetComponentsInChildren<MeshRenderer>();
         ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
         transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
         reticleFollowCursor = reticle.GetComponent<SC_HudReticleFollowCursor>();
+        
     }
 
     // Start is called before the first frame update
@@ -736,7 +738,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 
         if (gameplayScreen.activeSelf)
             gameplayScreen.SetActive(false);
-        topDownCamera.gameObject.SetActive(false);
+        //topDownCamera.gameObject.SetActive(false);
 
         /*
         if (shipAnim.enabled != true)
@@ -755,8 +757,8 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     {
         if (!gameplayScreen.activeSelf)
             gameplayScreen.SetActive(true);
-        if (!topDownCamera.gameObject.activeSelf)
-            topDownCamera.gameObject.SetActive(true);
+        //if (!topDownCamera.gameObject.activeSelf)
+        //    topDownCamera.gameObject.SetActive(true);
         if (playIntro)
             StartCoroutine(PlayIntro());
         else

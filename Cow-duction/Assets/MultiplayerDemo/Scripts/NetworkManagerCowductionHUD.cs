@@ -181,9 +181,14 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
         if (mainMenu.activeSelf) return;
 
         if (pauseMenu.activeSelf)
+        {
             pauseMenu.SetActive(false);
+        }
+
         else
+        {
             pauseMenu.SetActive(true);
+        }
     }
 
     public void ExitToMainMenu()
