@@ -55,8 +55,8 @@ public class SC_SpaceshipMovement : MonoBehaviour
         }
 
         Vector3 horizontalForce = Vector3.zero;
-        //float horizontalInput = Input.GetAxis("Horizontal");
-        //float verticalInput = Input.GetAxis("Vertical");
+        float horizontalInput = Input.GetAxis("Horizontal");
+        float verticalInput = Input.GetAxis("Vertical");
         float turnHorizontalInput = Input.GetAxis("TurnHorizontal");
         float turnVerticalInput = Input.GetAxis("TurnVertical");
         float rollInput = Input.GetAxis("Roll");
@@ -232,6 +232,9 @@ public class SC_SpaceshipMovement : MonoBehaviour
     #region Player Abilities
     private void OnMovement(InputValue inputValue)
     {
+        Debug.Log(inputValue.Get<Vector2>());
+        float horizontalInput = inputValue.Get<Vector2>().x;
+        float verticalInput = inputValue.Get<Vector2>().y;
         Debug.Log("moving");
     }
 
