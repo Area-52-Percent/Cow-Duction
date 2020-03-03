@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
@@ -11,14 +12,37 @@ public class SpaceshipCanvas : MonoBehaviour
     [Tooltip("An icon used to get the direction of raycasts from the main camera")]
     public RectTransform reticle;
 
+    [Header("Fuel")]
+    public Slider fuelMeter;
+    public Image fuelMeterFill;
+    public float fuelDepletionRate = .5f;
+    public float fuel { get; private set; }
+
+    [Header("Ability")]
+    public Slider abilityMeter;
+    public Image abilityMeterFill;
+    public float abilityRegenRate = 5;
+    public float abilityCooldown { get; private set; }
+    private bool cooldownActive;
+
+    [Header("Timer")]
+    public Text timerText;
+    public float timerStartValue = 270;
+    public float timeScaleFactor = 1;
+    public float timeRemaining { get; private set; }
+
     [Header("Waypoint Icon")]
     [Tooltip("An icon that tracks a grappled entity")]
     public RectTransform waypointIcon;
     private Image waypointIconImage;
     public Sprite waypointIconCow, waypointIconThreat, waypointIconUnknown;
 
+    [Header("Crop Splatter")]
+    public Image cropSplatter;
+
     void Awake()
     {
+        // Only allow one instance of SpaceshipCanvas
         if (instance == null)
             instance = this;
         else if (instance != this)
@@ -32,13 +56,60 @@ public class SpaceshipCanvas : MonoBehaviour
 
     void Update()
     {
-        // TODO: Implement rest of UI elements
-        // - Fuel
-        // - Ability
-        // - Timer
-        // - Speed & Height
+        HandleFuel();
+
+        HandleAbility();
+
+        HandleTimer();
+
+        HandleStatus();
+
+        // TODO:
         // - Score & Multiplier
         // - Input Events
+    }
+
+    private void HandleFuel()
+    {
+        if (!fuelMeter || !fuelMeterFill) return;
+
+        if (fuel > 0)
+        {
+            fuel -= fuelDepletionRate * Time.deltaTime;
+            fuelMeter.value = fuel;
+        }
+        else
+        {
+            if (fuel < 0) fuel = 0;
+
+            // Restrict spaceship air movement
+        }
+    }
+
+    private void HandleAbility()
+    {
+        if (!abilityMeter || !abilityMeterFill) return;
+
+        if (cooldownActive && abilityCooldown < 100)
+        {
+            abilityCooldown += abilityRegenRate * Time.deltaTime;
+            abilityMeter.value = abilityCooldown;
+        }
+    }
+
+    private void HandleTimer()
+    {
+        // TODO
+    }
+
+    private void HandleStatus()
+    {
+        // TODO
+    }
+
+    public void IncreaseScore(int amount)
+    {
+        // TODO
     }
 
     public Color GetReticleColor()
@@ -51,20 +122,29 @@ public class SpaceshipCanvas : MonoBehaviour
         reticle.GetComponent<Image>().color = color;
     }
 
-    public void SetWaypointIconSprite(string iconName)
+    public void SetWaypointIconSprite(Sprite sprite)
     {
-        switch (iconName)
+        waypointIconImage.sprite = sprite;
+    }
+
+    public IEnumerator ScreenSplatter(float stickDuration, float fadeDuration)
+    {
+        cropSplatter.gameObject.SetActive(true);
+
+        // Reset transparency
+        if (cropSplatter.color.a < 1)
         {
-            default:
-            case "?": // Unknown
-                waypointIconImage.sprite = waypointIconUnknown;
-                break;
-            case "Cow": // Cow
-                waypointIconImage.sprite = waypointIconCow;
-                break;
-            case "!": // Threat
-                waypointIconImage.sprite = waypointIconThreat;
-                break;
+            Color splatterColor = cropSplatter.color;
+            splatterColor.a = 1;
+            cropSplatter.color = splatterColor;
         }
+
+        yield return new WaitForSeconds(stickDuration);
+
+        cropSplatter.CrossFadeAlpha(0, fadeDuration, false);
+
+        yield return new WaitForSeconds(fadeDuration);
+
+        cropSplatter.gameObject.SetActive(false);
     }
 }

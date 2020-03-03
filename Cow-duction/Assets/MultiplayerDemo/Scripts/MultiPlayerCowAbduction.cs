@@ -18,6 +18,7 @@ using Mirror;
 [RequireComponent(typeof(AudioSource))]
 public class MultiPlayerCowAbduction : NetworkBehaviour
 {
+    private SpaceshipCanvas spaceshipCanvas;
     private MultiPlayerSpaceshipController spaceshipController;
     private AudioSource audioSource;
     private Rigidbody rb;
@@ -26,7 +27,6 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     private Rigidbody attachedRigidbody;
     private MultiPlayerCowBrain attachedBrain;
     private GameObject probeClone;
-    private RectTransform reticle;
     private RectTransform waypointIcon;
     private float captureLength;
     private bool grappling;
@@ -79,6 +79,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     // Awake is called after all objects are initialized
     private void Awake()
     {
+        spaceshipCanvas = SpaceshipCanvas.instance;
         spaceshipController = GetComponent<MultiPlayerSpaceshipController>();
         rb = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
@@ -87,8 +88,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        reticle = SpaceshipCanvas.instance.reticle;
-        waypointIcon = SpaceshipCanvas.instance.waypointIcon;
+        waypointIcon = spaceshipCanvas.waypointIcon;
 
         ResetGame();
     }
@@ -109,7 +109,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
-        Ray ray = RayFromReticle();
+        Ray ray = RayFromReticle(spaceshipCanvas.reticle);
         RaycastHit hit;
         int layerMask = ~(1 << gameObject.layer);
 
@@ -130,15 +130,15 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         {
             if (hit.transform.tag == "Cow")
             {
-                SpaceshipCanvas.instance.SetReticleColor(Color.green);
+                spaceshipCanvas.SetReticleColor(Color.green);
             }
             else if (hit.transform.tag == "Farmer")
             {
-                SpaceshipCanvas.instance.SetReticleColor(Color.red);
+                spaceshipCanvas.SetReticleColor(Color.red);
             }
-            else if (SpaceshipCanvas.instance.GetReticleColor() != Color.white)
+            else if (spaceshipCanvas.GetReticleColor() != Color.white)
             {
-                SpaceshipCanvas.instance.SetReticleColor(Color.white);
+                spaceshipCanvas.SetReticleColor(Color.white);
             }
         }
 
@@ -224,7 +224,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         }
     }
 
-    private Ray RayFromReticle()
+    private Ray RayFromReticle(RectTransform reticle)
     {
         if (reticle != null)
         {
@@ -329,7 +329,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
 
         if (hit.distance > maxCaptureLength)
         {
-            Ray ray = RayFromReticle();
+            Ray ray = RayFromReticle(spaceshipCanvas.reticle);
             grappleHitPoint = ray.origin + (ray.direction * maxCaptureLength);
         }
 
@@ -397,13 +397,13 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             }
 
             if (hit.transform.tag == "Cow")
-                SpaceshipCanvas.instance.SetWaypointIconSprite("Cow");
+                spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconCow);
             else if (hit.transform.tag == "Farmer")
-                SpaceshipCanvas.instance.SetWaypointIconSprite("!");
+                spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconThreat);
         }
         else
         {
-            SpaceshipCanvas.instance.SetWaypointIconSprite("?");
+            spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconUnknown);
         }
 
         if (hit.rigidbody)
