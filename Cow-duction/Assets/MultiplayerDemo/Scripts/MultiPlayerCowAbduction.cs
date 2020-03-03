@@ -629,7 +629,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         {
             //score++;
             UIManager.IncreaseScore(col.gameObject.GetComponent<MultiPlayerCowBrain>().milk , col.gameObject);
-            GetComponent<SC_CowShooter>().AddCow();
+            GetComponent<MultiPlayerCowShooter>().AddCow();
             // Apply force for physical feedback
             spaceshipController.AddImpulseForce(attachedRigidbody.velocity.normalized, Mathf.Clamp(attachedRigidbody.mass * 0.5f, 1f, 10f));
 
