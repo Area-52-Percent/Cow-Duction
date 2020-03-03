@@ -17,7 +17,6 @@ public class Controller : MonoBehaviour
     private void Awake()
     {
         myid = idCount++;
-        Debug.Log("myid = " + myid);
     }
 
     private void Start()
@@ -31,8 +30,6 @@ public class Controller : MonoBehaviour
         string current = Gamepad.current.ToString();
         if (current == "XInputControllerWindows:/XInputControllerWindows")
         {
-            Debug.Log("moving");
-            Debug.Log(current);
             _OnMovement?.Invoke(inputValue);
         }
     }
@@ -42,8 +39,6 @@ public class Controller : MonoBehaviour
         string current = Gamepad.current.ToString();
         if (current == "XInputControllerWindows:/XInputControllerWindows1")
         {
-            Debug.Log("shoot");
-            Debug.Log(current);
             _OnShoot?.Invoke(inputValue);
         }
     }

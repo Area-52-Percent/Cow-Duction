@@ -234,6 +234,11 @@ public class SC_SpaceshipMovement : MonoBehaviour
     {
         Debug.Log("moving");
     }
+
+    private void OnShoot(InputValue inputValue)
+    {
+        Debug.Log("shooting");
+    }
     #endregion
 
     #region Input Mapping
@@ -245,6 +250,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
         if (controller != null)
         {
             controller._OnMovement += OnMovement;
+            controller._OnShoot += OnShoot;
         }
     }
 
@@ -253,6 +259,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
         if (controller != null)
         {
             controller._OnMovement -= OnMovement;
+            controller._OnShoot -= OnShoot;
         }
     }
     #endregion
