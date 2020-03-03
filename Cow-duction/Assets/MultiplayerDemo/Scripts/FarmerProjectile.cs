@@ -40,7 +40,7 @@ public class FarmerProjectile : NetworkBehaviour
         {
             co.gameObject.GetComponent<MultiPlayerSpaceshipController>().AddImpulseForce(rigidBody.velocity.normalized, force * rigidBody.mass);
 
-            GameObject milkLeakClone = Instantiate(milkLeak, transform.position, transform.rotation);
+            GameObject milkLeakClone = Instantiate(milkLeak, transform.position, transform.rotation, co.transform);
             NetworkServer.Spawn(milkLeakClone);
             milkLeakClone.AddComponent<AudioSource>().PlayOneShot(projectileHit, 0.25f);
         }

@@ -51,7 +51,7 @@ public class MultiPlayerHUD : NetworkBehaviour
         hud = GetComponentInChildren<Canvas>();
         if (isLocalPlayer)
         {
-            hud.enabled = true;
+            hud.gameObject.SetActive(true);
             if (thirdPersonMeshes.Length > 0)
             {
                 foreach(GameObject mesh in thirdPersonMeshes)
@@ -70,9 +70,9 @@ public class MultiPlayerHUD : NetworkBehaviour
                 }
             }
         }
-        else if (hud.enabled)
+        else if (hud.gameObject.activeSelf)
         {
-            hud.enabled = false;
+            hud.gameObject.SetActive(false);
         }
     }
 }
