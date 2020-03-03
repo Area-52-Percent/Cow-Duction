@@ -1,10 +1,46 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using Mirror;
 
 public class NetworkManagerCowduction : NetworkManager
 {
     public Transform spaceshipSpawn;
     public Transform[] farmerSpawns;
+
+    [Scene]
+    [Tooltip("Add all sub-scenes to this list")]
+    public string[] subScenes;
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+
+        // Load all subscenes on the server
+        foreach (string sceneName in subScenes)
+        {
+            SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Additive);
+        }
+    }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        UnloadScenes();
+    }
+
+    void UnloadScenes()
+    {
+        foreach (string sceneName in subScenes)
+            if (SceneManager.GetSceneByName(sceneName).IsValid())
+                StartCoroutine(UnloadScene(sceneName));
+    }
+
+    IEnumerator UnloadScene(string sceneName)
+    {
+        yield return SceneManager.UnloadSceneAsync(sceneName);
+        yield return Resources.UnloadUnusedAssets();
+    }
 
     public override void OnServerAddPlayer(NetworkConnection conn)
     {

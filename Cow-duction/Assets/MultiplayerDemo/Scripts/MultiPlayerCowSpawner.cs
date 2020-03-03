@@ -26,6 +26,12 @@ public class MultiPlayerCowSpawner : NetworkBehaviour
     public int intialSpawnAmount = 9;
     public float randomFactor = 0.1f;
 
+    private void OnValidate()
+    {
+        if (cowSpawnRatios.Length != cows.Length)
+            cowSpawnRatios = new float[cows.Length];
+    }
+
     // OnDisable is called when the object is removed from the server
     private void OnDisable()
     {

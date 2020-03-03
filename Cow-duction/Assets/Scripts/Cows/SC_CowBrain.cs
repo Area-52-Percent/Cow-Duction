@@ -29,7 +29,8 @@ public class SC_CowBrain : MonoBehaviour
     
     // Serialized protected variables
     [SerializeField] protected float fieldRadius = 5.0f;
-    [SerializeField] private bool seekingFood = true;    
+    [SerializeField] private bool seekingFood = true;
+    [SerializeField] protected Vector3 wanderOrigin = Vector3.zero;
     [SerializeField] protected int wanderRadius = 100;
     [SerializeField] protected float maxWanderTime = 10.0f;
     [SerializeField] protected float idleTime = 3.0f;
@@ -247,7 +248,7 @@ public class SC_CowBrain : MonoBehaviour
             return;
         
         NavMeshPath navMeshPath = new NavMeshPath();
-        Vector3 targetPosition = Random.insideUnitSphere * wanderRadius;
+        Vector3 targetPosition = wanderOrigin + Random.insideUnitSphere * wanderRadius;
 
         // Keep looking for a path if it can't reach the destination
         while (navMeshPath.status == NavMeshPathStatus.PathPartial) {

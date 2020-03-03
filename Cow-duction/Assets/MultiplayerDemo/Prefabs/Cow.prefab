@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1436704814465053672}
   - component: {fileID: 8792314447803442791}
   - component: {fileID: 5087147125273948035}
+  - component: {fileID: 5453326921994071668}
   m_Layer: 11
   m_Name: Cow
   m_TagString: Cow
@@ -63,7 +64,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 0
+  m_StoppingDistance: 1
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -83,9 +84,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 0
+  sceneId: 2957616844
   serverOnly: 0
-  m_AssetId: 7f4d5b6d021694fd2b105745efa4a8a7
+  m_AssetId: 
 --- !u!114 &8792314447803442791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,7 +103,7 @@ MonoBehaviour:
   syncInterval: 0.1
   clientAuthority: 0
   localPositionSensitivity: 0.01
-  localEulerAnglesSensitivity: 0.01
+  localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
   compressRotation: 1
 --- !u!114 &5087147125273948035
@@ -119,8 +120,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  maxTimeBetweenMoos: 20
+  minTimeBetweenMoos: 10
   fieldRadius: 5
-  wanderRadius: 100
+  wanderRadius: 20
   maxWanderTime: 10
   maxSpeed: 8
   idleTime: 3
@@ -129,6 +132,102 @@ MonoBehaviour:
   mass: 10
   tugWhenGrappled: 0
   cowMoo: {fileID: 8300000, guid: dd4141b9b87034b34b09ed67110fc272, type: 3}
+--- !u!82 &5453326921994071668
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3647719034498501467}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.5
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &2616802461944748777
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -236,6 +335,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 5104515762905693267, guid: 5454526abd4844622bf5fe52fc3cbed6,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 704009465e65f48bba122e26994180ad, type: 2}
     - target: {fileID: -3172097414920416170, guid: 5454526abd4844622bf5fe52fc3cbed6,
         type: 3}
       propertyPath: m_Layer

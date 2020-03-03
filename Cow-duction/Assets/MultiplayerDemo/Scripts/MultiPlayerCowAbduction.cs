@@ -18,15 +18,19 @@ using Mirror;
 [RequireComponent(typeof(AudioSource))]
 public class MultiPlayerCowAbduction : NetworkBehaviour
 {
+    private SpaceshipCanvas spaceshipCanvas;
     private MultiPlayerSpaceshipController spaceshipController;
+    private AudioSource audioSource;
     private Rigidbody rb;
     private ConfigurableJoint[] attachedObjectJoints;
     private GameObject attachedObject;
     private Rigidbody attachedRigidbody;
+    private MultiPlayerCowBrain attachedBrain;
     private GameObject probeClone;
+    private RectTransform waypointIcon;
     private float captureLength;
     private bool grappling;
-    
+
     [Header("Parameters")]
     public int grappleJointCount = 5;
     public float grappleTime = 0.25f;
@@ -34,8 +38,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     public float maxCaptureLength = 50.0f;
     public float captureSpeed = 5.0f;
     public float reticleAttractionForce = 1.0f;
-    [Tooltip("A canvas image whose position will be used in raycast calls")]
-    public GameObject reticle = null;
+
     [Tooltip("A prefab which will spawn when firing the grapple")]
     public GameObject probe = null;
     [Tooltip("An empty transform which marks the grapple origin position")]
@@ -49,12 +52,6 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     public AudioClip grappleBreak = null;
     public AudioClip grappleReel = null;
     public AudioClip cowSuction = null;
-
-    [Header("Waypoint Icon")]
-    public RectTransform waypointIcon = null;
-    public Sprite cowIcon = null;
-    public Sprite unknownIcon = null;
-    public Sprite warningIcon = null;
 
     [Header("Diagnostics")]
     public float grapplePushPull = 0f;
@@ -82,13 +79,17 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     // Awake is called after all objects are initialized
     private void Awake()
     {
+        spaceshipCanvas = SpaceshipCanvas.instance;
         spaceshipController = GetComponent<MultiPlayerSpaceshipController>();
         rb = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Start is called before the first frame update
     private void Start()
     {
+        waypointIcon = spaceshipCanvas.waypointIcon;
+
         ResetGame();
     }
 
@@ -108,31 +109,36 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
+        Ray ray = RayFromReticle(spaceshipCanvas.reticle);
+        RaycastHit hit;
+        int layerMask = ~(1 << gameObject.layer);
+
         // Left click casts a raycast in the direction of the cursor position.
         if (isFiring && Time.timeScale > Mathf.Epsilon)
         {
             // Do not shoot ray if object is already attached
             if (!attachedObject && !grappling && Camera.main)
             {
-                Ray ray = new Ray();
-                if (reticle != null)
-                {
-                    // Convert reticle world coordinates to screen coordinates
-                    Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, reticle.GetComponent<RectTransform>().position);
-                    ray = Camera.main.ScreenPointToRay(reticlePoint);
-                }
-                else
-                {
-                    ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                }
-
-                // Ignore UFO layer and trigger colliders
-                int layerMask = ~(1 << gameObject.layer);
-                if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
                 {
                     captureLength = Vector3.Distance(grappleOrigin.position, hit.transform.position);
                     StartCoroutine(ShootGrapple(hit));
                 }
+            }
+        }
+        else if (Physics.Raycast(ray, out hit, maxCaptureLength, layerMask, QueryTriggerInteraction.Ignore))
+        {
+            if (hit.transform.tag == "Cow")
+            {
+                spaceshipCanvas.SetReticleColor(Color.green);
+            }
+            else if (hit.transform.tag == "Farmer")
+            {
+                spaceshipCanvas.SetReticleColor(Color.red);
+            }
+            else if (spaceshipCanvas.GetReticleColor() != Color.white)
+            {
+                spaceshipCanvas.SetReticleColor(Color.white);
             }
         }
 
@@ -141,23 +147,22 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             GrappleRelease();
         }
 
-        AudioSource ufoAudioSource = GetComponent<AudioSource>();
         if (grapplePushPull > 0f || isPulling)
         {
             GrapplePull();
 
             if (attachedObject)
             {
-                if (!ufoAudioSource.isPlaying)
+                if (!audioSource.isPlaying)
                 {
-                    ufoAudioSource.loop = true;
-                    ufoAudioSource.clip = grappleReel;
-                    ufoAudioSource.Play();
+                    audioSource.loop = true;
+                    audioSource.clip = grappleReel;
+                    audioSource.Play();
                 }
             }
-            else if (ufoAudioSource.clip == grappleReel)
+            else if (audioSource.clip == grappleReel)
             {
-                ufoAudioSource.clip = null;
+                audioSource.clip = null;
             }
         }
         else if (grapplePushPull < 0f)
@@ -166,9 +171,9 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         }
         else
         {
-            if (ufoAudioSource.clip == grappleReel)
+            if (audioSource.clip == grappleReel)
             {
-                ufoAudioSource.clip = null;
+                audioSource.clip = null;
             }
         }
 
@@ -183,28 +188,14 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 attachedRigidbody.AddForce(-attachedRigidbody.velocity, ForceMode.Acceleration);
 
             // Check if object has a brain and tugs when grappled
-            SC_CowBrain brain = attachedObject.GetComponent<SC_CowBrain>();
-            if (!brain)
-                brain = attachedObject.GetComponent<SC_FarmerBrain>();
-            if (brain && brain.GetTugWhenGrappled())
+            if (attachedBrain && attachedBrain.tugWhenGrappled)
             {
                 attachedRigidbody.AddForce((attachedObject.transform.position - grappleOrigin.position), ForceMode.Acceleration);
                 rb.AddForce((attachedObject.transform.position - transform.position) / 2, ForceMode.Acceleration);
             }
             else
             {
-                Ray ray = new Ray();
-                if (reticle != null)
-                {
-                    Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, reticle.GetComponent<RectTransform>().position);
-                    ray = Camera.main.ScreenPointToRay(reticlePoint);
-                }
-                else
-                {
-                    ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                }
                 Vector3 worldPoint = ray.origin + (ray.direction * captureLength);
-                Debug.DrawRay(ray.origin, ray.direction * captureLength);
 
                 // Attached object is attracted to reticle postion
                 attachedRigidbody.AddForce((worldPoint - attachedObject.transform.position) * reticleAttractionForce, ForceMode.Acceleration);
@@ -218,34 +209,55 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 GrappleRelease();
             }
 
-            if (waypointIcon != null)
-            {
-                if (!waypointIcon.gameObject.activeSelf)
-                    waypointIcon.gameObject.SetActive(true);
-
-                // Waypoint tracks position of attached object, clamped to the screen
-                Vector3 waypointIconPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, attachedObject.transform.position);
-                if (waypointIconPosition.x < waypointIcon.rect.width / 2)
-                    waypointIconPosition.x = waypointIcon.rect.width / 2;
-                else if (waypointIconPosition.x > Screen.width - (waypointIcon.rect.width / 2))
-                    waypointIconPosition.x = Screen.width - (waypointIcon.rect.width / 2);
-                if (waypointIconPosition.y < waypointIcon.rect.height / 2)
-                    waypointIconPosition.y = waypointIcon.rect.height / 2;
-                else if (waypointIconPosition.y > Screen.height - (waypointIcon.rect.height / 2))
-                    waypointIconPosition.y = Screen.height - (waypointIcon.rect.height / 2);
-                waypointIcon.position = waypointIconPosition;
-            }
+            ClampWaypointIcon();
         }
         else // attachedObject == null
         {
             if (waypointIcon != null && waypointIcon.gameObject.activeSelf)
                 waypointIcon.gameObject.SetActive(false);
 
-            if (ufoAudioSource.isPlaying && ufoAudioSource.clip == grappleReel)
+            if (audioSource.isPlaying && audioSource.clip == grappleReel)
             {
-                ufoAudioSource.loop = false;
-                ufoAudioSource.clip = null;
+                audioSource.loop = false;
+                audioSource.clip = null;
             }
+        }
+    }
+
+    private Ray RayFromReticle(RectTransform reticle)
+    {
+        if (reticle != null)
+        {
+            Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, reticle.position);
+            return Camera.main.ScreenPointToRay(reticlePoint);
+        }
+        else
+        {
+            return Camera.main.ScreenPointToRay(Input.mousePosition);
+        }
+    }
+
+    private void ClampWaypointIcon()
+    {
+        if (waypointIcon != null)
+        {
+            if (!waypointIcon.gameObject.activeSelf)
+                waypointIcon.gameObject.SetActive(true);
+
+            // Waypoint tracks position of attached object, clamped to the screen
+            Vector3 waypointIconPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, attachedObject.transform.position);
+            // Clamp x position
+            if (waypointIconPosition.x < waypointIcon.rect.width / 2)
+                waypointIconPosition.x = waypointIcon.rect.width / 2;
+            else if (waypointIconPosition.x > Screen.width - (waypointIcon.rect.width / 2))
+                waypointIconPosition.x = Screen.width - (waypointIcon.rect.width / 2);
+            // Clamp y position
+            if (waypointIconPosition.y < waypointIcon.rect.height / 2)
+                waypointIconPosition.y = waypointIcon.rect.height / 2;
+            else if (waypointIconPosition.y > Screen.height - (waypointIcon.rect.height / 2))
+                waypointIconPosition.y = Screen.height - (waypointIcon.rect.height / 2);
+            // Set position
+            waypointIcon.position = waypointIconPosition;
         }
     }
 
@@ -284,28 +296,28 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             return;
         }
 
+        Vector3[] points;
         if (obj == attachedObject && attachedObjectJoints != null)
         {
             // Set up points along each joint
-            var points = new Vector3[grappleJointCount + 1];
+            points = new Vector3[grappleJointCount + 1];
             points[0] = grappleOrigin.position;
             for (int j = 0; j < grappleJointCount; j++)
             {
                 points[j + 1] = attachedObjectJoints[j].transform.position;
             }
-            lineRenderer.positionCount = points.Length;
             lineRenderer.numCornerVertices = lineRenderer.positionCount;
-            lineRenderer.SetPositions(points);
         }
         else
         {
             // Set up two points for a straight line
-            var points = new Vector3[2];
+            points = new Vector3[2];
             points[0] = grappleOrigin.position;
             points[1] = obj.transform.position;
-            lineRenderer.positionCount = points.Length;
-            lineRenderer.SetPositions(points);
         }
+        lineRenderer.positionCount = points.Length;
+        lineRenderer.SetPositions(points);
+
         if (!lineRenderer.enabled)
             lineRenderer.enabled = true;
     }
@@ -317,16 +329,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
 
         if (hit.distance > maxCaptureLength)
         {
-            Ray ray = new Ray();
-            if (reticle != null)
-            {
-                Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, reticle.GetComponent<RectTransform>().position);
-                ray = Camera.main.ScreenPointToRay(reticlePoint);
-            }
-            else
-            {
-                ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            }
+            Ray ray = RayFromReticle(spaceshipCanvas.reticle);
             grappleHitPoint = ray.origin + (ray.direction * maxCaptureLength);
         }
 
@@ -338,7 +341,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             NetworkServer.Spawn(probeClone);
         }
         
-        GetComponent<AudioSource>().PlayOneShot(grappleShot, 0.5f);
+        audioSource.PlayOneShot(grappleShot, 0.5f);
         
         // Extend the grapple
         float counter = 0.0f;
@@ -382,15 +385,25 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         if (hit.distance > maxCaptureLength)
             return false;
         
-        if (hit.transform.tag == "Cow")
+        if (hit.transform.tag == "Cow" || hit.transform.tag == "Farmer")
         {
-            MultiPlayerCowBrain cowBrain = hit.transform.gameObject.GetComponent<MultiPlayerCowBrain>();
-            Rigidbody cowRigidBody = hit.transform.gameObject.GetComponent<Rigidbody>();
-            if (!cowRigidBody)
+            if (attachedBrain = hit.transform.gameObject.GetComponent<MultiPlayerCowBrain>())
             {
-                cowRigidBody = hit.transform.gameObject.AddComponent<Rigidbody>();
-                cowRigidBody.mass = cowBrain.mass;
+                attachedBrain.PlayMoo(3f);
+                if (!hit.transform.gameObject.GetComponent<Rigidbody>())
+                {
+                    hit.transform.gameObject.AddComponent<Rigidbody>().mass = attachedBrain.mass;
+                }
             }
+
+            if (hit.transform.tag == "Cow")
+                spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconCow);
+            else if (hit.transform.tag == "Farmer")
+                spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconThreat);
+        }
+        else
+        {
+            spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconUnknown);
         }
 
         if (hit.rigidbody)
@@ -471,13 +484,6 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 probeClone.transform.localPosition = Vector3.zero;
             }
 
-            // Play distressed moo
-            if (hit.transform.tag == "Cow") {
-                SC_CowBrain cowBrain = hit.transform.GetComponent<SC_CowBrain>();
-                if (cowBrain)
-                    cowBrain.PlayMoo(3f);
-            }
-
             // Play grapple hit sfx
             if (probeClone.GetComponent<AudioSource>())
             {
@@ -519,7 +525,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 Destroy(probeClone);
 
             // Reset movement penalty
-            spaceshipController.SetMovementMultiplier(1f);
+            spaceshipController.SetMovementMultiplier();
 
             // Enable attached object colliders if necessary
             foreach (Collider col in attachedObject.GetComponents<Collider>())
@@ -533,11 +539,12 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 objNetId.RemoveClientAuthority();
 
             // Play grapple break audio clip
-            GetComponent<AudioSource>().PlayOneShot(grappleBreak, 1f);
+            audioSource.PlayOneShot(grappleBreak, 1f);
 
             attachedObject = null;
             attachedRigidbody.useGravity = true;
             attachedRigidbody = null;
+            attachedBrain = null;
         }
     }
 
@@ -627,18 +634,17 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             
             foreach(ConfigurableJoint cj in attachedObjectJoints)
             {
-                if (cj.gameObject)
-                    Destroy(cj.gameObject);
+                Destroy(cj.gameObject);
             }
 
             attachedObject = null;
             RpcRenderLine(null);
 
             // Reset movement penalty
-            spaceshipController.SetMovementMultiplier(1f);
+            spaceshipController.SetMovementMultiplier();
 
             // Play suction audio
-            GetComponent<AudioSource>().PlayOneShot(cowSuction, 0.5f);
+            audioSource.PlayOneShot(cowSuction, 0.5f);
         }
     }
 }
