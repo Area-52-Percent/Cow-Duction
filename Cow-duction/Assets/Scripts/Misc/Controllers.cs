@@ -7,7 +7,6 @@ public class Controllers : MonoBehaviour
 {
     public GameObject controllerPrefab;
     public List<Controller> controllers;
-    public List<int> controllerNames;
 
     public Controller GetController(int index)
     {
@@ -35,7 +34,7 @@ public class Controllers : MonoBehaviour
             playerInput.transform.SetParent(this.gameObject.transform);
             playerInput.transform.name = string.Format("Controller #{0}", playerIndex);
             playerIndex++;
-            controllerNames.Add(inputDevice.deviceId);
+            Debug.Log(playerInput.currentActionMap);
         }
     }
 

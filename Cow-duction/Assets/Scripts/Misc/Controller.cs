@@ -13,7 +13,6 @@ public class Controller : MonoBehaviour
     public event InputEventHandler _OnShoot;
 
     private static int idCount = 0;
-    private List<int> controllerNames;
 
     private void Awake()
     {
@@ -25,8 +24,6 @@ public class Controller : MonoBehaviour
     {
         //InputMaster master = new InputMaster();
         //master.GetComponent<PlayerInput>().actions = master.asset;
-        Controllers controllers = new Controllers();
-        Debug.Log(controllers.controllerNames);
     }
 
     private void OnMovement(InputValue inputValue)
