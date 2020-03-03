@@ -13,6 +13,7 @@ public class Controller : MonoBehaviour
     public event InputEventHandler _OnShoot;
 
     private static int idCount = 0;
+    private List<int> controllerNames;
 
     private void Awake()
     {
@@ -22,26 +23,30 @@ public class Controller : MonoBehaviour
 
     private void Start()
     {
-        InputMaster master = new InputMaster();
-        this.GetComponent<PlayerInput>().actions = master.asset;
+        //InputMaster master = new InputMaster();
+        //master.GetComponent<PlayerInput>().actions = master.asset;
+        Controllers controllers = new Controllers();
+        Debug.Log(controllers.controllerNames);
     }
 
     private void OnMovement(InputValue inputValue)
     {
-        if (myid == 0)
+        string current = Gamepad.current.ToString();
+        if (current == "XInputControllerWindows:/XInputControllerWindows")
         {
             Debug.Log("moving");
-            Debug.Log(myid);
+            Debug.Log(current);
             _OnMovement?.Invoke(inputValue);
         }
     }
 
     private void OnShoot(InputValue inputValue)
     {
-        if (myid == 1)
+        string current = Gamepad.current.ToString();
+        if (current == "XInputControllerWindows:/XInputControllerWindows1")
         {
             Debug.Log("shoot");
-            Debug.Log(myid);
+            Debug.Log(current);
             _OnShoot?.Invoke(inputValue);
         }
     }
