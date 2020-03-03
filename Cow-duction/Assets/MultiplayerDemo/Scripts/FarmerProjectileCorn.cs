@@ -13,8 +13,9 @@ public class FarmerProjectileCorn : NetworkBehaviour
     [Header("Hit Feedback")]
     public GameObject milkLeak;
     public AudioClip projectileHit;
+    public float projectileDamage = 5f;
 
-    private SC_AlienUIManager uIManager;
+    public SpaceshipCanvas spaceshipCanvas;
 
     public override void OnStartServer()
     {
@@ -25,7 +26,6 @@ public class FarmerProjectileCorn : NetworkBehaviour
     // position, because both the server and the client simulate it.
     void Start()
     {
-        //uIManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
         rigidBody.AddForce(transform.forward * speedForce);
     }
 

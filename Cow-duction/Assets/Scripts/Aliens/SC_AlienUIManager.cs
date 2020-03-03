@@ -38,10 +38,12 @@ public class SC_AlienUIManager : MonoBehaviour
     private float timeRemaining; // In seconds
     private float timeScaleFactor;
     private bool paused;
+    private bool effected;
 
     // Public variables
     public GameObject CowSpawner;
     public float playTime = 270.0f;
+    public float effectCD = 2f;
 
     // Serialized private variables
 
@@ -370,22 +372,38 @@ public class SC_AlienUIManager : MonoBehaviour
         //StartCoroutine(AnimateDamage(position));
         if(type == 'p')
             StartCoroutine(PotatoEffect());
+        if (type == 'r')
+            StartCoroutine(CarrotEffect());
+        if (type == 'c')
+            StartCoroutine(CornEffect());
         fuel -= amount;
         fuelMeter.value = fuel;
     }
     public IEnumerator CarrotEffect()
     {
+        effected = true;
         float curFuelRate = fuelDepletionRate;
         fuelDepletionRate = fuelDepletionRate * 2;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(effectCD);
         fuelDepletionRate = curFuelRate;
+        effected = false;
     }
 
     public IEnumerator PotatoEffect()
     {
+        effected = true;
         cropSplatter.gameObject.SetActive(true);
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(effectCD);
         cropSplatter.gameObject.SetActive(false);
+        effected = false;
+    }
+
+    public IEnumerator CornEffect()
+    {
+        effected = true;
+        _rbUFO.GetComponent<SC_SpaceshipMovement>().AddImpulseForce(new Vector3(0, -1f, 0), 250f);
+        yield return new WaitForSeconds(effectCD);
+        effected = false;
     }
     // Visual indicator of taking damage
     private IEnumerator AnimateDamage(Vector3 position)

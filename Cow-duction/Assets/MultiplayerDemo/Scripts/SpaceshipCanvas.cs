@@ -40,6 +40,12 @@ public class SpaceshipCanvas : MonoBehaviour
     [Header("Crop Splatter")]
     public Image cropSplatter;
 
+    [Header("Ammo Effects")]
+    public MultiPlayerSpaceshipController ufoMovement;
+    public GameObject fullscreenSplatter;
+    public float effectCD = 2f;
+    private bool effected = false;
+
     void Awake()
     {
         // Only allow one instance of SpaceshipCanvas
@@ -125,6 +131,48 @@ public class SpaceshipCanvas : MonoBehaviour
     public void SetWaypointIconSprite(Sprite sprite)
     {
         waypointIconImage.sprite = sprite;
+    }
+
+    public void TakeDamage(float amount, char type)
+    {
+        //StartCoroutine(AnimateDamage(position));
+        if (!effected)
+        {
+            if (type == 'p')
+                StartCoroutine(PotatoEffect());
+            if (type == 'r')
+                StartCoroutine(CarrotEffect());
+            if (type == 'c')
+                StartCoroutine(CornEffect());
+        }
+        fuel -= amount;
+        fuelMeter.value = fuel;
+    }
+    public IEnumerator CarrotEffect()
+    {
+        effected = true;
+        float curFuelRate = fuelDepletionRate;
+        fuelDepletionRate = fuelDepletionRate * 2;
+        yield return new WaitForSeconds(effectCD);
+        fuelDepletionRate = curFuelRate;
+        effected = false;
+    }
+
+    public IEnumerator PotatoEffect()
+    {
+        effected = true;
+        fullscreenSplatter.SetActive(true);
+        yield return new WaitForSeconds(effectCD);
+        fullscreenSplatter.SetActive(false);
+        effected = false;
+    }
+
+    public IEnumerator CornEffect()
+    {
+        effected = true;
+        ufoMovement.AddImpulseForce(new Vector3(0, -1f, 0), 250f);
+        yield return new WaitForSeconds(effectCD);
+        effected = false;
     }
 
     public IEnumerator ScreenSplatter(float stickDuration, float fadeDuration)

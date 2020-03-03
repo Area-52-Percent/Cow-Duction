@@ -15,7 +15,7 @@ public class FarmerProjectilePotato : NetworkBehaviour
     public AudioClip projectileHit;
     public float projectileDamage = 5.0f;
 
-    private SC_AlienUIManager uIManager;
+    public SpaceshipCanvas spaceshipCanvas;
 
     public override void OnStartServer()
     {
@@ -26,7 +26,6 @@ public class FarmerProjectilePotato : NetworkBehaviour
     // position, because both the server and the client simulate it.
     void Start()
     {
-        //uIManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
         rigidBody.AddForce(transform.forward * speedForce);
     }
 
