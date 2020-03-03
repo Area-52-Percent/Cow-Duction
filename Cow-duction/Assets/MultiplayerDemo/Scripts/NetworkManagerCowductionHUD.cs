@@ -157,7 +157,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
                 }
             }
         }
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetButtonDown("Cancel") && !Input.GetKey("left shift"))
         {
             TogglePauseMenu();
         }

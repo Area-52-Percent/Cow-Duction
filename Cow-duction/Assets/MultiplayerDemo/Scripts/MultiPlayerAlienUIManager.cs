@@ -127,7 +127,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
         */
 
         // Toggle parameter screen
-        if (Input.GetButtonDown("Cancel"))
+        if (Input.GetKeyDown("f1"))
         {
             ToggleParameterScreen();
         }
@@ -610,6 +610,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
             paused = true;
             Time.timeScale = Mathf.Epsilon;
             parameterScreen.SetActive(true);
+            
         }
 
         /*
@@ -738,7 +739,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 
         if (gameplayScreen.activeSelf)
             gameplayScreen.SetActive(false);
-        //topDownCamera.gameObject.SetActive(false);
+        topDownCamera.gameObject.SetActive(false);
 
         /*
         if (shipAnim.enabled != true)
@@ -757,8 +758,8 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     {
         if (!gameplayScreen.activeSelf)
             gameplayScreen.SetActive(true);
-        //if (!topDownCamera.gameObject.activeSelf)
-        //    topDownCamera.gameObject.SetActive(true);
+        if (!topDownCamera.gameObject.activeSelf)
+            topDownCamera.gameObject.SetActive(true);
         if (playIntro)
             StartCoroutine(PlayIntro());
         else

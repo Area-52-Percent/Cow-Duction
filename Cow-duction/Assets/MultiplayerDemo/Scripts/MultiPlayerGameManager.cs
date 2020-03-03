@@ -52,7 +52,7 @@ public class MultiPlayerGameManager : MonoBehaviour
 
         //mainCamera = Camera.main;
 
-        SoftReset();
+        //SoftReset();
     }
 
     public void StartListening()
