@@ -26,13 +26,13 @@ public class Controller : MonoBehaviour
         //master.GetComponent<PlayerInput>().actions = master.asset;
     }
 
+    //Vector 2 - x:Horizontal, y:Vertical
     private void OnMovement(InputValue inputValue)
     {
         string current = Gamepad.current.ToString();
         if (current == "XInputControllerWindows:/XInputControllerWindows")
         {
-            Debug.Log("moving");
-            Debug.Log(current);
+            Debug.Log(0);
             _OnMovement?.Invoke(inputValue);
         }
     }
@@ -42,8 +42,7 @@ public class Controller : MonoBehaviour
         string current = Gamepad.current.ToString();
         if (current == "XInputControllerWindows:/XInputControllerWindows1")
         {
-            Debug.Log("shoot");
-            Debug.Log(current);
+            Debug.Log(1);
             _OnShoot?.Invoke(inputValue);
         }
     }

@@ -232,7 +232,12 @@ public class SC_SpaceshipMovement : MonoBehaviour
     #region Player Abilities
     private void OnMovement(InputValue inputValue)
     {
-        Debug.Log("moving");
+        Debug.Log(inputValue.Get<Vector2>());
+    }
+
+    private void OnShoot(InputValue inputValue)
+    {
+        Debug.Log(inputValue);
     }
     #endregion
 
@@ -245,6 +250,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
         if (controller != null)
         {
             controller._OnMovement += OnMovement;
+            controller._OnShoot += OnShoot;
         }
     }
 
@@ -253,6 +259,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
         if (controller != null)
         {
             controller._OnMovement -= OnMovement;
+            controller._OnShoot -= OnShoot;
         }
     }
     #endregion

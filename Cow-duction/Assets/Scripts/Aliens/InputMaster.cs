@@ -49,17 +49,6 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""d93dbbf4-c015-4c96-87d7-59bab4f98f43"",
-                    ""path"": """",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""Movement"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""09f97627-6053-4ede-bfd2-6227cf350049"",
                     ""path"": ""<XInputController>/buttonSouth"",
                     ""interactions"": """",
