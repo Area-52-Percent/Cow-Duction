@@ -43,7 +43,7 @@ public class SpaceshipCanvas : MonoBehaviour
 
     [Header("Ammo Effects")]
     public MultiPlayerSpaceshipController ufoMovement;
-    public GameObject fullscreenSplatter;
+    public Image fullscreenSplatter;
     public float effectCD = 2f;
     private bool effected = false;
 
@@ -165,9 +165,9 @@ public class SpaceshipCanvas : MonoBehaviour
     public IEnumerator PumpkinEffect()
     {
         effected = true;
-        fullscreenSplatter.SetActive(true);
+        fullscreenSplatter.gameObject.SetActive(true);
         yield return new WaitForSeconds(effectCD);
-        fullscreenSplatter.SetActive(false);
+        fullscreenSplatter.gameObject.SetActive(false);
         effected = false;
     }
 

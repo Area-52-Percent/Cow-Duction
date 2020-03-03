@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4419196751125780299}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1296.0049, y: 427.68365, z: 601.04266}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.7}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_Children:
   - {fileID: 9004873203030452425}
   m_Father: {fileID: 0}
@@ -122,6 +122,7 @@ MonoBehaviour:
   milkLeak: {fileID: 3548555650585113165, guid: fae10533dbb5e462784fe99a2bbed39d,
     type: 3}
   projectileHit: {fileID: 8300000, guid: 2d383d0fb481a4b8daf0e141a0d5f0da, type: 3}
+  projectileDamage: 5
 --- !u!1001 &7364756985322896132
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -152,22 +153,22 @@ PrefabInstance:
     - target: {fileID: 1928493929396638669, guid: db61505bebc02554fab8a8ddd8ad2cec,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1928493929396638669, guid: db61505bebc02554fab8a8ddd8ad2cec,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1928493929396638669, guid: db61505bebc02554fab8a8ddd8ad2cec,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.7071068
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1928493929396638669, guid: db61505bebc02554fab8a8ddd8ad2cec,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1928493929396638669, guid: db61505bebc02554fab8a8ddd8ad2cec,
         type: 3}
@@ -182,7 +183,7 @@ PrefabInstance:
     - target: {fileID: 1928493929396638669, guid: db61505bebc02554fab8a8ddd8ad2cec,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: 1928493929396638669, guid: db61505bebc02554fab8a8ddd8ad2cec,
         type: 3}
