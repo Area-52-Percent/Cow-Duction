@@ -71,9 +71,25 @@ public class SC_CowAbduction : MonoBehaviour
         controls = new InputMaster();
     }
 
-    void Shoot()
+    public void Shoot()
     {
-        Debug.Log("Shoot!");
+        // Do not shoot ray if object is already attached
+        if (!attachedObject && !grappling && Camera.main)
+        {
+            // Convert reticle world coordinates to screen coordinates
+            Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, reticle.GetComponent<RectTransform>().position);
+            Ray ray = Camera.main.ScreenPointToRay(reticlePoint);
+            RaycastHit hit;
+
+            // Ignore UFO layer and trigger colliders
+            int layerMask = ~(1 << gameObject.layer);
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
+            {
+                captureLength = Vector3.Distance(grappleOrigin.position, hit.transform.position);
+
+                StartCoroutine(ShootGrapple(hit));
+            }
+        }
     }
 
     private void OnEnable()

@@ -34,6 +34,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public float verticalInput;
     public int playerNumber;
     public Controller controller;
+    public SC_CowAbduction shooter;
 
     // Start is called before the first frame update
     void Start()
@@ -233,14 +234,57 @@ public class SC_SpaceshipMovement : MonoBehaviour
     private void OnMovement(InputValue inputValue)
     {
         Debug.Log(inputValue.Get<Vector2>());
+        Vector3 horizontalForce = Vector3.zero;
         float horizontalInput = inputValue.Get<Vector2>().x;
         float verticalInput = inputValue.Get<Vector2>().y;
         Debug.Log("moving");
+        // Move left and right
+        if (Mathf.Abs(horizontalInput) > 0.0f)
+        {
+            horizontalForce = transform.right;
+            horizontalForce.y = 0;
+
+            if (movementEnabled)
+            {
+                _rb.AddForce(horizontalForce.normalized * horizontalInput * horizontalSpeed * movementMultiplier, ForceMode.Acceleration);
+
+                // Rotate towards the direction of motion
+                if ((horizontalInput < 0 && (transform.eulerAngles.z < maxRotation || transform.eulerAngles.z > 360.0f - maxRotation)) ||
+                    (horizontalInput > 0 && (transform.eulerAngles.z > 360.0f - maxRotation || transform.eulerAngles.z < maxRotation)))
+                {
+                    _rb.AddRelativeTorque(Vector3.back * horizontalInput * autoRotationForce, ForceMode.Acceleration);
+                }
+            }
+            else if (grounded)
+                _rb.AddForce(horizontalForce.normalized * horizontalInput * groundSpeed * movementMultiplier, ForceMode.Acceleration);
+        }
+
+        // Move forward and backward
+        if (Mathf.Abs(verticalInput) > 0.0f)
+        {
+            horizontalForce = transform.forward;
+            horizontalForce.y = 0;
+
+            if (movementEnabled)
+            {
+                _rb.AddForce(horizontalForce.normalized * verticalInput * horizontalSpeed * movementMultiplier, ForceMode.Acceleration);
+
+                // Rotate towards the direction of motion
+                if ((verticalInput > 0 && (transform.localEulerAngles.x < maxRotation || transform.localEulerAngles.x > 360.0f - maxRotation)) ||
+                    (verticalInput < 0 && (transform.localEulerAngles.x > 360.0f - maxRotation || transform.localEulerAngles.x < maxRotation)))
+                {
+                    _rb.AddRelativeTorque(Vector3.right * verticalInput * autoRotationForce, ForceMode.Acceleration);
+                }
+            }
+            else if (grounded)
+                _rb.AddForce(horizontalForce.normalized * verticalInput * groundSpeed * movementMultiplier, ForceMode.Acceleration);
+        }
     }
 
     private void OnShoot(InputValue inputValue)
     {
         Debug.Log("shooting");
+        shooter.Shoot();
     }
     #endregion
 
