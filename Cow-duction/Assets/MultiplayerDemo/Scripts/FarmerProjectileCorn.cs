@@ -14,6 +14,8 @@ public class FarmerProjectileCorn : NetworkBehaviour
     public GameObject milkLeak;
     public AudioClip projectileHit;
 
+    private SC_AlienUIManager uIManager;
+
     public override void OnStartServer()
     {
         Invoke(nameof(DestroySelf), destroyAfter);
@@ -23,6 +25,7 @@ public class FarmerProjectileCorn : NetworkBehaviour
     // position, because both the server and the client simulate it.
     void Start()
     {
+        //uIManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
         rigidBody.AddForce(transform.forward * speedForce);
     }
 
@@ -41,7 +44,7 @@ public class FarmerProjectileCorn : NetworkBehaviour
         if (co.gameObject.GetComponent<MultiPlayerSpaceshipController>())
         {
             co.gameObject.GetComponent<MultiPlayerSpaceshipController>().AddImpulseForce(rigidBody.velocity.normalized, hitForce * rigidBody.mass);
-
+            //uIManager.TakeDamage(projectileDamage, 'c');
             GameObject milkLeakClone = Instantiate(milkLeak, transform.position, transform.rotation);
             NetworkServer.Spawn(milkLeakClone);
             milkLeakClone.AddComponent<AudioSource>().PlayOneShot(projectileHit, 0.25f);
