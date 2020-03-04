@@ -177,17 +177,19 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         animator.SetFloat("speed", velocity.magnitude);
     }
 
-    public void FireProjectile()
-    {
-        gunsmoke.Play();
-    }
-
     [Command]
     public void CmdFireProjectile()
     {
         GameObject projectileClone = Instantiate(projectile, cameraTransform.position + cameraTransform.forward, cameraTransform.rotation);
         gunsmoke.Play();
+        RpcPlayParticle();
         NetworkServer.Spawn(projectileClone);
+    }
+
+    [ClientRpc]
+    public void RpcPlayParticle()
+    {
+        gunsmoke.Play();
     }
 
     // Lock or unlock the cursor
