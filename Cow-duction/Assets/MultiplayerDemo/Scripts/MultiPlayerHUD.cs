@@ -26,7 +26,7 @@ public class MultiPlayerHUD : NetworkBehaviour
         Camera.main.transform.localPosition = Vector3.zero;
         Camera.main.transform.localEulerAngles = Vector3.zero;
 
-        Camera.main.cullingMask = ~(1 << LayerMask.NameToLayer("UI"));
+        Camera.main.cullingMask = ~(1 << LayerMask.NameToLayer("UI") | 1 << LayerMask.NameToLayer("Radar"));
         cameraTransform.enabled = true;
     }
 
@@ -37,7 +37,7 @@ public class MultiPlayerHUD : NetworkBehaviour
         {
             // Return main camera to starting position
             Camera.main.transform.SetParent(null);
-            Camera.main.transform.localPosition = new Vector3(30f, 15f, -10f); // Hard-coded position
+            Camera.main.transform.localPosition = new Vector3(30f, 15f, 70f); // Hard-coded position
             Camera.main.transform.localEulerAngles = Vector3.zero;
 
             Camera.main.cullingMask = -1;
