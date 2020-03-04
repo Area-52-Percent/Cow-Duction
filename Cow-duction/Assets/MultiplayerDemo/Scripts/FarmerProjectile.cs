@@ -7,6 +7,7 @@ public class FarmerProjectile : NetworkBehaviour
     public float destroyAfter = 5;
     public Rigidbody rigidBody;
     public float force = 1000;
+    public ParticleSystem gunsmoke;
 
     [Header("Hit Feedback")]
     public GameObject milkLeak;
@@ -22,6 +23,7 @@ public class FarmerProjectile : NetworkBehaviour
     void Start()
     {
         rigidBody.AddForce(transform.forward * force);
+        //gunsmoke.Play();
     }
 
     // destroy for everyone on the server

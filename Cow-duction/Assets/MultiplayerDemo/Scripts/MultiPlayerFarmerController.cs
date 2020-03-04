@@ -12,6 +12,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     [Tooltip("The transform of the farmer's gun")]
     public Transform gunTransform;
     public GameObject projectile;
+    public ParticleSystem gunsmoke;
 
     [Header("Parameters")]
     public float moveSpeed = 8f;
@@ -180,6 +181,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public void CmdFireProjectile()
     {
         GameObject projectileClone = Instantiate(projectile, cameraTransform.position + cameraTransform.forward, cameraTransform.rotation);
+        gunsmoke.Play();
         NetworkServer.Spawn(projectileClone);
     }
 
