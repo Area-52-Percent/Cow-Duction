@@ -20,6 +20,7 @@ public class SC_FarmerBrain : SC_CowBrain
     private bool lockedOn;
     private bool seekingAmmo;
     public bool peaceful;
+    public ParticleSystem GunSmoke;
     
 
     // Serialized private variables
@@ -191,6 +192,7 @@ public class SC_FarmerBrain : SC_CowBrain
     private void FireWeapon()
     {
         GameObject projectileClone = Instantiate(projectile, gunShotOrigin);
+        GunSmoke.Play();
         projectileClone.transform.parent = null;
         projectileClone.GetComponent<Rigidbody>().AddForce(gunShotOrigin.forward * projectileSpeed, ForceMode.Impulse);
 
