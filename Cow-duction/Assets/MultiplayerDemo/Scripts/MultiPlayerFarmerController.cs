@@ -177,6 +177,11 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         animator.SetFloat("speed", velocity.magnitude);
     }
 
+    public void FireProjectile()
+    {
+        gunsmoke.Play();
+    }
+
     [Command]
     public void CmdFireProjectile()
     {

@@ -230,6 +230,17 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 9191940059234161867}
+        m_MethodName: FireProjectile
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 9191940059234161867}
         m_MethodName: CmdFireProjectile
         m_Mode: 1
         m_Arguments:
@@ -1894,15 +1905,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 26e94cef8fb424f5ba8ce805732ed5b1, type: 3}
---- !u!198 &2124311554384994826 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 4213723084637835301, guid: 26e94cef8fb424f5ba8ce805732ed5b1,
-    type: 3}
-  m_PrefabInstance: {fileID: 2810585691066708527}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &933337896069547030 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3166827771623208505, guid: 26e94cef8fb424f5ba8ce805732ed5b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 2810585691066708527}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2124311554384994826 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4213723084637835301, guid: 26e94cef8fb424f5ba8ce805732ed5b1,
     type: 3}
   m_PrefabInstance: {fileID: 2810585691066708527}
   m_PrefabAsset: {fileID: 0}
@@ -1913,16 +1924,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5917015313987045630}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
-        type: 3}
-      propertyPath: m_Name
-      value: Farmer_Hat
-      objectReference: {fileID: 0}
-    - target: {fileID: 3791376661586708882, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: b8e1a1ff345434bdf8749f6baa63e6de, type: 2}
     - target: {fileID: -4216859302048453862, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1978,6 +1979,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.48200002
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
+        type: 3}
+      propertyPath: m_Name
+      value: Farmer_Hat
+      objectReference: {fileID: 0}
+    - target: {fileID: 3791376661586708882, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b8e1a1ff345434bdf8749f6baa63e6de, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ce318e9ee59e4b44bdf3990b2372beb, type: 3}
 --- !u!1 &3222773144295395938 stripped
