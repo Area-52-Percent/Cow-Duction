@@ -48,6 +48,7 @@ public class CornFieldEditor : MonoBehaviour
 
     private void Start()
     {
+        GeneratePositions();
         foreach (Vector3 pos in cornPositions)
         {
             GameObject cornClone = Instantiate(cornstalk, pos, transform.rotation, transform);
