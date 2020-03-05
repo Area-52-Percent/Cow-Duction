@@ -156,6 +156,11 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
         movementMultiplier = multiplier;
     }
 
+    public void limitHeight(float height)
+    {
+        maxHeight = height;
+    }
+
     // Clamp the transform rotation by applying a relative torque on the rigidbody
     private void ClampRotation(float max)
     {

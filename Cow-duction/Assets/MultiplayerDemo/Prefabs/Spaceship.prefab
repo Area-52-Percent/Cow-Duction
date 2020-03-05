@@ -951,8 +951,8 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
+  far clip plane: 1500
+  field of view: 26.991467
   orthographic: 0
   orthographic size: 5
   m_Depth: 0
@@ -1457,6 +1457,12 @@ PrefabInstance:
     - target: {fileID: 8768143151399356156, guid: c9a6690d7156aa842bfad112fa650349,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 11500000, guid: 420b7f5dba36c4806b0e7cb3c6600d0f,
+        type: 3}
+    - target: {fileID: 8768143151399356156, guid: c9a6690d7156aa842bfad112fa650349,
+        type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2830645166523463300, guid: c9a6690d7156aa842bfad112fa650349,
@@ -2195,6 +2201,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2849777734735732318}
     m_Modifications:
+    - target: {fileID: -927199367670048503, guid: ae570223ea803491b9cf80167448e975,
+        type: 3}
+      propertyPath: m_Name
+      value: milkyufo
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: ae570223ea803491b9cf80167448e975,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae570223ea803491b9cf80167448e975,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2264,16 +2280,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: ae570223ea803491b9cf80167448e975,
-        type: 3}
-      propertyPath: m_Name
-      value: milkyufo
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: ae570223ea803491b9cf80167448e975,
-        type: 3}
-      propertyPath: m_Layer
-      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: -695617504796786764, guid: ae570223ea803491b9cf80167448e975,
         type: 3}
@@ -2472,15 +2478,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b29e0f40524733438fe0a7e7f6f8d0e, type: 3}
---- !u!20 &1271015595782122912 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 5476803785954008460, guid: 3b29e0f40524733438fe0a7e7f6f8d0e,
-    type: 3}
-  m_PrefabInstance: {fileID: 6746966143465861164}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1271015595782122913 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5476803785954008461, guid: 3b29e0f40524733438fe0a7e7f6f8d0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6746966143465861164}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &1271015595782122912 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 5476803785954008460, guid: 3b29e0f40524733438fe0a7e7f6f8d0e,
     type: 3}
   m_PrefabInstance: {fileID: 6746966143465861164}
   m_PrefabAsset: {fileID: 0}

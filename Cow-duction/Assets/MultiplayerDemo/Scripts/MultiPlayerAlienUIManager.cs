@@ -17,6 +17,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 {
     // Private variables
     private MultiPlayerGameManager gameManager;
+    private MultiPlayerSpaceshipController spaceship;
     private Camera mainCamera;
     public Animator shipAnim;
     private SC_HudReticleFollowCursor reticleFollowCursor;
@@ -72,8 +73,8 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     [SerializeField] private Text cooldownReadyText = null; // Set up in inspector
     [Space] // Screens
     [SerializeField] private GameObject gameplayScreen = null; // Set up in inspector
-    [SerializeField] private GameObject endScreen = null; // Set up in inspector
     [SerializeField] private GameObject helpScreen = null; // Set up in inspector
+    [SerializeField] private GameObject endScreen = null; // Set up in inspector
     [SerializeField] private GameObject parameterScreen = null; // Set up in inspector
     [Space] // Intro
     [SerializeField] private GameObject holoCow = null; // Intro cow hologram
@@ -103,6 +104,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     void Awake()
     {
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<MultiPlayerGameManager>();
+        spaceship = GameObject.FindWithTag("UFO").GetComponent<MultiPlayerSpaceshipController>();
         gameManager.StartListening();
         mainCamera = Camera.main;
         ufoMesh = _rbUFO.GetComponentsInChildren<MeshRenderer>();
@@ -182,10 +184,12 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 
                 fuel -= Time.deltaTime * fuelDepletionRate;
                 fuelMeterFill.color = Color.Lerp(fuelDepletedColor, fuelStartColor, fuel / 100f);
+                spaceship.limitHeight(50f);
                 fuelMeter.value = fuel;
             }
             else
             {
+                spaceship.limitHeight(20f);
                 fuel = 0.0f;
                 fuelWarnText.text = "OUT";
                 //_rbUFO.GetComponent<MultiPlayerSpaceshipController>().AllowMovement(false);

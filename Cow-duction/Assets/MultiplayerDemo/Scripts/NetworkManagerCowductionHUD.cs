@@ -24,6 +24,11 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
     public InputField networkAddressField;
     public GameObject pauseMenu;
 
+    [SerializeField] private GameObject endScreen = null; // Set up in inspector
+    [SerializeField] private AudioClip loseAudio = null; // Set up in inspector
+    [SerializeField] private AudioClip winAudio = null; // Set up in inspector
+    [SerializeField] private Text finalScoreText = null; // Set up in inspector
+
     private float deltaTime = 0f;
 
     void Awake()
@@ -143,13 +148,13 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
     {
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
 
-        if (!NetworkClient.isConnected && !NetworkServer.active)
         {
             if (!NetworkClient.active)
             {
                 if (!mainMenu.activeSelf)
                 {
                     mainMenu.SetActive(true);
+        if (!NetworkClient.isConnected && !NetworkServer.active)
                 }
                 if (pauseMenu.activeSelf)
                 {
@@ -189,6 +194,57 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
         {
             pauseMenu.SetActive(true);
         }
+    }
+
+    public void DisplayEndScreen(int score, AudioSource ufoAudioSource, AudioClip loseAudio, AudioClip winAudio)
+    {
+        string rating = "";
+
+        if (score > 25)
+            rating = "SS";
+        else if (score > 20)
+            rating = "S";
+        else if (score > 17)
+            rating = "A";
+        else if (score > 13)
+            rating = "B";
+        else if (score > 7)
+            rating = "C";
+        else
+        {
+            rating = "D";
+
+            GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
+            if (farmers.Length > 0)
+            {
+                foreach (GameObject farmer in farmers)
+                {
+                    Animator farmerAnimator = farmer.GetComponentInChildren<Animator>();
+                    if (farmerAnimator)
+                    {
+                        farmerAnimator.SetBool("celebrate", true);
+                    }
+                }
+            }
+
+            ufoAudioSource.PlayOneShot(loseAudio, 1f);
+        }
+
+        switch (rating)
+        {
+            case "SS":
+            case "S":
+            case "A":
+                ufoAudioSource.PlayOneShot(winAudio, 1f);
+                break;
+            default:
+                break;
+        }
+
+        //gameManager.SetMusicVolume(0.1f);
+
+        finalScoreText.text = score + "\n\nRating: " + rating;
+        endScreen.SetActive(true);
     }
 
     public void ExitToMainMenu()
