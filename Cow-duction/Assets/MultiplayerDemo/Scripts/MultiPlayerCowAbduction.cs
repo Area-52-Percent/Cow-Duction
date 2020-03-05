@@ -18,6 +18,7 @@ using Mirror;
 [RequireComponent(typeof(AudioSource))]
 public class MultiPlayerCowAbduction : NetworkBehaviour
 {
+    private SpaceshipCanvas spaceshipCanvas;
     private MultiPlayerSpaceshipController spaceshipController;
     private AudioSource audioSource;
     private Rigidbody rb;
@@ -26,20 +27,17 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     private Rigidbody attachedRigidbody;
     private MultiPlayerCowBrain attachedBrain;
     private GameObject probeClone;
-    private RectTransform reticle;
     private RectTransform waypointIcon;
     private float captureLength;
     private bool grappling;
 
     [Header("Parameters")]
-    public MultiPlayerAlienUIManager UIManager;
     public int grappleJointCount = 5;
     public float grappleTime = 0.25f;
     public float grappleCooldown = 0.5f;
     public float maxCaptureLength = 50.0f;
     public float captureSpeed = 5.0f;
     public float reticleAttractionForce = 1.0f;
-    //public int score = 0;
 
     [Tooltip("A prefab which will spawn when firing the grapple")]
     public GameObject probe = null;
@@ -89,8 +87,8 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        reticle = SpaceshipCanvas.instance.reticle;
-        waypointIcon = SpaceshipCanvas.instance.waypointIcon;
+        spaceshipCanvas = SpaceshipCanvas.instance;
+        waypointIcon = spaceshipCanvas.waypointIcon;
 
         ResetGame();
     }
@@ -111,7 +109,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
-        Ray ray = RayFromReticle();
+        Ray ray = RayFromReticle(spaceshipCanvas.reticle);
         RaycastHit hit;
         int layerMask = ~(1 << gameObject.layer);
 
@@ -132,15 +130,15 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         {
             if (hit.transform.tag == "Cow")
             {
-                SpaceshipCanvas.instance.SetReticleColor(Color.green);
+                spaceshipCanvas.SetReticleColor(Color.green);
             }
             else if (hit.transform.tag == "Farmer")
             {
-                SpaceshipCanvas.instance.SetReticleColor(Color.red);
+                spaceshipCanvas.SetReticleColor(Color.red);
             }
-            else if (SpaceshipCanvas.instance.GetReticleColor() != Color.white)
+            else if (spaceshipCanvas.GetReticleColor() != Color.white)
             {
-                SpaceshipCanvas.instance.SetReticleColor(Color.white);
+                spaceshipCanvas.SetReticleColor(Color.white);
             }
         }
 
@@ -226,7 +224,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         }
     }
 
-    private Ray RayFromReticle()
+    private Ray RayFromReticle(RectTransform reticle)
     {
         if (reticle != null)
         {
@@ -331,7 +329,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
 
         if (hit.distance > maxCaptureLength)
         {
-            Ray ray = RayFromReticle();
+            Ray ray = RayFromReticle(spaceshipCanvas.reticle);
             grappleHitPoint = ray.origin + (ray.direction * maxCaptureLength);
         }
 
@@ -399,13 +397,13 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             }
 
             if (hit.transform.tag == "Cow")
-                SpaceshipCanvas.instance.SetWaypointIconSprite("Cow");
+                spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconCow);
             else if (hit.transform.tag == "Farmer")
-                SpaceshipCanvas.instance.SetWaypointIconSprite("!");
+                spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconThreat);
         }
         else
         {
-            SpaceshipCanvas.instance.SetWaypointIconSprite("?");
+            spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconUnknown);
         }
 
         if (hit.rigidbody)
@@ -627,9 +625,10 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     {
         if(col.gameObject.tag == "Cow" && col.gameObject == attachedObject)
         {
-            //score++;
-            UIManager.IncreaseScore(col.gameObject.GetComponent<MultiPlayerCowBrain>().milk , col.gameObject);
+            spaceshipCanvas.IncreaseScore(col.GetComponent<MultiPlayerCowBrain>().milk);
+
             GetComponent<MultiPlayerCowShooter>().AddCow();
+
             // Apply force for physical feedback
             spaceshipController.AddImpulseForce(attachedRigidbody.velocity.normalized, Mathf.Clamp(attachedRigidbody.mass * 0.5f, 1f, 10f));
 

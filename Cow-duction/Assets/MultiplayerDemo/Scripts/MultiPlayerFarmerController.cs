@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Mirror;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(NetworkTransform))]
@@ -11,8 +12,11 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public Transform cameraTransform;
     [Tooltip("The transform of the farmer's gun")]
     public Transform gunTransform;
+    public List<GameObject> projectiles;
+    public int index = 0;
     public GameObject projectile;
-    public ParticleSystem gunsmoke;
+    public ParticleSystem gunSmoke;
+    public Transform gunTip;
 
     [Header("Parameters")]
     public float moveSpeed = 8f;
@@ -20,6 +24,8 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public float tiltSensitivity = 16f;
     public float touchSensitivity = 5f;
     public bool invertY = false;
+    public int pellets = 5;
+    public float spread = .5f;
 
     [Header("Touch Diagnostics")]
     public float touchX = 0f;
@@ -68,6 +74,10 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if(Input.GetKeyDown(KeyCode.L))
+        {
+            CmdSwapAmmo();
+        }
         if (!isLocalPlayer) return;
 
         int touchCount = Input.touchCount;
@@ -177,19 +187,40 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         animator.SetFloat("speed", velocity.magnitude);
     }
 
-    [Command]
-    public void CmdFireProjectile()
-    {
-        GameObject projectileClone = Instantiate(projectile, cameraTransform.position + cameraTransform.forward, cameraTransform.rotation);
-        gunsmoke.Play();
-        RpcPlayParticle();
-        NetworkServer.Spawn(projectileClone);
-    }
-
     [ClientRpc]
     public void RpcPlayParticle()
     {
-        gunsmoke.Play();
+        gunSmoke.Play();
+    }
+
+    [Command]
+    public void CmdSwapAmmo()
+    {
+        index = (index + 1) % projectiles.Count;
+        projectile = projectiles[index];
+    }
+
+    [Command]
+    public void CmdFireProjectile()
+    {
+        GameObject projectileClone = Instantiate(projectile, gunTip.position + gunTip.forward, gunTip.rotation);
+        if (projectileClone.GetComponent<FarmerProjectileCorn>())
+        {
+            projectileClone.GetComponent<FarmerProjectileCorn>().owner = gameObject;
+            for (int i = 1; i < 5; i++)
+            {
+                Vector3 pos = new Vector3(gunTip.position.x + Random.Range(-spread, spread), gunTip.position.y + Random.Range(-spread, spread), gunTip.position.z + Random.Range(-spread, spread)) + gunTip.forward;
+                GameObject pelletClone = Instantiate(projectile, pos, gunTip.rotation);
+                pelletClone.GetComponent<FarmerProjectileCorn>().owner = gameObject;
+                NetworkServer.Spawn(pelletClone);
+            }
+        }
+        else if (projectileClone.GetComponent<FarmerProjectile>())
+            projectileClone.GetComponent<FarmerProjectile>().owner = gameObject;
+        NetworkServer.Spawn(projectileClone);
+
+        gunSmoke.Play();
+        RpcPlayParticle();
     }
 
     // Lock or unlock the cursor

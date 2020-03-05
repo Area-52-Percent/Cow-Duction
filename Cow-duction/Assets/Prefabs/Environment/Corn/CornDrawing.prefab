@@ -1,5 +1,22 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &3472443856326605501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1116369487290189307}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84e36d51846724027ae9976ccec12da0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 2359554682677154506}
+  waypointSystem: {fileID: 4744980122297447243}
+  nextWaypoint: {x: 0, y: 0, z: 0}
+  currentWaypointIndex: 0
+  precision: 1
 --- !u!1 &1271324051506333299
 GameObject:
   m_ObjectHideFlags: 0
@@ -30,23 +47,6 @@ Transform:
   m_Father: {fileID: 4744980122297447252}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3472443856326605501
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1116369487290189307}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 84e36d51846724027ae9976ccec12da0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  agent: {fileID: 0}
-  waypointSystem: {fileID: 4744980122297447243}
-  nextWaypoint: {x: 0, y: 0, z: 0}
-  currentWaypointIndex: 0
-  precision: 1
 --- !u!1 &4744980120740207094
 GameObject:
   m_ObjectHideFlags: 0
@@ -216,6 +216,12 @@ GameObject:
 --- !u!4 &2893339706421160147 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1569042824579950195, guid: 7f4d5b6d021694fd2b105745efa4a8a7,
+    type: 3}
+  m_PrefabInstance: {fileID: 4458960558614548128}
+  m_PrefabAsset: {fileID: 0}
+--- !u!195 &2359554682677154506 stripped
+NavMeshAgent:
+  m_CorrespondingSourceObject: {fileID: 2116616488497863786, guid: 7f4d5b6d021694fd2b105745efa4a8a7,
     type: 3}
   m_PrefabInstance: {fileID: 4458960558614548128}
   m_PrefabAsset: {fileID: 0}
