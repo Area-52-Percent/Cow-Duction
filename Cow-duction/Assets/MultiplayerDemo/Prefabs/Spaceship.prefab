@@ -300,7 +300,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  UIManager: {fileID: 8701886952612549788}
   grappleJointCount: 5
   grappleTime: 0.25
   grappleCooldown: 0.5
@@ -768,11 +767,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   reticle: {fileID: 6552211023055267168}
+  fuelMeter: {fileID: 0}
+  fuelMeterFill: {fileID: 0}
+  fuelDepletionRate: 0.5
+  abilityMeter: {fileID: 0}
+  abilityMeterFill: {fileID: 0}
+  abilityRegenRate: 5
+  timerText: {fileID: 0}
+  timerStartValue: 270
+  timeScaleFactor: 1
   waypointIcon: {fileID: 4270611181714581367}
   waypointIconCow: {fileID: 21300000, guid: 442d9ddd269484eac867c47e27bf87be, type: 3}
   waypointIconThreat: {fileID: 21300000, guid: 07a6970e13fb34af399f8fd42991d013, type: 3}
   waypointIconUnknown: {fileID: 21300000, guid: 676ddd496bc854eee845cb43995873b6,
     type: 3}
+  mainCamera: {fileID: 0}
+  cropSplatter: {fileID: 0}
+  ufoMovement: {fileID: 0}
+  fullscreenSplatter: {fileID: 0}
+  effectCD: 2
 --- !u!1 &5112934349617288756
 GameObject:
   m_ObjectHideFlags: 0
@@ -2175,18 +2188,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2630454976759828757}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8701886952612549788 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6647894457465062793, guid: c9a6690d7156aa842bfad112fa650349,
-    type: 3}
-  m_PrefabInstance: {fileID: 2630454976759828757}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 208fc1ebb7ddd3348850359e234f34b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &4137249378128795923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2194,21 +2195,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2849777734735732318}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: ae570223ea803491b9cf80167448e975,
-        type: 3}
-      propertyPath: m_Name
-      value: milkyufo
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: ae570223ea803491b9cf80167448e975,
-        type: 3}
-      propertyPath: m_Layer
-      value: 13
-      objectReference: {fileID: 0}
-    - target: {fileID: -695617504796786764, guid: ae570223ea803491b9cf80167448e975,
-        type: 3}
-      propertyPath: m_Layer
-      value: 13
-      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: ae570223ea803491b9cf80167448e975,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2278,6 +2264,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: ae570223ea803491b9cf80167448e975,
+        type: 3}
+      propertyPath: m_Name
+      value: milkyufo
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: ae570223ea803491b9cf80167448e975,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: -695617504796786764, guid: ae570223ea803491b9cf80167448e975,
+        type: 3}
+      propertyPath: m_Layer
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 348385769364920362, guid: ae570223ea803491b9cf80167448e975,
         type: 3}

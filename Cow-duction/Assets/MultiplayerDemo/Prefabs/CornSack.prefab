@@ -46,6 +46,7 @@ GameObject:
   - component: {fileID: 4582468806510681512}
   - component: {fileID: 5154409457896155367}
   - component: {fileID: 8202281306891802598}
+  - component: {fileID: -4591355738992988436}
   - component: {fileID: 4226294389943849618}
   m_Layer: 0
   m_Name: CornSack
@@ -95,9 +96,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 0
+  sceneId: 3448252843
   serverOnly: 0
-  m_AssetId: e2ee2236ccb6d7f4cbeac09963ae4ecd
+  m_AssetId: 
+--- !u!114 &-4591355738992988436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5972971800046416457}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  localPositionSensitivity: 0.01
+  localRotationSensitivity: 0.01
+  localScaleSensitivity: 0.01
+  compressRotation: 1
 --- !u!114 &4226294389943849618
 MonoBehaviour:
   m_ObjectHideFlags: 0

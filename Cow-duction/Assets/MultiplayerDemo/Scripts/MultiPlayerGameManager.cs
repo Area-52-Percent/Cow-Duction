@@ -13,6 +13,7 @@ using UnityEngine.SceneManagement;
 
 public class MultiPlayerGameManager : MonoBehaviour
 {
+    public static MultiPlayerGameManager instance;
     private GameObject ufo;
     [SerializeField] private GameObject ufoStartLocation;
     //[SerializeField] private Camera startCamera;
@@ -42,7 +43,15 @@ public class MultiPlayerGameManager : MonoBehaviour
         musicAudioSource.volume = volume;
     }
 
-    // Awake is called after all objects are initialized
+    void Awake()
+    {
+        // Only allow one instance of GameManager
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(this);
+    }
+
     void Start()
     {
         ufoStartLocation = GameObject.Find("SpaceshipSpawn");

@@ -49,6 +49,7 @@ GameObject:
   - component: {fileID: 6731381851780129169}
   - component: {fileID: 1770640716412557931}
   - component: {fileID: 6941233466989026842}
+  - component: {fileID: -3155313170830332449}
   - component: {fileID: 5799559344707689521}
   m_Layer: 0
   m_Name: CarrotSack
@@ -98,9 +99,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 0
+  sceneId: 2577060790
   serverOnly: 0
-  m_AssetId: 53d5127883b3a5b48803bea2ea5eb5d1
+  m_AssetId: 
+--- !u!114 &-3155313170830332449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4197489852392994786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  localPositionSensitivity: 0.01
+  localRotationSensitivity: 0.01
+  localScaleSensitivity: 0.01
+  compressRotation: 1
 --- !u!114 &5799559344707689521
 MonoBehaviour:
   m_ObjectHideFlags: 0
