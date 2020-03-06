@@ -148,13 +148,13 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
     {
         deltaTime += (Time.unscaledDeltaTime - deltaTime) * 0.1f;
 
+        if (!NetworkClient.isConnected && !NetworkServer.active)
         {
             if (!NetworkClient.active)
             {
                 if (!mainMenu.activeSelf)
                 {
                     mainMenu.SetActive(true);
-        if (!NetworkClient.isConnected && !NetworkServer.active)
                 }
                 if (pauseMenu.activeSelf)
                 {
