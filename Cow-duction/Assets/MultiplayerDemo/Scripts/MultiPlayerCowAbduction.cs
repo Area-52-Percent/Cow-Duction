@@ -625,7 +625,8 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     {
         if(col.gameObject.tag == "Cow" && col.gameObject == attachedObject)
         {
-            spaceshipCanvas.IncreaseScore(col.GetComponent<MultiPlayerCowBrain>().milk);
+            // spaceshipCanvas.IncreaseScore(col.GetComponent<MultiPlayerCowBrain>().milk);
+            GetComponentInChildren<MultiPlayerAlienUIManager>().IncreaseScore(col.GetComponent<MultiPlayerCowBrain>().milk, null);
 
             GetComponent<MultiPlayerCowShooter>().AddCow();
 

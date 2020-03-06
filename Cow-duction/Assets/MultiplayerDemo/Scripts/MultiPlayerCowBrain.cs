@@ -71,6 +71,12 @@ public class MultiPlayerCowBrain : NetworkBehaviour
             mooTimer += Time.deltaTime;
         }
 
+        // Set animator speed parameter for walking animation
+        if (m_Animator)
+            m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
+
+        if (!NetworkServer.active) return;
+
         // Wander for set amount of time or until reaching destination
         if (m_Agent.enabled && m_Agent.isOnNavMesh)
         {
@@ -98,10 +104,6 @@ public class MultiPlayerCowBrain : NetworkBehaviour
                 StartCoroutine(Recover());
             }
         }
-
-        // Set animator speed parameter for walking animation
-        if (m_Animator)
-            m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
     }
 
     // Satisfy hunger on contact with field
