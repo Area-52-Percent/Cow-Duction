@@ -58,6 +58,7 @@ public class SpaceshipCanvas : MonoBehaviour
 
     void Start()
     {
+        if (mainCamera == null) mainCamera = Camera.main;
         if (waypointIcon != null) waypointIconImage = waypointIcon.GetComponent<Image>();
     }
 
@@ -150,7 +151,8 @@ public class SpaceshipCanvas : MonoBehaviour
     {
         StartCoroutine(ScreenSplatter(effectCD, .5f, pos));
         fuel -= amount;
-        fuelMeter.value = fuel;
+
+        if (fuelMeter != null) fuelMeter.value = fuel;
     }
     public IEnumerator CarrotEffect()
     {

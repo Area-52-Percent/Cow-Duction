@@ -7,7 +7,6 @@ public class FarmerProjectile : NetworkBehaviour
 {
     public float destroyAfter = 5;
     public Rigidbody rigidBody;
-    public ParticleSystem gunSmoke;
     public float hitForce = 1000;
     public float speedForce = 1000;
     public GameObject owner;
