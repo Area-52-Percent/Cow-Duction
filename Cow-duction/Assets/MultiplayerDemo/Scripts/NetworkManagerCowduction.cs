@@ -12,9 +12,9 @@ public class NetworkManagerCowduction : NetworkManager
     [Tooltip("Add all sub-scenes to this list")]
     public string[] subScenes;
 
-    public override void OnStartClient()
+    public override void OnClientConnect(NetworkConnection conn)
     {
-        base.OnStartClient();
+        base.OnClientConnect(conn);
 
         // Load all subscenes on the server
         foreach (string sceneName in subScenes)
