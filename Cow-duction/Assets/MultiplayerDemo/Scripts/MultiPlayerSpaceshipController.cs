@@ -54,7 +54,18 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
 
         if (Input.GetKeyDown("1") && Input.GetKey("left shift"))
         {
-            this.gameObject.GetComponent<JumpPoint>().JumpAround(1);
+            this.gameObject.GetComponent<JumpPoint>().RpcJumpAroundSpaceship(1);
+            GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
+            int currentfarmer = 0;
+            for (int i = 0; i < GameObject.FindGameObjectsWithTag("Farmer").Length; i ++)
+            {
+                Debug.Log("Farmer name = " + farmers[i].gameObject.name);
+                if (farmers[i].gameObject.name != "Bull(Clone)")
+                {
+                    currentfarmer++;
+                    farmers[i].GetComponent<MultiPlayerFarmerController>().RpcDoJump(1, farmers[i], currentfarmer);
+                }
+            }
             //StartCoroutine(AnimateIncreaseScore());
             //score += 1;
             //scoreText.text = score.ToString("D2");
@@ -62,7 +73,17 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
 
         if (Input.GetKeyDown("2") && Input.GetKey("left shift"))
         {
-            this.gameObject.GetComponent<JumpPoint>().JumpAround(2);
+            this.gameObject.GetComponent<JumpPoint>().RpcJumpAroundSpaceship(2);
+            GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
+            int currentfarmer = 0;
+            for (int i = 0; i < GameObject.FindGameObjectsWithTag("Farmer").Length; i++)
+            {
+                if (farmers[i].gameObject.name != "Bull(Clone)")
+                {
+                    currentfarmer++;
+                    farmers[i].GetComponent<MultiPlayerFarmerController>().RpcDoJump(2, farmers[i], currentfarmer);
+                }
+            }
             //StartCoroutine(AnimateIncreaseScore());
             //score += 2;
             //scoreText.text = score.ToString("D2");
@@ -71,7 +92,17 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
 
         if (Input.GetKeyDown("3") && Input.GetKey("left shift"))
         {
-            this.gameObject.GetComponent<JumpPoint>().JumpAround(3);
+            this.gameObject.GetComponent<JumpPoint>().RpcJumpAroundSpaceship(3);
+            GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
+            int currentfarmer = 0;
+            for (int i = 0; i < GameObject.FindGameObjectsWithTag("Farmer").Length; i++)
+            {
+                if (farmers[i].gameObject.name != "Bull(Clone)")
+                {
+                    currentfarmer++;
+                    farmers[i].GetComponent<MultiPlayerFarmerController>().RpcDoJump(3, farmers[i], currentfarmer);
+                }
+            }
             //StartCoroutine(AnimateIncreaseScore());
             //score += 3;
             //scoreText.text = score.ToString("D2");

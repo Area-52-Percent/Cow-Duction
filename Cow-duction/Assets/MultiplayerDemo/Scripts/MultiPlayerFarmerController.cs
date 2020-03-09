@@ -188,6 +188,12 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     }
 
     [ClientRpc]
+    public void RpcDoJump(int JumpPoint , GameObject curfarmer, int curJump)
+    {
+        this.gameObject.GetComponent<JumpPoint>().RpcJumpAroundFarmer(JumpPoint, curfarmer, curJump);
+    }
+
+    [ClientRpc]
     public void RpcPlayParticle()
     {
         gunSmoke.Play();

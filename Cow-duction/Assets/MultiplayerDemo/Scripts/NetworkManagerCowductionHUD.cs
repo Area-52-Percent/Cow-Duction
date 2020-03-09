@@ -12,6 +12,7 @@ using Mirror;
 public class NetworkManagerCowductionHUD : MonoBehaviour
 {
     NetworkManagerCowduction manager;
+    MultiPlayerGameManager gamemanager;
 
     /// <summary>
     /// Whether to show the default control HUD at runtime.
@@ -34,6 +35,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
     void Awake()
     {
         manager = GetComponent<NetworkManagerCowduction>();
+        gamemanager = GameObject.Find("GameManager").GetComponent<MultiPlayerGameManager>();
         mainMenu.SetActive(true);
         pauseMenu.SetActive(false);
 
@@ -171,6 +173,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
     public void PlayAsSpaceShip()
     {
         manager.StartHost();
+        gamemanager.startMusic();
         mainMenu.SetActive(false);
     }
 
@@ -178,6 +181,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
     {
         manager.networkAddress = networkAddressField.text;
         manager.StartClient();
+        gamemanager.startMusic();
         mainMenu.SetActive(false);
     }
 
@@ -188,11 +192,13 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
         if (pauseMenu.activeSelf)
         {
             pauseMenu.SetActive(false);
+            gamemanager.SetMusicVolume(.5f);
         }
 
         else
         {
             pauseMenu.SetActive(true);
+            gamemanager.SetMusicVolume(.1f);
         }
     }
 
@@ -253,6 +259,9 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
         {
             manager.StopHost();
         }
+
+        gamemanager.stopMusic();
+
         pauseMenu.SetActive(false);
     }
 

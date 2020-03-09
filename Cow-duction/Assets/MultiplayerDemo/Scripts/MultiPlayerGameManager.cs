@@ -118,8 +118,8 @@ public class MultiPlayerGameManager : MonoBehaviour
 
         yield return null;
 
-        musicAudioSource.clip = gameplayMusic;
-        musicAudioSource.Play();
+        //musicAudioSource.clip = gameplayMusic;
+        //musicAudioSource.Play();
     }
 
     /*
@@ -137,9 +137,22 @@ public class MultiPlayerGameManager : MonoBehaviour
 
     */
 
+    public void stopMusic()
+    {
+        SetMusicVolume(.5f);
+        musicAudioSource.Stop();
+    }
+
+    public void startMusic()
+    {
+        musicAudioSource.clip = gameplayMusic;
+        musicAudioSource.Play();
+    }
+
     // Load the active scene
     public IEnumerator ResetGame()
     {
+        musicAudioSource.Stop();
         gameStarted = false;
 
         AsyncOperation asyncSceneLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
