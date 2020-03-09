@@ -79,7 +79,6 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     // Awake is called after all objects are initialized
     private void Awake()
     {
-        spaceshipCanvas = SpaceshipCanvas.instance;
         spaceshipController = GetComponent<MultiPlayerSpaceshipController>();
         rb = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
@@ -88,7 +87,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        waypointIcon = spaceshipCanvas.waypointIcon;
+        spaceshipCanvas = SpaceshipCanvas.instance;
 
         ResetGame();
     }
@@ -130,15 +129,15 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         {
             if (hit.transform.tag == "Cow")
             {
-                spaceshipCanvas.SetReticleColor(Color.green);
+                spaceshipCanvas.SetReticleColor(spaceshipCanvas.reticleColorCow);
             }
             else if (hit.transform.tag == "Farmer")
             {
-                spaceshipCanvas.SetReticleColor(Color.red);
+                spaceshipCanvas.SetReticleColor(spaceshipCanvas.reticleColorThreat);
             }
-            else if (spaceshipCanvas.GetReticleColor() != Color.white)
+            else if (spaceshipCanvas.GetReticleColor() != spaceshipCanvas.reticleColorDefault)
             {
-                spaceshipCanvas.SetReticleColor(Color.white);
+                spaceshipCanvas.SetReticleColor(spaceshipCanvas.reticleColorDefault);
             }
         }
 
@@ -209,12 +208,12 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 GrappleRelease();
             }
 
-            ClampWaypointIcon();
+            ClampWaypointIcon(spaceshipCanvas.waypointIcon);
         }
         else // attachedObject == null
         {
-            if (waypointIcon != null && waypointIcon.gameObject.activeSelf)
-                waypointIcon.gameObject.SetActive(false);
+            if (spaceshipCanvas.waypointIcon.gameObject.activeSelf)
+                spaceshipCanvas.waypointIcon.gameObject.SetActive(false);
 
             if (audioSource.isPlaying && audioSource.clip == grappleReel)
             {
@@ -237,28 +236,27 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         }
     }
 
-    private void ClampWaypointIcon()
+    private void ClampWaypointIcon(RectTransform waypointIcon)
     {
-        if (waypointIcon != null)
-        {
-            if (!waypointIcon.gameObject.activeSelf)
-                waypointIcon.gameObject.SetActive(true);
+        if (waypointIcon == null) return;
 
-            // Waypoint tracks position of attached object, clamped to the screen
-            Vector3 waypointIconPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, attachedObject.transform.position);
-            // Clamp x position
-            if (waypointIconPosition.x < waypointIcon.rect.width / 2)
-                waypointIconPosition.x = waypointIcon.rect.width / 2;
-            else if (waypointIconPosition.x > Screen.width - (waypointIcon.rect.width / 2))
-                waypointIconPosition.x = Screen.width - (waypointIcon.rect.width / 2);
-            // Clamp y position
-            if (waypointIconPosition.y < waypointIcon.rect.height / 2)
-                waypointIconPosition.y = waypointIcon.rect.height / 2;
-            else if (waypointIconPosition.y > Screen.height - (waypointIcon.rect.height / 2))
-                waypointIconPosition.y = Screen.height - (waypointIcon.rect.height / 2);
-            // Set position
-            waypointIcon.position = waypointIconPosition;
-        }
+        if (!waypointIcon.gameObject.activeSelf)
+            waypointIcon.gameObject.SetActive(true);
+
+        // Waypoint tracks position of attached object, clamped to the screen
+        Vector3 waypointIconPosition = RectTransformUtility.WorldToScreenPoint(Camera.main, attachedObject.transform.position);
+        // Clamp x position
+        if (waypointIconPosition.x < waypointIcon.rect.width / 2)
+            waypointIconPosition.x = waypointIcon.rect.width / 2;
+        else if (waypointIconPosition.x > Screen.width - (waypointIcon.rect.width / 2))
+            waypointIconPosition.x = Screen.width - (waypointIcon.rect.width / 2);
+        // Clamp y position
+        if (waypointIconPosition.y < waypointIcon.rect.height / 2)
+            waypointIconPosition.y = waypointIcon.rect.height / 2;
+        else if (waypointIconPosition.y > Screen.height - (waypointIcon.rect.height / 2))
+            waypointIconPosition.y = Screen.height - (waypointIcon.rect.height / 2);
+        // Set position
+        waypointIcon.position = waypointIconPosition;
     }
 
     // Reset parameters to starting values
