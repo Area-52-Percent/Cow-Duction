@@ -272,6 +272,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             lineRenderer.startColor = lineColor;
             lineRenderer.widthMultiplier = 0.25f;
             lineRenderer.positionCount = 0;
+            lineRenderer.sortingOrder = 1;
         }
         lineRenderer.enabled = false;
 
