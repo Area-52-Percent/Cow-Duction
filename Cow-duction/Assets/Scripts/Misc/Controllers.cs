@@ -7,6 +7,7 @@ public class Controllers : MonoBehaviour
 {
     public GameObject controllerPrefab;
     public List<Controller> controllers;
+    public List<string> controllerNames;
 
     public Controller GetController(int index)
     {
@@ -29,6 +30,8 @@ public class Controllers : MonoBehaviour
         foreach (Gamepad gamepad in Gamepad.all)
         {
             InputDevice inputDevice = gamepad.device;
+            Debug.Log(gamepad.name);
+            controllerNames.Add(gamepad.name);
             Debug.LogFormat("Controllers - Device #{0} {1}", playerIndex, inputDevice);
             PlayerInput playerInput = PlayerInput.Instantiate(controllerPrefab, playerIndex: playerIndex, pairWithDevice: inputDevice);
             playerInput.transform.SetParent(this.gameObject.transform);

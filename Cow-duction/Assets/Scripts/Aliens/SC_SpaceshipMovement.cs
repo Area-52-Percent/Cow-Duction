@@ -286,6 +286,11 @@ public class SC_SpaceshipMovement : MonoBehaviour
         Debug.Log("shooting");
         shooter.Shoot();
     }
+
+    private void OnAim(InputValue inputValue)
+    {
+        Debug.Log("aiming");
+    }
     #endregion
 
     #region Input Mapping

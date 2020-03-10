@@ -12,6 +12,7 @@ public class Controller : MonoBehaviour
 
     public event InputEventHandler _OnMovement;
     public event InputEventHandler _OnShoot;
+    public event InputEventHandler _OnAim;
 
     private static int idCount = 0;
     private List<string> controllerNames;
@@ -25,6 +26,7 @@ public class Controller : MonoBehaviour
     {
         //InputMaster master = new InputMaster();
         //master.GetComponent<PlayerInput>().actions = master.asset;
+        controllerNames = app.GetComponent<Controllers>().controllerNames;
     }
 
     private void OnMovement(InputValue inputValue)
@@ -46,9 +48,33 @@ public class Controller : MonoBehaviour
     private void OnShoot(InputValue inputValue)
     {
         string current = Gamepad.current.ToString();
-        if (current == "XInputControllerWindows:/XInputControllerWindows1")
+        if (controllerNames.Count > 2)
+        {
+            if (current == controllerNames[1])
+            {
+                _OnShoot?.Invoke(inputValue);
+            }
+        }
+        else if (current == "XInputControllerWindows:/XInputControllerWindows1")
         {
             _OnShoot?.Invoke(inputValue);
         }
     }
+
+    private void OnAim(InputValue inputValue)
+    {
+        string current = Gamepad.current.ToString();
+        if (controllerNames.Count > 2)
+        {
+            if (current == controllerNames[1])
+            {
+                _OnAim?.Invoke(inputValue);
+            }
+        }
+        else if (current == "XInputControllerWindows:/XInputControllerWindows1")
+        {
+            _OnAim?.Invoke(inputValue);
+        }
+    }
 }
+
