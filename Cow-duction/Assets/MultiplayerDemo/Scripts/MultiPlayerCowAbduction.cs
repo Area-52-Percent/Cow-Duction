@@ -45,6 +45,8 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     public Transform grappleOrigin = null;
     [Tooltip("(Optional) The line renderer for the grapple rope")]
     public LineRenderer lineRenderer;
+    public GameObject bulletHole;
+    public GameObject MilkParticle;
 
     [Header("SFX")]
     public AudioClip grappleShot = null;
@@ -201,6 +203,11 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 attachedRigidbody.AddForce((worldPoint - attachedObject.transform.position) * reticleAttractionForce, ForceMode.Acceleration);
 
                 rb.AddForce((attachedObject.transform.position - transform.position).normalized, ForceMode.Acceleration);
+            }
+
+            if (attachedObject.name == "MilkSilo")
+            {
+                GrappleRelease();
             }
 
             // Grapple breaks if attached object is too far
@@ -386,7 +393,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         if (hit.distance > maxCaptureLength)
             return false;
         
-        if (hit.transform.tag == "Cow" || hit.transform.tag == "Farmer")
+        if (hit.transform.tag == "Cow" || hit.transform.tag == "Farmer" || hit.transform.tag == "MilkBottle")
         {
             if (attachedBrain = hit.transform.gameObject.GetComponent<MultiPlayerCowBrain>())
             {
@@ -397,8 +404,13 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 }
             }
 
-            if (hit.transform.tag == "Cow")
+            if (hit.transform.tag == "Cow" || hit.transform.tag == "MilkBottle")
+            {
                 spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconCow);
+                Instantiate(MilkParticle, hit.point - Vector3.forward * 0.05f, Quaternion.FromToRotation(Vector3.forward, hit.normal));
+                Instantiate(bulletHole, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
+            }
+                
             else if (hit.transform.tag == "Farmer")
                 spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconThreat);
         }
@@ -502,11 +514,16 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         if (attachedObject)
         {
             // Re-enable nav mesh agent
-            SC_CowBrain brain = attachedObject.GetComponent<SC_CowBrain>();
-            if (!brain)
-                brain = attachedObject.GetComponent<SC_FarmerBrain>();
-            if (brain)
-            StartCoroutine(brain.Recover());
+
+            if (attachedObject.tag != "MilkBottle")
+            {
+                SC_CowBrain brain = attachedObject.GetComponent<SC_CowBrain>();
+                if (!brain)
+                    brain = attachedObject.GetComponent<SC_FarmerBrain>();
+                if (brain)
+                    StartCoroutine(brain.Recover());
+            }
+            
 
             // Destroy joints
             foreach (ConfigurableJoint cj in attachedObjectJoints)
@@ -539,6 +556,13 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             if (objNetId != null)
                 objNetId.RemoveClientAuthority();
 
+            /*
+            if (attachedObject.tag == "MilkBottle")
+            {
+                attachedObject.gameObject.GetComponent<BarnDestruction>().RpcbreakObject();
+            }
+            */
+
             // Play grapple break audio clip
             audioSource.PlayOneShot(grappleBreak, 1f);
 
@@ -570,7 +594,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             else
             {
                 // Only suck in cows
-                if (attachedObject.tag == "Cow")
+                if (attachedObject.tag == "Cow" || attachedObject.tag == "MilkBottle")
                 {
                     // Release cow if object in between UFO and cow
                     int layerMask = ~(gameObject.layer);
@@ -594,6 +618,21 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                             GrappleRelease();
                         }
                     }
+                }
+                else if (attachedObject.tag == "MilkBottle")
+                {
+                    Debug.Log("Grabbing Bottle");
+                    // Disable attached object colliders
+                    if (!attachedObject.GetComponent<Collider>().isTrigger)
+                    {
+                        foreach (Collider col in attachedObject.GetComponents<Collider>())
+                        {
+                            col.isTrigger = true;
+                            Destroy(attachedObject);
+                        }
+                    }
+                    // Spring attached body towards UFO
+                    attachedRigidbody.AddForce((transform.position - attachedObject.transform.position) * attachedRigidbody.mass * 10f, ForceMode.Impulse);
                 }
                 else
                 {
@@ -651,6 +690,10 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
 
             // Play suction audio
             audioSource.PlayOneShot(cowSuction, 0.5f);
+        }
+        else if (col.gameObject.tag == "MilkBottle" && col.gameObject == attachedObject)
+        {
+            Destroy(col);
         }
     }
 }

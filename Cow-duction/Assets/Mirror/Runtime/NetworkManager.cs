@@ -888,12 +888,12 @@ namespace Mirror
                 {
                     // TODO only respawn the server objects from that scene later!
                     NetworkServer.SpawnObjects();
-                    Debug.Log("Respawned Server objects after additive scene load: " + scene.name);
+                    //Debug.Log("Respawned Server objects after additive scene load: " + scene.name);
                 }
                 if (NetworkClient.active)
                 {
                     ClientScene.PrepareToSpawnSceneObjects();
-                    Debug.Log("Rebuild Client spawnableObjects after additive scene load: " + scene.name);
+                    //Debug.Log("Rebuild Client spawnableObjects after additive scene load: " + scene.name);
                 }
             }
         }

@@ -113,7 +113,6 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
         ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
         transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
         reticleFollowCursor = reticle.GetComponent<SC_HudReticleFollowCursor>();
-        
     }
 
     // Start is called before the first frame update
@@ -186,7 +185,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 
                 fuel -= Time.deltaTime * fuelDepletionRate;
                 fuelMeterFill.color = Color.Lerp(fuelDepletedColor, fuelStartColor, fuel / 100f);
-                spaceship.limitHeight(50f);
+                spaceship.limitHeight(70f);
                 fuelMeter.value = fuel;
             }
             else
@@ -203,7 +202,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
                 int minutes = Mathf.FloorToInt(timeRemaining / 60.0f);
                 int seconds = Mathf.FloorToInt(timeRemaining % 60.0f);
                 timeText.text = minutes + ":" + seconds.ToString("D2");
-                Debug.Log("Gametime: " + minutes + ":" + seconds.ToString("D2"));
+                //Debug.Log("Gametime: " + minutes + ":" + seconds.ToString("D2"));
 
                 if (minutes < 1 && seconds <= 30)
                 {

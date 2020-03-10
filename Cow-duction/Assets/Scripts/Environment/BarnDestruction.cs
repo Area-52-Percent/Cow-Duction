@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class BarnDestruction : MonoBehaviour
+public class BarnDestruction : NetworkBehaviour
 {
     public GameObject myObject;
     public GameObject DestroyedObjectPrefab;
@@ -40,6 +41,16 @@ public class BarnDestruction : MonoBehaviour
     //}
     //**New Object Method**
     //Use when you want to enact physics on the destroyed Object
+
+    [ClientRpc]
+    public void RpcbreakObject()
+    {
+        destroyedObject = Instantiate(DestroyedObjectPrefab, transform.position, transform.rotation);
+        //destroyedObject.transform.parent = gameObject.transform;
+        myObject.SetActive(false);
+        isDestroyed = true;
+    }
+
     void OnCollisionEnter(Collision col)
     {
         if (!isDestroyed)
