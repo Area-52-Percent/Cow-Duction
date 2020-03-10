@@ -77,7 +77,11 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         {
             CmdSwapAmmo();
         }
-        if (Input.GetKeyDown(KeyCode.V))
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            //LockCursor(!isCursorLocked);
+            gameObject.GetComponent<FarmerTeleport>().OpenMenu();
+        }
         if (!isLocalPlayer) return;
 
         int touchCount = Input.touchCount;
@@ -181,7 +185,6 @@ public class MultiPlayerFarmerController : NetworkBehaviour
             characterController.Move(direction * Time.fixedDeltaTime);
         else
             characterController.SimpleMove(direction);
-
         isGrounded = characterController.isGrounded;
         velocity = characterController.velocity;
         animator.SetFloat("speed", velocity.magnitude);
@@ -189,7 +192,9 @@ public class MultiPlayerFarmerController : NetworkBehaviour
 
     public void MoveFarmer(Vector3 location)
     {
-        gameObject.transform.position = location;
+        characterController.enabled = false;
+        transform.position = location;
+        characterController.enabled = true;
     }
     [Command]
     public void CmdSwapAmmo()
@@ -221,11 +226,13 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     {
         if (lockCursor)
         {
+            Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             isCursorLocked = true;
         }
         else
         {
+            Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             isCursorLocked = false;
         }
