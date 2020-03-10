@@ -77,6 +77,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         {
             CmdSwapAmmo();
         }
+        if (Input.GetKeyDown(KeyCode.V))
         if (!isLocalPlayer) return;
 
         int touchCount = Input.touchCount;
@@ -186,6 +187,10 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         animator.SetFloat("speed", velocity.magnitude);
     }
 
+    public void MoveFarmer(Vector3 location)
+    {
+        gameObject.transform.position = location;
+    }
     [Command]
     public void CmdSwapAmmo()
     {
