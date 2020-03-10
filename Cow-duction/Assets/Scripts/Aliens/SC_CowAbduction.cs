@@ -440,7 +440,7 @@ public class SC_CowAbduction : MonoBehaviour
     }
 
     // Release the attached object
-    private void GrappleRelease()
+    public void GrappleRelease()
     {
         if (attachedObject)
         {

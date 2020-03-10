@@ -35,6 +35,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public int playerNumber;
     public Controller controller;
     public SC_CowAbduction shooter;
+    public SC_HudReticleFollowCursor cursor;
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +45,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         movementEnabled = true;
         shooter = gameObject.GetComponent<SC_CowAbduction>();
+        cursor = gameObject.transform.parent.GetChild(1).GetChild(0).GetChild(4).GetComponent<SC_HudReticleFollowCursor>();
         MapControls();
     }
 
@@ -237,7 +239,6 @@ public class SC_SpaceshipMovement : MonoBehaviour
         Vector3 horizontalForce = Vector3.zero;
         float horizontalInput = inputValue.Get<Vector2>().x;
         float verticalInput = inputValue.Get<Vector2>().y;
-        Debug.Log("moving");
         // Move left and right
         if (Mathf.Abs(horizontalInput) > 0.0f)
         {
@@ -290,10 +291,36 @@ public class SC_SpaceshipMovement : MonoBehaviour
     private void OnAim(InputValue inputValue)
     {
         Debug.Log("aiming");
+        Vector2 coordinates = inputValue.Get<Vector2>();
+        cursor.Aim(coordinates);
     }
     private void OnTurn(InputValue inputValue)
     {
-        Debug.Log("turning");
+        float turnHorizontalInput = inputValue.Get<Vector2>().x;
+        float turnVerticalInput = inputValue.Get<Vector2>().y;
+        // Turn left and right
+        if (Mathf.Abs(turnHorizontalInput) > 0.0f)
+        {
+            _rb.AddRelativeTorque(Vector3.up * turnHorizontalInput * rotationForce, ForceMode.Acceleration);
+        }
+
+        // Tilt forward and backward
+        if (Mathf.Abs(turnVerticalInput) > 0.0f)
+        {
+            _rb.AddRelativeTorque((invertLook ? Vector3.right : Vector3.left) * turnVerticalInput * rotationForce, ForceMode.Acceleration);
+        }
+        // Rotate x axis back upright
+        else
+        {
+            if (transform.localEulerAngles.x > maxRotation && transform.localEulerAngles.x < 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.left * rotationForce, ForceMode.Acceleration);
+            }
+            else if (transform.localEulerAngles.x < 360.0f - maxRotation && transform.localEulerAngles.x > 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.right * rotationForce, ForceMode.Acceleration);
+            }
+        }
     }
     private void OnAscend(InputValue inputValue)
     {
@@ -318,6 +345,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     private void OnRelease(InputValue inputValue)
     {
         Debug.Log("releasing");
+        shooter.GrappleRelease();
     }
     private void OnPushPull(InputValue inputValue)
     {

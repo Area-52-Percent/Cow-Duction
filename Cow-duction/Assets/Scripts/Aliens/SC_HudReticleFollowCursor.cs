@@ -38,4 +38,22 @@ public class SC_HudReticleFollowCursor : MonoBehaviour
             transform.position = Input.mousePosition;
         }
     }
+
+    public void Aim(Vector2 coordinates)
+    {
+        // Take input from controller 2
+        float horizontal = coordinates.x;
+        float vertical = coordinates.y;
+
+        if (horizontal > 0 && transform.position.x < Screen.width ||
+            horizontal < 0 && transform.position.x > 0)
+        {
+            transform.position += Vector3.right * horizontal * joystickSensitivity;
+        }
+        if (vertical < 0 && transform.position.y < Screen.height ||
+            vertical > 0 && transform.position.y > 0)
+        {
+            transform.position += Vector3.down * vertical * joystickSensitivity;
+        }
+    }
 }
