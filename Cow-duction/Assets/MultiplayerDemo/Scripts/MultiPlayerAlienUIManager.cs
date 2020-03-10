@@ -18,6 +18,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     // Private variables
     private MultiPlayerGameManager gameManager;
     private MultiPlayerSpaceshipController spaceship;
+    private NetworkManagerCowductionHUD networkManagerHUD;
     private Camera mainCamera;
     public Animator shipAnim;
     private SC_HudReticleFollowCursor reticleFollowCursor;
@@ -74,7 +75,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     [Space] // Screens
     [SerializeField] private GameObject gameplayScreen = null; // Set up in inspector
     [SerializeField] private GameObject helpScreen = null; // Set up in inspector
-    [SerializeField] private GameObject endScreen = null; // Set up in inspector
+    //[SerializeField] private GameObject endScreen = null; // Set up in inspector
     [SerializeField] private GameObject parameterScreen = null; // Set up in inspector
     [Space] // Intro
     [SerializeField] private GameObject holoCow = null; // Intro cow hologram
@@ -103,6 +104,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     // Awake is called after all objects are initialized
     void Awake()
     {
+        networkManagerHUD = GameObject.FindWithTag("NetworkManager").GetComponent<NetworkManagerCowductionHUD>();
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<MultiPlayerGameManager>();
         spaceship = GameObject.FindWithTag("UFO").GetComponent<MultiPlayerSpaceshipController>();
         gameManager.StartListening();
@@ -236,11 +238,11 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 
                 timeRemaining -= Time.unscaledDeltaTime;
             }
-            else if (!endScreen.activeSelf)
+            else if (!networkManagerHUD.endScreen.activeSelf)
             {
                 timeRemaining = 0.0f;
                 timeText.text = "0:00";
-                DisplayEndScreen();
+                networkManagerHUD.DisplayEndScreen(score, ufoAudioSource, loseAudio, winAudio);
             }
         }
         else
@@ -542,53 +544,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     // Show the endscreen (TO-DO: Replace hard-coded values)
     public void DisplayEndScreen()
     {
-        string rating = "";
-
-        if (score > 25)
-            rating = "SS";
-        else if (score > 20)
-            rating = "S";
-        else if (score > 17)
-            rating = "A";
-        else if (score > 13)
-            rating = "B";
-        else if (score > 7)
-            rating = "C";
-        else
-        {
-            rating = "D";
-
-            GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
-            if (farmers.Length > 0)
-            {
-                foreach (GameObject farmer in farmers)
-                {
-                    Animator farmerAnimator = farmer.GetComponentInChildren<Animator>();
-                    if (farmerAnimator)
-                    {
-                        farmerAnimator.SetBool("celebrate", true);
-                    }
-                }
-            }
-
-            ufoAudioSource.PlayOneShot(loseAudio, 1f);
-        }
-
-        switch (rating)
-        {
-            case "SS":
-            case "S":
-            case "A":
-                ufoAudioSource.PlayOneShot(winAudio, 1f);
-                break;
-            default:
-                break;
-        }
-
-        //gameManager.SetMusicVolume(0.1f);
-
-        finalScoreText.text = score + "\n\nRating: " + rating;
-        endScreen.SetActive(true);
+        networkManagerHUD.DisplayEndScreen(score, ufoAudioSource, loseAudio, winAudio);
     }
 
     // Toggle the help screen
@@ -725,7 +681,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
             cropSplatter.gameObject.SetActive(false);
 
         // Deactivate non-gameplay menus
-        endScreen.SetActive(false);
+        networkManagerHUD.endScreen.SetActive(false);
         parameterScreen.SetActive(false);
         helpScreen.SetActive(false);
 

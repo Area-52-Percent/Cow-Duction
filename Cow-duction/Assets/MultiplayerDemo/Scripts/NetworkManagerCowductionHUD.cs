@@ -25,7 +25,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
     public InputField networkAddressField;
     public GameObject pauseMenu;
 
-    [SerializeField] private GameObject endScreen = null; // Set up in inspector
+    [SerializeField] public GameObject endScreen = null; // Set up in inspector
     [SerializeField] private AudioClip loseAudio = null; // Set up in inspector
     [SerializeField] private AudioClip winAudio = null; // Set up in inspector
     [SerializeField] private Text finalScoreText = null; // Set up in inspector
@@ -38,6 +38,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
         gamemanager = GameObject.Find("GameManager").GetComponent<MultiPlayerGameManager>();
         mainMenu.SetActive(true);
         pauseMenu.SetActive(false);
+        endScreen.SetActive(false);
 
         networkAddressField.text = "localhost";
     }
@@ -162,6 +163,10 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
                 {
                     pauseMenu.SetActive(false);
                 }
+                if (endScreen.activeSelf)
+                {
+                    endScreen.SetActive(false);
+                }
             }
         }
         if (Input.GetButtonDown("Cancel") && !Input.GetKey("left shift"))
@@ -252,7 +257,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
                 break;
         }
 
-        //gameManager.SetMusicVolume(0.1f);
+        gamemanager.SetMusicVolume(0.1f);
 
         finalScoreText.text = score + "\n\nRating: " + rating;
         endScreen.SetActive(true);
@@ -264,10 +269,8 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
         {
             manager.StopHost();
         }
-
-        gamemanager.stopMusic();
-
         pauseMenu.SetActive(false);
+        gamemanager.stopMusic();
     }
 
     public void ExitGame()
