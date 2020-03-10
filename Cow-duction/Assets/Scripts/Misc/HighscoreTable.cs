@@ -48,6 +48,7 @@ public class HighscoreTable : MonoBehaviour
             highscores = JsonUtility.FromJson<Highscores>(jsonString);
         }
         curScore = GameObject.Find("UI").GetComponent<MultiPlayerAlienUIManager>().GetScore();
+        Debug.Log("end =" + curScore);
         if (NewHighScore(curScore))
         {
             playerInput.SetActive(true);
@@ -116,6 +117,7 @@ public class HighscoreTable : MonoBehaviour
 
     public void SaveScore()
     {
+        Debug.Log("save" + curScore);
         AddHighscoreEntry(curScore,(player1NameInput[0].text + player1NameInput[1].text + player1NameInput[2].text ), (player2NameInput[0].text + player2NameInput[1].text + player2NameInput[2].text));
         highscoreEntryTransformList = new List<Transform>();
         Highscores highscores = new Highscores();
