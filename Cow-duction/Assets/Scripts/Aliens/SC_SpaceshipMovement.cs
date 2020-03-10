@@ -18,6 +18,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     private float movementMultiplier = 1f;
     private bool movementEnabled;
     private bool grounded;
+    private float lift;
 
     // Public variables
     public float horizontalSpeed = 10.0f;
@@ -324,10 +325,23 @@ public class SC_SpaceshipMovement : MonoBehaviour
     }
     private void OnAscend(InputValue inputValue)
     {
+        lift = inputValue.Get<float>();
+        Debug.Log(lift);
+        // Lift
+        if (transform.position.y < maxHeight)
+        {
+            _rb.AddForce(Vector3.up * lift * verticalSpeed * movementMultiplier, ForceMode.Acceleration);
+        }
         Debug.Log("ascending");
     }
     private void OnDescend(InputValue inputValue)
     {
+        lift = -1 * inputValue.Get<float>();
+        Debug.Log(lift);
+        if (transform.position.y > minHeight)
+        {
+            _rb.AddForce(Vector3.up * lift * verticalSpeed * movementMultiplier, ForceMode.Acceleration);
+        }
         Debug.Log("descending");
     }
     private void OnTiltRight(InputValue inputValue)
