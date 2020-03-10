@@ -13,6 +13,14 @@ public class Controller : MonoBehaviour
     public event InputEventHandler _OnMovement;
     public event InputEventHandler _OnShoot;
     public event InputEventHandler _OnAim;
+    public event InputEventHandler _OnTurn;
+    public event InputEventHandler _OnAscend;
+    public event InputEventHandler _OnDescend;
+    public event InputEventHandler _OnTiltRight;
+    public event InputEventHandler _OnTiltLeft;
+    public event InputEventHandler _OnCloak;
+    public event InputEventHandler _OnRelease;
+    public event InputEventHandler _OnPushPull;
 
     private static int idCount = 0;
     private List<string> controllerNames;
@@ -75,6 +83,39 @@ public class Controller : MonoBehaviour
         {
             _OnAim?.Invoke(inputValue);
         }
+    }
+
+    private void OnTurn(InputValue inputValue)
+    {
+        _OnTurn?.Invoke(inputValue);
+    }
+    private void OnAscend(InputValue inputValue)
+    {
+        _OnAscend?.Invoke(inputValue);
+    }
+    private void OnDescend(InputValue inputValue)
+    {
+        _OnDescend?.Invoke(inputValue);
+    }
+    private void OnTiltRight(InputValue inputValue)
+    {
+        _OnTiltRight?.Invoke(inputValue);
+    }
+    private void OnTiltLeft(InputValue inputValue)
+    {
+        _OnTiltLeft?.Invoke(inputValue);
+    }
+    private void OnCloak(InputValue inputValue)
+    {
+        _OnCloak?.Invoke(inputValue);
+    }
+    private void OnRelease(InputValue inputValue)
+    {
+        _OnRelease?.Invoke(inputValue);
+    }
+    private void OnPushPull(InputValue inputValue)
+    {
+        _OnPushPull?.Invoke(inputValue);
     }
 }
 

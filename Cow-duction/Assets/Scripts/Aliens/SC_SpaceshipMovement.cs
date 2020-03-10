@@ -291,6 +291,38 @@ public class SC_SpaceshipMovement : MonoBehaviour
     {
         Debug.Log("aiming");
     }
+    private void OnTurn(InputValue inputValue)
+    {
+        Debug.Log("turning");
+    }
+    private void OnAscend(InputValue inputValue)
+    {
+        Debug.Log("ascending");
+    }
+    private void OnDescend(InputValue inputValue)
+    {
+        Debug.Log("descending");
+    }
+    private void OnTiltRight(InputValue inputValue)
+    {
+        Debug.Log("tilting right");
+    }
+    private void OnTiltLeft(InputValue inputValue)
+    {
+        Debug.Log("tilting left");
+    }
+    private void OnCloak(InputValue inputValue)
+    {
+        Debug.Log("cloaking");
+    }
+    private void OnRelease(InputValue inputValue)
+    {
+        Debug.Log("releasing");
+    }
+    private void OnPushPull(InputValue inputValue)
+    {
+        Debug.Log("pushing/pulling");
+    }
     #endregion
 
     #region Input Mapping
