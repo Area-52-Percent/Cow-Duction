@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3899943086048865679}
   - component: {fileID: 3899943086048865672}
+  - component: {fileID: 7480109355978991894}
   m_Layer: 0
   m_Name: DynamicDesigner
   m_TagString: Untagged
@@ -38,7 +39,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3899943086048865678}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cee20d543da89604ebc39857ba6ef45f, type: 3}
   m_Name: 
@@ -60,3 +61,19 @@ MonoBehaviour:
   - {fileID: 7808737464459943294, guid: eb38d62ea44015f42947f4075a3243d2, type: 3}
   environments:
   - {fileID: 7051992964691472881, guid: c714e9314f069b24dbdaf5224475dbd7, type: 3}
+--- !u!114 &7480109355978991894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3899943086048865678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 968a931bd283b49668aea4e28c7d4667, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scenes:
+  - Feb11_IntroAreaSceneDevin
+  - Feb11_WindAreaScene
+  - Feb18_FieldAreaScene
