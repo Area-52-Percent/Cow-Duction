@@ -43,6 +43,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Confined;
         movementEnabled = true;
+        shooter = gameObject.GetComponent<SC_CowAbduction>();
         MapControls();
     }
 
@@ -233,7 +234,6 @@ public class SC_SpaceshipMovement : MonoBehaviour
     #region Player Abilities
     private void OnMovement(InputValue inputValue)
     {
-        Debug.Log(inputValue.Get<Vector2>());
         Vector3 horizontalForce = Vector3.zero;
         float horizontalInput = inputValue.Get<Vector2>().x;
         float verticalInput = inputValue.Get<Vector2>().y;
@@ -335,6 +335,15 @@ public class SC_SpaceshipMovement : MonoBehaviour
         {
             controller._OnMovement += OnMovement;
             controller._OnShoot += OnShoot;
+            controller._OnAim += OnAim;
+            controller._OnTurn += OnTurn;
+            controller._OnAscend += OnAscend;
+            controller._OnDescend += OnDescend;
+            controller._OnTiltRight += OnTiltRight;
+            controller._OnTiltLeft += OnTiltLeft;
+            controller._OnCloak += OnCloak;
+            controller._OnRelease += OnRelease;
+            controller._OnPushPull += OnPushPull;
         }
     }
 
@@ -344,6 +353,15 @@ public class SC_SpaceshipMovement : MonoBehaviour
         {
             controller._OnMovement -= OnMovement;
             controller._OnShoot -= OnShoot;
+            controller._OnAim -= OnAim;
+            controller._OnTurn -= OnTurn;
+            controller._OnAscend -= OnAscend;
+            controller._OnDescend -= OnDescend;
+            controller._OnTiltRight -= OnTiltRight;
+            controller._OnTiltLeft -= OnTiltLeft;
+            controller._OnCloak -= OnCloak;
+            controller._OnRelease -= OnRelease;
+            controller._OnPushPull -= OnPushPull;
         }
     }
     #endregion

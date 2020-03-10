@@ -34,20 +34,13 @@ public class Controller : MonoBehaviour
     {
         //InputMaster master = new InputMaster();
         //master.GetComponent<PlayerInput>().actions = master.asset;
-        controllerNames = app.GetComponent<Controllers>().controllerNames;
+        //controllerNames = app.GetComponent<Controllers>().controllerNames;
     }
 
     private void OnMovement(InputValue inputValue)
     {
         string current = Gamepad.current.ToString();
-        if (controllerNames.Count > 2)
-        {
-            if (current == controllerNames[0])
-            {
-                _OnMovement?.Invoke(inputValue);
-            }
-        }
-        else if (current == "XInputControllerWindows:/XInputControllerWindows")
+        if (current == "XInputControllerWindows:/XInputControllerWindows")
         {
             _OnMovement?.Invoke(inputValue);
         }
@@ -56,14 +49,7 @@ public class Controller : MonoBehaviour
     private void OnShoot(InputValue inputValue)
     {
         string current = Gamepad.current.ToString();
-        if (controllerNames.Count > 2)
-        {
-            if (current == controllerNames[1])
-            {
-                _OnShoot?.Invoke(inputValue);
-            }
-        }
-        else if (current == "XInputControllerWindows:/XInputControllerWindows1")
+        if (current == "XInputControllerWindows:/XInputControllerWindows1")
         {
             _OnShoot?.Invoke(inputValue);
         }
@@ -72,14 +58,7 @@ public class Controller : MonoBehaviour
     private void OnAim(InputValue inputValue)
     {
         string current = Gamepad.current.ToString();
-        if (controllerNames.Count > 2)
-        {
-            if (current == controllerNames[1])
-            {
-                _OnAim?.Invoke(inputValue);
-            }
-        }
-        else if (current == "XInputControllerWindows:/XInputControllerWindows1")
+        if (current == "XInputControllerWindows:/XInputControllerWindows1")
         {
             _OnAim?.Invoke(inputValue);
         }
@@ -87,35 +66,67 @@ public class Controller : MonoBehaviour
 
     private void OnTurn(InputValue inputValue)
     {
-        _OnTurn?.Invoke(inputValue);
+        string current = Gamepad.current.ToString();
+        if (current == "XInputControllerWindows:/XInputControllerWindows")
+        {
+            _OnTurn?.Invoke(inputValue);
+        }
     }
     private void OnAscend(InputValue inputValue)
     {
-        _OnAscend?.Invoke(inputValue);
+        string current = Gamepad.current.ToString();
+        if (current == "XInputControllerWindows:/XInputControllerWindows")
+        {
+            _OnAscend?.Invoke(inputValue);
+        }
     }
     private void OnDescend(InputValue inputValue)
     {
-        _OnDescend?.Invoke(inputValue);
+        string current = Gamepad.current.ToString();
+        if (current == "XInputControllerWindows:/XInputControllerWindows")
+        {
+            _OnDescend?.Invoke(inputValue);
+        }
     }
     private void OnTiltRight(InputValue inputValue)
     {
-        _OnTiltRight?.Invoke(inputValue);
+        string current = Gamepad.current.ToString();
+        if (current == "XInputControllerWindows:/XInputControllerWindows")
+        {
+            _OnTiltRight?.Invoke(inputValue);
+        }
     }
     private void OnTiltLeft(InputValue inputValue)
     {
-        _OnTiltLeft?.Invoke(inputValue);
+        string current = Gamepad.current.ToString();
+        if (current == "XInputControllerWindows:/XInputControllerWindows")
+        {
+            _OnTiltLeft?.Invoke(inputValue);
+        }
     }
     private void OnCloak(InputValue inputValue)
     {
-        _OnCloak?.Invoke(inputValue);
+        string current = Gamepad.current.ToString();
+        if (current == "XInputControllerWindows:/XInputControllerWindows1")
+        {
+            _OnCloak?.Invoke(inputValue);
+        }
     }
     private void OnRelease(InputValue inputValue)
     {
-        _OnRelease?.Invoke(inputValue);
+        string current = Gamepad.current.ToString();
+        if (current == "XInputControllerWindows:/XInputControllerWindows1")
+        {
+            _OnRelease?.Invoke(inputValue);
+        }
     }
     private void OnPushPull(InputValue inputValue)
     {
-        _OnPushPull?.Invoke(inputValue);
+        string current = Gamepad.current.ToString();
+        if (current == "XInputControllerWindows:/XInputControllerWindows1")
+        {
+            _OnPushPull?.Invoke(inputValue);
+        }
     }
 }
 
