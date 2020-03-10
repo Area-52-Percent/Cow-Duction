@@ -69,6 +69,7 @@ public class SC_CowAbduction : MonoBehaviour
         spaceshipMovement = GetComponent<SC_SpaceshipMovement>();
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
         controls = new InputMaster();
+        reticle.transform.position = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0);
     }
 
     public void Shoot()

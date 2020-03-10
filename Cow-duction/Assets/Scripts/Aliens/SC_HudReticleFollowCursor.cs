@@ -13,7 +13,7 @@ public class SC_HudReticleFollowCursor : MonoBehaviour
     public float joystickSensitivity = 5.0f;
 
     // Update is called once per frame
-    void Update()
+    /*void Update()
     {
         if (Input.GetJoystickNames().Length > 1)
         {
@@ -37,13 +37,13 @@ public class SC_HudReticleFollowCursor : MonoBehaviour
             // Use input mouse position
             transform.position = Input.mousePosition;
         }
-    }
+    }*/
 
     public void Aim(Vector2 coordinates)
     {
         // Take input from controller 2
         float horizontal = coordinates.x;
-        float vertical = coordinates.y;
+        float vertical = -1 * coordinates.y;
 
         if (horizontal > 0 && transform.position.x < Screen.width ||
             horizontal < 0 && transform.position.x > 0)
