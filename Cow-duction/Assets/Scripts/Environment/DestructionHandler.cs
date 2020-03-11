@@ -3,19 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class BarnDestruction : NetworkBehaviour
+public class DestructionHandler : NetworkBehaviour
 {
     public GameObject myObject;
     public GameObject DestroyedObjectPrefab;
+    public GameObject MilkParticle;
+    public GameObject bulletHole;
+
     //public Mesh destroyedMesh;
     //private Mesh defaultMesh;
-    private bool isDestroyed;
+    private bool isHit;
     public float timeToRepair;
     private IEnumerator co;
     private GameObject destroyedObject;
+
     void Start()
     {
-        isDestroyed = false;
+        isHit = false;
         //defaultMesh = myObject.GetComponent<MeshFilter>().mesh;
     }
     //**Mesh Swapping Method**
@@ -43,24 +47,47 @@ public class BarnDestruction : NetworkBehaviour
     //Use when you want to enact physics on the destroyed Object
 
     [ClientRpc]
+    public bool RpcHitMilk(RaycastHit hit)
+    {
+        if (isHit)
+        {
+            return true;
+        }
+        else
+        {
+            Instantiate(MilkParticle, hit.point - Vector3.forward * 0.05f, Quaternion.FromToRotation(Vector3.forward, hit.normal));
+            Instantiate(bulletHole, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
+            //destroyedObject = Instantiate(DestroyedObjectPrefab, transform.position, transform.rotation);
+            //destroyedObject.transform.parent = gameObject.transform;
+            //myObject.SetActive(false);
+            isHit = true;
+            return false;
+        }
+    }
+
+    [ClientRpc]
     public void RpcbreakObject()
     {
         destroyedObject = Instantiate(DestroyedObjectPrefab, transform.position, transform.rotation);
         //destroyedObject.transform.parent = gameObject.transform;
         myObject.SetActive(false);
-        isDestroyed = true;
+        isHit = true;
     }
 
     void OnCollisionEnter(Collision col)
     {
-        if (!isDestroyed)
+        if (!isHit)
         {
             if (col.gameObject.tag == "CowProjectile")
             {
-                destroyedObject = Instantiate(DestroyedObjectPrefab, transform.position, transform.rotation);
-                destroyedObject.transform.parent = gameObject.transform;
-                myObject.SetActive(false);
-                isDestroyed = true;
+                //destroyedObject = Instantiate(DestroyedObjectPrefab, transform.position, transform.rotation);
+                //destroyedObject.transform.parent = gameObject.transform;
+
+                //Instantiate(MilkParticle, col.gameObject.transform.position, Quaternion.FromToRotation(col.gameObject.transform.forward, Vector3.forward));
+                //Instantiate(bulletHole, col.gameObject.transform.position, Quaternion.FromToRotation(col.gameObject.transform.forward, Vector3.forward));
+
+                //myObject.SetActive(false);
+                isHit = true;
             }
         }
         else

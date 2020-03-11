@@ -61,6 +61,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     public bool isPulling = false;
     public bool isReleasingGrapple = false;
     public bool isSucking = false;
+    public bool shouldAttach = false;
 
     // OnStartLocalPlayer is called when the local player object is set up
     public override void OnStartLocalPlayer()
@@ -131,7 +132,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         }
         else if (Physics.Raycast(ray, out hit, maxCaptureLength, layerMask, QueryTriggerInteraction.Ignore))
         {
-            if (hit.transform.tag == "Cow")
+            if (hit.transform.tag == "Cow" || hit.transform.tag == "MilkBottle")
             {
                 spaceshipCanvas.SetReticleColor(Color.green);
             }
@@ -206,7 +207,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 rb.AddForce((attachedObject.transform.position - transform.position).normalized, ForceMode.Acceleration);
             }
 
-            if (attachedObject.name == "MilkSilo")
+            if (attachedObject.tag == "MilkBottle")
             {
                 GrappleRelease();
             }
@@ -217,7 +218,10 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 GrappleRelease();
             }
 
-            ClampWaypointIcon();
+            if (attachedObject.tag != "MilkBottle")
+            {
+                ClampWaypointIcon();
+            }
         }
         else // attachedObject == null
         {
@@ -415,9 +419,14 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             }
             else if (hit.transform.tag == "MilkBottle")
             {
-                Instantiate(MilkParticle, hit.point - Vector3.forward * 0.05f, Quaternion.FromToRotation(Vector3.forward, hit.normal));
-                Instantiate(bulletHole, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
-            }   
+                //shouldAttach = hit.transform.GetComponent<DestructionHandler>().RpcHitMilk(hit, MilkParticle, bulletHole);
+                shouldAttach = hit.transform.GetComponent<DestructionHandler>().RpcHitMilk(hit);
+                if (shouldAttach)
+                {
+                    GameObject AttachedMilk = hit.transform.gameObject;
+                    Debug.Log("Currently attached to: " + AttachedMilk.name);
+                }
+            }
             else if (hit.transform.tag == "Farmer")
                 spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconThreat);
         }
@@ -677,6 +686,50 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         {
             Destroy(col);
         }
+    }
+
+    public IEnumerator SuckMilk(float skinnyTime, float shrinkTime)
+    {
+        isSucking = true;
+
+        float suckTimer = 0;
+        Vector3 skinnyScale = Vector3.one - Vector3.right * .9f;
+        while (suckTimer < skinnyTime)
+        {
+            suckTimer += Time.deltaTime;
+            attachedObject.transform.localScale = Vector3.Lerp(attachedObject.transform.localScale, skinnyScale, Time.deltaTime);
+            attachedObject.transform.position = Vector3.Lerp(attachedObject.transform.position, grappleOrigin.position, suckTimer);
+            yield return null;
+        }
+
+        suckTimer = 0;
+        while (suckTimer < shrinkTime)
+        {
+            suckTimer += Time.deltaTime;
+            attachedObject.transform.localScale = Vector3.Lerp(attachedObject.transform.localScale, Vector3.zero, suckTimer);
+            attachedObject.transform.position = grappleOrigin.position;
+            yield return null;
+        }
+
+        foreach (ConfigurableJoint cj in attachedObjectJoints)
+        {
+            Destroy(cj.gameObject);
+        }
+
+        // Apply force for physical feedback
+        spaceshipController.AddImpulseForce((Camera.main.transform.position - attachedObject.transform.position).normalized, Mathf.Clamp(attachedRigidbody.mass * 0.5f, 1f, 10f));
+
+        // Destroy grappling hook and attached object
+        if (probeClone)
+            Destroy(probeClone);
+
+        attachedObject = null;
+
+        RpcRenderLine(null);
+
+        GetComponent<MultiPlayerCowShooter>().AddCow();
+
+        isSucking = false;
     }
 
     public IEnumerator SuckCow(float skinnyTime, float shrinkTime)
