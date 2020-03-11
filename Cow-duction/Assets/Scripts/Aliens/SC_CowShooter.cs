@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Mirror;
 
 [RequireComponent(typeof(SC_SpaceshipMovement))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
-public class SC_CowShooter : MonoBehaviour
+public class SC_CowShooter : NetworkBehaviour
 {
     private SC_AlienUIManager uiManager;
     private SC_SpaceshipMovement spaceshipMovement;
@@ -46,7 +47,7 @@ public class SC_CowShooter : MonoBehaviour
                     int layerMask = ~(1 << gameObject.layer);
                     if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
                     {
-                        StartCoroutine(ShootCow(hit));
+                        StartCoroutine(RpcShootCow(hit));
                     }
                 }
                 Debug.Log(obtainedCows);
@@ -57,7 +58,8 @@ public class SC_CowShooter : MonoBehaviour
         obtainedCows++;
     }
 
-    private IEnumerator ShootCow(RaycastHit hit)
+    [ClientRpc]
+    private IEnumerator RpcShootCow(RaycastHit hit)
     {
         Vector3 grappleHitPoint = hit.point;
 
