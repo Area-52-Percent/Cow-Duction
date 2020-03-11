@@ -201,15 +201,20 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             {
                 Vector3 worldPoint = ray.origin + (ray.direction * captureLength);
 
-                // Attached object is attracted to reticle postion
-                attachedRigidbody.AddForce((worldPoint - attachedObject.transform.position) * reticleAttractionForce, ForceMode.Acceleration);
+                if (attachedObject.tag == "MilkBottle")
+                {
+                    if (shouldAttach && !isSucking)
+                    {
+                        StartCoroutine(SuckMilk(5f, attachedObject));
+                    }
+                }
+                else
+                {
+                    // Attached object is attracted to reticle postion
+                    attachedRigidbody.AddForce((worldPoint - attachedObject.transform.position) * reticleAttractionForce, ForceMode.Acceleration);
 
-                rb.AddForce((attachedObject.transform.position - transform.position).normalized, ForceMode.Acceleration);
-            }
-
-            if (attachedObject.tag == "MilkBottle")
-            {
-                GrappleRelease();
+                    rb.AddForce((attachedObject.transform.position - transform.position).normalized, ForceMode.Acceleration);
+                }
             }
 
             // Grapple breaks if attached object is too far
@@ -218,7 +223,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 GrappleRelease();
             }
 
-            if (attachedObject.tag != "MilkBottle")
+            if (attachedObject)
             {
                 ClampWaypointIcon();
             }
@@ -672,8 +677,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         if(col.gameObject.tag == "Cow" && col.gameObject == attachedObject && !isSucking)
         {
             // spaceshipCanvas.IncreaseScore(col.GetComponent<MultiPlayerCowBrain>().milk);
-            GetComponentInChildren<MultiPlayerAlienUIManager>().IncreaseScore(col.GetComponent<MultiPlayerCowBrain>().milk, null);
-
+            GetComponentInChildren<MultiPlayerAlienUIManager>().IncreaseScore(col.GetComponent<MultiPlayerCowBrain>().milk);
             StartCoroutine(SuckCow(2f, .2f));
 
             // Reset movement penalty
@@ -682,52 +686,44 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             // Play suction audio
             audioSource.PlayOneShot(cowSuction, 0.5f);
         }
-        else if (col.gameObject.tag == "MilkBottle" && col.gameObject == attachedObject)
-        {
-            Destroy(col);
-        }
     }
 
-    public IEnumerator SuckMilk(float skinnyTime, float shrinkTime)
+    public IEnumerator SuckMilk(float suckTime, GameObject milkBottle)
     {
         isSucking = true;
 
         float suckTimer = 0;
+        int i = 0;
         Vector3 skinnyScale = Vector3.one - Vector3.right * .9f;
-        while (suckTimer < skinnyTime)
+        while (suckTimer < suckTime)
         {
             suckTimer += Time.deltaTime;
-            attachedObject.transform.localScale = Vector3.Lerp(attachedObject.transform.localScale, skinnyScale, Time.deltaTime);
-            attachedObject.transform.position = Vector3.Lerp(attachedObject.transform.position, grappleOrigin.position, suckTimer);
+            if (i % 45 == 0)
+            {
+                GetComponentInChildren<MultiPlayerAlienUIManager>().IncreaseScore(4f);
+            }
+            i++;
             yield return null;
-        }
-
-        suckTimer = 0;
-        while (suckTimer < shrinkTime)
-        {
-            suckTimer += Time.deltaTime;
-            attachedObject.transform.localScale = Vector3.Lerp(attachedObject.transform.localScale, Vector3.zero, suckTimer);
-            attachedObject.transform.position = grappleOrigin.position;
-            yield return null;
-        }
-
-        foreach (ConfigurableJoint cj in attachedObjectJoints)
-        {
-            Destroy(cj.gameObject);
         }
 
         // Apply force for physical feedback
         spaceshipController.AddImpulseForce((Camera.main.transform.position - attachedObject.transform.position).normalized, Mathf.Clamp(attachedRigidbody.mass * 0.5f, 1f, 10f));
 
+        if (milkBottle.GetComponent<DestructionHandler>().liveParticles)
+        {
+            Destroy(milkBottle.GetComponent<DestructionHandler>().liveParticles);
+            milkBottle.GetComponent<DestructionHandler>().liveParticles = null;
+        }
+
         // Destroy grappling hook and attached object
         if (probeClone)
             Destroy(probeClone);
 
+        GrappleRelease();
+
         attachedObject = null;
 
         RpcRenderLine(null);
-
-        GetComponent<MultiPlayerCowShooter>().AddCow();
 
         isSucking = false;
     }

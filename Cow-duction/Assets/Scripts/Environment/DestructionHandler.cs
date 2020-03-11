@@ -9,10 +9,12 @@ public class DestructionHandler : NetworkBehaviour
     public GameObject DestroyedObjectPrefab;
     public GameObject MilkParticle;
     public GameObject bulletHole;
+    public GameObject liveParticles;
 
     //public Mesh destroyedMesh;
     //private Mesh defaultMesh;
     private bool isHit;
+    public bool isMilked;
     public float timeToRepair;
     private IEnumerator co;
     private GameObject destroyedObject;
@@ -49,13 +51,18 @@ public class DestructionHandler : NetworkBehaviour
     [ClientRpc]
     public bool RpcHitMilk(RaycastHit hit)
     {
-        if (isHit)
+        if (isHit && isMilked)
         {
+            return false;
+        }
+        else if (isHit)
+        {
+            isMilked = true;
             return true;
         }
         else
         {
-            Instantiate(MilkParticle, hit.point - Vector3.forward * 0.05f, Quaternion.FromToRotation(Vector3.forward, hit.normal));
+            liveParticles = Instantiate(MilkParticle, hit.point - Vector3.forward * 0.05f, Quaternion.FromToRotation(Vector3.forward, hit.normal));
             Instantiate(bulletHole, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
             //destroyedObject = Instantiate(DestroyedObjectPrefab, transform.position, transform.rotation);
             //destroyedObject.transform.parent = gameObject.transform;

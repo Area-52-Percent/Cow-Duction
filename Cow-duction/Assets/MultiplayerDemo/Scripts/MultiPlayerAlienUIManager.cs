@@ -268,7 +268,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     }
 
     // Animate milk sliding effect
-    private IEnumerator AnimateIncreaseScore()
+    public IEnumerator AnimateIncreaseScore()
     {
         milkSlide.direction = Slider.Direction.TopToBottom;
         while (milkSlide.value < 1.0f)
@@ -297,7 +297,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     }
 
     // Increase score and fuel
-    public void IncreaseScore(float milk, GameObject cow)
+    public void IncreaseScore(float milk) //, GameObject cow
     {
         StartCoroutine(AnimateIncreaseScore());
         int cowScore = 1;
