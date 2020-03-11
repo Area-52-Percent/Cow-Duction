@@ -409,13 +409,15 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 }
             }
 
-            if (hit.transform.tag == "Cow" || hit.transform.tag == "MilkBottle")
+            if (hit.transform.tag == "Cow")
             {
                 spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconCow);
+            }
+            else if (hit.transform.tag == "MilkBottle")
+            {
                 Instantiate(MilkParticle, hit.point - Vector3.forward * 0.05f, Quaternion.FromToRotation(Vector3.forward, hit.normal));
                 Instantiate(bulletHole, hit.point, Quaternion.FromToRotation(Vector3.forward, hit.normal));
-            }
-                
+            }   
             else if (hit.transform.tag == "Farmer")
                 spaceshipCanvas.SetWaypointIconSprite(spaceshipCanvas.waypointIconThreat);
         }
@@ -604,50 +606,6 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             else
             {
                 // Only suck in cows
-                if (attachedObject.tag == "Cow" || attachedObject.tag == "MilkBottle")
-                {
-                    // Release cow if object in between UFO and cow
-                    int layerMask = ~(gameObject.layer);
-                    if (Physics.Raycast(transform.position, (attachedObject.transform.position - transform.position).normalized, out RaycastHit hit, maxCaptureLength, layerMask))
-                    {
-                        if (hit.collider.tag == "Cow")
-                        {
-                            // Disable attached object colliders
-                            if (!attachedObject.GetComponent<Collider>().isTrigger)
-                            {
-                                foreach (Collider col in attachedObject.GetComponents<Collider>())
-                                {
-                                    col.isTrigger = true;
-                                }
-                            }
-                            // Spring attached body towards UFO
-                            attachedRigidbody.AddForce((transform.position - attachedObject.transform.position) * attachedRigidbody.mass * 10f, ForceMode.Impulse);
-                        }
-                        else
-                        {
-                            GrappleRelease();
-                        }
-                    }
-                }
-                else if (attachedObject.tag == "MilkBottle")
-                {
-                    Debug.Log("Grabbing Bottle");
-                    // Disable attached object colliders
-                    if (!attachedObject.GetComponent<Collider>().isTrigger)
-                    {
-                        foreach (Collider col in attachedObject.GetComponents<Collider>())
-                        {
-                            col.isTrigger = true;
-                            Destroy(attachedObject);
-                        }
-                    }
-                    // Spring attached body towards UFO
-                    attachedRigidbody.AddForce((transform.position - attachedObject.transform.position) * attachedRigidbody.mass * 10f, ForceMode.Impulse);
-                }
-                else
-                {
-                    GrappleRelease();
-                }
                 // if (attachedObject.tag == "Cow")
                 // {
                 //     // Release cow if object in between UFO and cow
