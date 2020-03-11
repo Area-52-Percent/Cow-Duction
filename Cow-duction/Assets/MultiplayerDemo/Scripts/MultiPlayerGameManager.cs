@@ -57,7 +57,7 @@ public class MultiPlayerGameManager : MonoBehaviour
         ufoStartLocation = GameObject.Find("SpaceshipSpawn");
         //uiManager = GameObject.Find("UI").GetComponent<MultiPlayerAlienUIManager>();
         musicAudioSource = GetComponent<AudioSource>();
-        SetMusicVolume(0.5f);
+        SetMusicVolume(.25f);
 
         //mainCamera = Camera.main;
 
@@ -139,7 +139,7 @@ public class MultiPlayerGameManager : MonoBehaviour
 
     public void stopMusic()
     {
-        SetMusicVolume(.5f);
+        SetMusicVolume(.25f);
         musicAudioSource.Stop();
     }
 
@@ -170,7 +170,7 @@ public class MultiPlayerGameManager : MonoBehaviour
         //MultiPlayerSpaceshipController ufoSM = ufo.GetComponent<MultiPlayerSpaceshipController>();
         //ufoSM.ResetGame();
 
-        SetMusicVolume(0.5f);
+        SetMusicVolume(.25f);
     }
 
     // Reset scene without re-finding components attached to dont destroy objects
