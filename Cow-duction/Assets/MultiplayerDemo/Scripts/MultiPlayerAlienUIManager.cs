@@ -270,6 +270,8 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     // Animate milk sliding effect
     public IEnumerator AnimateIncreaseScore()
     {
+        if (milkSlide.value > 0) milkSlide.value = 0;
+
         milkSlide.direction = Slider.Direction.TopToBottom;
         while (milkSlide.value < 1.0f)
         {

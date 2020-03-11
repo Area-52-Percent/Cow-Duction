@@ -220,7 +220,8 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             // Grapple breaks if attached object is too far
             if (Vector3.Distance(transform.position, attachedObject.transform.position) > maxCaptureLength)
             {
-                GrappleRelease();
+                if (attachedObject.tag != "MilkBottle")
+                    GrappleRelease();
             }
 
             if (attachedObject)
@@ -430,6 +431,10 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 {
                     GameObject AttachedMilk = hit.transform.gameObject;
                     Debug.Log("Currently attached to: " + AttachedMilk.name);
+                }
+                else
+                {
+                    return false;
                 }
             }
             else if (hit.transform.tag == "Farmer")
