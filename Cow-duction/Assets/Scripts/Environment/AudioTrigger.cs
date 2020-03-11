@@ -12,9 +12,9 @@ public class AudioTrigger : MonoBehaviour
         sounds = GetComponent<AudioSource>();
     }
 
-    private void OnTriggerEnter()
+    private void OnTriggerEnter(Collider collider)
     {
-        if (GameObject.FindWithTag("MainCamera"))
+        if (collider.tag == "MainCamera")
         {
             if (!alreadyPlayed)
             {
