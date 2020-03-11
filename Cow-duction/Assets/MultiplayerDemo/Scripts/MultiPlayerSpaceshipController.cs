@@ -132,10 +132,15 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
         }
         if (Mathf.Abs(lift) > 0f)
         {
-            if (!(lift > 0 && transform.position.y >= maxHeight))
-            {
-                Move(transform.up * lift);
-            }
+            Move(transform.up * lift);
+        }
+        if (transform.position.y > maxHeight)
+        {
+            Move(Vector3.down);
+        }
+        else if (transform.position.y < minHeight)
+        {
+            Move(Vector3.up);
         }
 
         // Rotational movement
