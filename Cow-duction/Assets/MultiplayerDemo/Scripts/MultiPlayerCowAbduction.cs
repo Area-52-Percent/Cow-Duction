@@ -53,7 +53,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     public AudioClip grappleHit = null;
     public AudioClip grappleBreak = null;
     public AudioClip grappleReel = null;
-    public AudioClip cowSuction = null;
+    public AudioClip[] cowSuction = null;
 
     [Header("Diagnostics")]
     public float grapplePushPull = 0f;
@@ -684,7 +684,8 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             spaceshipController.SetMovementMultiplier();
 
             // Play suction audio
-            audioSource.PlayOneShot(cowSuction, 0.5f);
+            int clipVariation = Random.Range(0, cowSuction.Length - 1);
+            audioSource.PlayOneShot(cowSuction[clipVariation], 0.5f);
         }
     }
 

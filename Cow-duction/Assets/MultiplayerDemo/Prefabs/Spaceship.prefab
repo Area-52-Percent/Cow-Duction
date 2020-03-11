@@ -316,13 +316,17 @@ MonoBehaviour:
   grappleShot: {fileID: 8300000, guid: 899740e7e72e3455498f4051067b7bab, type: 3}
   grappleHit: {fileID: 8300000, guid: a5f0849dac3674ef9a5873428dfc2644, type: 3}
   grappleBreak: {fileID: 8300000, guid: 63df9bdfba2e342afa5a866cd0cb3d06, type: 3}
-  grappleReel: {fileID: 8300000, guid: 4c1d4cd159ab14762aa4bb99a5f5115e, type: 3}
-  cowSuction: {fileID: 8300000, guid: bebbce08bcbf849799e58d5e031aca7f, type: 3}
+  grappleReel: {fileID: 8300000, guid: 9a69e3d970ccfcb4997a06bc35fff822, type: 3}
+  cowSuction:
+  - {fileID: 8300000, guid: 1d072583761cf4298a9ee183621f22cf, type: 3}
+  - {fileID: 8300000, guid: 850f6905b656d479db3ea1b389389f64, type: 3}
+  - {fileID: 8300000, guid: 93d2a4eb96a164ef68b4bf48bce0ff98, type: 3}
   grapplePushPull: 0
   isFiring: 0
   isPulling: 0
   isReleasingGrapple: 0
   isSucking: 0
+  shouldAttach: 0
 --- !u!114 &1007227725829933003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -372,6 +376,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6eda318b9af30ca418809ceb6fdbf51a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   crosshair: {fileID: 513156808240694633}
   grappleOrigin: {fileID: 982272729762589960}
   mainCam: {fileID: 1706197937580248518}
