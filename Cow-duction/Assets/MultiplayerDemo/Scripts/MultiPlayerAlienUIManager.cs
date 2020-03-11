@@ -356,7 +356,8 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
         ufoAudioSource.PlayOneShot(activateAbility, 0.5f);
 
         // Fade out HUD 
-        topDownCamera.cullingMask = (1 << LayerMask.NameToLayer("Radar"));
+        // topDownCamera.cullingMask = (1 << LayerMask.NameToLayer("Radar"));
+        topDownCamera.depth = 0;
         hudDisplay.CrossFadeAlpha(cloakedOpacity, abilityActiveTime / 10f, false);
         scoreText.CrossFadeAlpha(cloakedOpacity, abilityActiveTime / 10f, false);
         speedText.CrossFadeAlpha(cloakedOpacity, abilityActiveTime / 10f, false);
@@ -374,7 +375,8 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
         ufoAudioSource.PlayOneShot(activateAbility, 0.3f);
 
         // Fade in HUD elements
-        topDownCamera.cullingMask = ~(1 << LayerMask.NameToLayer("Cow"));
+        // topDownCamera.cullingMask = ~(1 << LayerMask.NameToLayer("Cow"));
+        topDownCamera.depth = 1;
         hudDisplay.CrossFadeAlpha(1f, abilityActiveTime / 10f, false);
         scoreText.CrossFadeAlpha(1f, abilityActiveTime / 10f, false);
         speedText.CrossFadeAlpha(1f, abilityActiveTime / 10f, false);
