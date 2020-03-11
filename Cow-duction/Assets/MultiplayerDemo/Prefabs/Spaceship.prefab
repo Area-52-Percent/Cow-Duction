@@ -304,8 +304,8 @@ MonoBehaviour:
   grappleTime: 0.25
   grappleCooldown: 0.5
   maxCaptureLength: 50
-  captureSpeed: 5
-  reticleAttractionForce: 1
+  captureSpeed: 7
+  reticleAttractionForce: 3
   probe: {fileID: 2843867613009940456, guid: 4053a3c25d69b4e27810cb493dbae0ca, type: 3}
   grappleOrigin: {fileID: 7035535239182078772}
   lineRenderer: {fileID: 0}
@@ -322,6 +322,7 @@ MonoBehaviour:
   isFiring: 0
   isPulling: 0
   isReleasingGrapple: 0
+  isSucking: 0
 --- !u!114 &1007227725829933003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -554,7 +555,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 982272729762589960}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 7, z: 0}
+  m_LocalPosition: {x: 0, y: 5.75, z: 3.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 6357196757770105166}
@@ -2559,9 +2560,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b29e0f40524733438fe0a7e7f6f8d0e, type: 3}
---- !u!20 &1271015595782122912 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 5476803785954008460, guid: 3b29e0f40524733438fe0a7e7f6f8d0e,
+--- !u!4 &1271015595782122913 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5476803785954008461, guid: 3b29e0f40524733438fe0a7e7f6f8d0e,
     type: 3}
   m_PrefabInstance: {fileID: 6746966143465861164}
   m_PrefabAsset: {fileID: 0}
@@ -2571,9 +2572,9 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 6746966143465861164}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1271015595782122913 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5476803785954008461, guid: 3b29e0f40524733438fe0a7e7f6f8d0e,
+--- !u!20 &1271015595782122912 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 5476803785954008460, guid: 3b29e0f40524733438fe0a7e7f6f8d0e,
     type: 3}
   m_PrefabInstance: {fileID: 6746966143465861164}
   m_PrefabAsset: {fileID: 0}

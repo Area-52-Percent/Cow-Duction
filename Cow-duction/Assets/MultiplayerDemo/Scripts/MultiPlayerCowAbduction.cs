@@ -60,6 +60,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     public bool isFiring = false;
     public bool isPulling = false;
     public bool isReleasingGrapple = false;
+    public bool isSucking = false;
 
     // OnStartLocalPlayer is called when the local player object is set up
     public override void OnStartLocalPlayer()
@@ -402,6 +403,10 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 {
                     hit.transform.gameObject.AddComponent<Rigidbody>().mass = attachedBrain.mass;
                 }
+                if (hit.transform.gameObject.GetComponentInChildren<Animator>())
+                {
+                    hit.transform.gameObject.GetComponentInChildren<Animator>().SetBool("grappled", true);
+                }
             }
 
             if (hit.transform.tag == "Cow" || hit.transform.tag == "MilkBottle")
@@ -525,6 +530,11 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             }
             
 
+            if (attachedObject.GetComponentInChildren<Animator>())
+            {
+                attachedObject.GetComponentInChildren<Animator>().SetBool("grappled", false);
+            }
+
             // Destroy joints
             foreach (ConfigurableJoint cj in attachedObjectJoints)
             {
@@ -584,7 +594,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 captureLength -= Time.deltaTime * captureSpeed;
                 SoftJointLimit softJointLimit = new SoftJointLimit();
                 softJointLimit.limit = captureLength / (float)grappleJointCount;
-                softJointLimit.contactDistance = 0.1f;
+                softJointLimit.contactDistance = 0.01f;
                 foreach(ConfigurableJoint cj in attachedObjectJoints)
                     cj.linearLimit = softJointLimit;
                 
@@ -638,6 +648,35 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 {
                     GrappleRelease();
                 }
+                // if (attachedObject.tag == "Cow")
+                // {
+                //     // Release cow if object in between UFO and cow
+                //     int layerMask = ~(gameObject.layer);
+                //     if (Physics.Raycast(transform.position, (attachedObject.transform.position - transform.position).normalized, out RaycastHit hit, maxCaptureLength, layerMask))
+                //     {
+                //         if (hit.collider.tag == "Cow")
+                //         {
+                //             // Disable attached object colliders
+                //             if (!attachedObject.GetComponent<Collider>().isTrigger)
+                //             {
+                //                 foreach (Collider col in attachedObject.GetComponents<Collider>())
+                //                 {
+                //                     col.isTrigger = true;
+                //                 }
+                //             }
+                //             // Spring attached body towards UFO
+                //             attachedRigidbody.AddForce((transform.position - attachedObject.transform.position) * attachedRigidbody.mass * 10f, ForceMode.Impulse);
+                //         }
+                //         else
+                //         {
+                //             GrappleRelease();
+                //         }
+                //     }
+                // }
+                // else
+                // {
+                //     GrappleRelease();
+                // }
             }
         }
     }
@@ -663,27 +702,12 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     // OnTriggerEnter is called when a collision with another collider is detected
     private void OnTriggerEnter(Collider col) 
     {
-        if(col.gameObject.tag == "Cow" && col.gameObject == attachedObject)
+        if(col.gameObject.tag == "Cow" && col.gameObject == attachedObject && !isSucking)
         {
             // spaceshipCanvas.IncreaseScore(col.GetComponent<MultiPlayerCowBrain>().milk);
             GetComponentInChildren<MultiPlayerAlienUIManager>().IncreaseScore(col.GetComponent<MultiPlayerCowBrain>().milk, null);
 
-            GetComponent<MultiPlayerCowShooter>().AddCow();
-
-            // Apply force for physical feedback
-            spaceshipController.AddImpulseForce(attachedRigidbody.velocity.normalized, Mathf.Clamp(attachedRigidbody.mass * 0.5f, 1f, 10f));
-
-            // Destroy grappling hook and attached object
-            if (probeClone)
-                Destroy(probeClone);
-            
-            foreach(ConfigurableJoint cj in attachedObjectJoints)
-            {
-                Destroy(cj.gameObject);
-            }
-
-            attachedObject = null;
-            RpcRenderLine(null);
+            StartCoroutine(SuckCow(2f, .2f));
 
             // Reset movement penalty
             spaceshipController.SetMovementMultiplier();
@@ -695,5 +719,49 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         {
             Destroy(col);
         }
+    }
+
+    public IEnumerator SuckCow(float skinnyTime, float shrinkTime)
+    {
+        isSucking = true;
+
+        float suckTimer = 0;
+        Vector3 skinnyScale = Vector3.one - Vector3.right * .9f;
+        while (suckTimer < skinnyTime)
+        {
+            suckTimer += Time.deltaTime;
+            attachedObject.transform.localScale = Vector3.Lerp(attachedObject.transform.localScale, skinnyScale, Time.deltaTime);
+            attachedObject.transform.position = Vector3.Lerp(attachedObject.transform.position, grappleOrigin.position, suckTimer);
+            yield return null;
+        }
+
+        suckTimer = 0;
+        while (suckTimer < shrinkTime)
+        {
+            suckTimer += Time.deltaTime;
+            attachedObject.transform.localScale = Vector3.Lerp(attachedObject.transform.localScale, Vector3.zero, suckTimer);
+            attachedObject.transform.position = grappleOrigin.position;
+            yield return null;
+        }
+
+        foreach(ConfigurableJoint cj in attachedObjectJoints)
+        {
+            Destroy(cj.gameObject);
+        }
+
+        // Apply force for physical feedback
+        spaceshipController.AddImpulseForce((Camera.main.transform.position - attachedObject.transform.position).normalized, Mathf.Clamp(attachedRigidbody.mass * 0.5f, 1f, 10f));
+
+        // Destroy grappling hook and attached object
+        if (probeClone)
+            Destroy(probeClone);
+
+        attachedObject = null;
+
+        RpcRenderLine(null);
+
+        GetComponent<MultiPlayerCowShooter>().AddCow();
+
+        isSucking = false;
     }
 }
