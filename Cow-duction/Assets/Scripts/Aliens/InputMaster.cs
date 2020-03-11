@@ -105,6 +105,14 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ShootCow"",
+                    ""type"": ""Button"",
+                    ""id"": ""871b9732-1cab-4695-8207-0a5d3cf76ea5"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -228,6 +236,17 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""action"": ""PushPull"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""64ea9ef2-67b2-43ca-b89f-31c2bdbf201b"",
+                    ""path"": ""<XInputController>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""ShootCow"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -253,6 +272,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
         m_Player_Cloak = m_Player.FindAction("Cloak", throwIfNotFound: true);
         m_Player_Release = m_Player.FindAction("Release", throwIfNotFound: true);
         m_Player_PushPull = m_Player.FindAction("PushPull", throwIfNotFound: true);
+        m_Player_ShootCow = m_Player.FindAction("ShootCow", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -313,6 +333,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Cloak;
     private readonly InputAction m_Player_Release;
     private readonly InputAction m_Player_PushPull;
+    private readonly InputAction m_Player_ShootCow;
     public struct PlayerActions
     {
         private @InputMaster m_Wrapper;
@@ -328,6 +349,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
         public InputAction @Cloak => m_Wrapper.m_Player_Cloak;
         public InputAction @Release => m_Wrapper.m_Player_Release;
         public InputAction @PushPull => m_Wrapper.m_Player_PushPull;
+        public InputAction @ShootCow => m_Wrapper.m_Player_ShootCow;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -370,6 +392,9 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 @PushPull.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPushPull;
                 @PushPull.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPushPull;
                 @PushPull.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPushPull;
+                @ShootCow.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootCow;
+                @ShootCow.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootCow;
+                @ShootCow.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootCow;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -407,6 +432,9 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 @PushPull.started += instance.OnPushPull;
                 @PushPull.performed += instance.OnPushPull;
                 @PushPull.canceled += instance.OnPushPull;
+                @ShootCow.started += instance.OnShootCow;
+                @ShootCow.performed += instance.OnShootCow;
+                @ShootCow.canceled += instance.OnShootCow;
             }
         }
     }
@@ -433,5 +461,6 @@ public class @InputMaster : IInputActionCollection, IDisposable
         void OnCloak(InputAction.CallbackContext context);
         void OnRelease(InputAction.CallbackContext context);
         void OnPushPull(InputAction.CallbackContext context);
+        void OnShootCow(InputAction.CallbackContext context);
     }
 }

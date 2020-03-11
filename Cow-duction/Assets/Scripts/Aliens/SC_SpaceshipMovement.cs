@@ -365,6 +365,10 @@ public class SC_SpaceshipMovement : MonoBehaviour
     {
         Debug.Log("pushing/pulling");
     }
+    private void OnCowShoot(InputValue inputValue)
+    {
+        Debug.Log("shooting cow");
+    }
     #endregion
 
     #region Input Mapping
@@ -386,6 +390,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
             controller._OnCloak += OnCloak;
             controller._OnRelease += OnRelease;
             controller._OnPushPull += OnPushPull;
+            controller._OnCowShoot += OnCowShoot;
         }
     }
 
@@ -404,6 +409,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
             controller._OnCloak -= OnCloak;
             controller._OnRelease -= OnRelease;
             controller._OnPushPull -= OnPushPull;
+            controller._OnCowShoot -= OnCowShoot;
         }
     }
     #endregion

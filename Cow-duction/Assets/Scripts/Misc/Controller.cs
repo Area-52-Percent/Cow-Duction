@@ -21,6 +21,7 @@ public class Controller : MonoBehaviour
     public event InputEventHandler _OnCloak;
     public event InputEventHandler _OnRelease;
     public event InputEventHandler _OnPushPull;
+    public event InputEventHandler _OnCowShoot;
 
     private static int idCount = 0;
     private List<string> controllerNames;
@@ -126,6 +127,15 @@ public class Controller : MonoBehaviour
         if (current == "XInputControllerWindows:/XInputControllerWindows1")
         {
             _OnPushPull?.Invoke(inputValue);
+        }
+    }
+
+    private void OnCowShoot(InputValue inputValue)
+    {
+        string current = Gamepad.current.ToString();
+        if (current == "XInputControllerWindows:/XInputControllerWindows1")
+        {
+            _OnCowShoot?.Invoke(inputValue);
         }
     }
 }
