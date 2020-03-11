@@ -448,7 +448,7 @@ Terrain:
   m_TreeBillboardDistance: 50
   m_TreeCrossFadeLength: 5
   m_TreeMaximumFullLODCount: 50
-  m_DetailObjectDistance: 80
+  m_DetailObjectDistance: 250
   m_DetailObjectDensity: 1
   m_HeightmapPixelError: 5
   m_SplatMapDistance: 1000
@@ -1009,7 +1009,7 @@ Transform:
   m_LocalScale: {x: 104.30855, y: 40, z: 63.16279}
   m_Children: []
   m_Father: {fileID: 319495990}
-  m_RootOrder: 8
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1410695574
 BoxCollider:
@@ -1807,7 +1807,7 @@ PrefabInstance:
     - target: {fileID: 1957204494558776005, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 2740216757366571697, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
@@ -1847,7 +1847,7 @@ PrefabInstance:
     - target: {fileID: 3904836838011294321, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 801240422303455749, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
@@ -1902,7 +1902,7 @@ PrefabInstance:
     - target: {fileID: 1976426777293005662, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 2757322480234244906, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
@@ -1952,7 +1952,7 @@ PrefabInstance:
     - target: {fileID: 8342591103685010178, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
       propertyPath: m_RootOrder
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 8113028068512523616, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
@@ -1987,7 +1987,7 @@ PrefabInstance:
     - target: {fileID: 8113028068512523616, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
       propertyPath: m_RootOrder
-      value: 6
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5067445434301610924, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
@@ -2264,11 +2264,21 @@ PrefabInstance:
       propertyPath: m_MaterialTemplate
       value: 
       objectReference: {fileID: 2100000, guid: 1f7607ac3cdda394dbbf67ca1f3c7416, type: 2}
+    - target: {fileID: 615041247537998329, guid: ae414620859aa934bb1eaf71ad87f344,
+        type: 3}
+      propertyPath: m_DetailObjectDistance
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 615041249184646262, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
       propertyPath: m_MaterialTemplate
       value: 
       objectReference: {fileID: 2100000, guid: 1f7607ac3cdda394dbbf67ca1f3c7416, type: 2}
+    - target: {fileID: 615041249184646262, guid: ae414620859aa934bb1eaf71ad87f344,
+        type: 3}
+      propertyPath: m_DetailObjectDistance
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 2947577210181694857, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
       propertyPath: m_MaterialTemplate
@@ -2279,16 +2289,31 @@ PrefabInstance:
       propertyPath: m_MaterialTemplate
       value: 
       objectReference: {fileID: 2100000, guid: 1f7607ac3cdda394dbbf67ca1f3c7416, type: 2}
+    - target: {fileID: 2947577210448812528, guid: ae414620859aa934bb1eaf71ad87f344,
+        type: 3}
+      propertyPath: m_DetailObjectDistance
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 2947577210582977344, guid: ae414620859aa934bb1eaf71ad87f344,
+        type: 3}
+      propertyPath: m_MaterialTemplate
+      value: 
+      objectReference: {fileID: 2100000, guid: 1f7607ac3cdda394dbbf67ca1f3c7416, type: 2}
+    - target: {fileID: 2947577210582977344, guid: ae414620859aa934bb1eaf71ad87f344,
+        type: 3}
+      propertyPath: m_DetailObjectDistance
+      value: 250
+      objectReference: {fileID: 0}
+    - target: {fileID: 2947577211751696910, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
       propertyPath: m_MaterialTemplate
       value: 
       objectReference: {fileID: 2100000, guid: 1f7607ac3cdda394dbbf67ca1f3c7416, type: 2}
     - target: {fileID: 2947577211751696910, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
-      propertyPath: m_MaterialTemplate
-      value: 
-      objectReference: {fileID: 2100000, guid: 1f7607ac3cdda394dbbf67ca1f3c7416, type: 2}
+      propertyPath: m_DetailObjectDistance
+      value: 250
+      objectReference: {fileID: 0}
     - target: {fileID: 615041247422892674, guid: ae414620859aa934bb1eaf71ad87f344,
         type: 3}
       propertyPath: m_IsActive
