@@ -11,11 +11,13 @@ public class WaterfallTrigger : MonoBehaviour
         sounds = GetComponent<AudioSource>();
     }
 
-    private void OnTriggerEnter()
+    private void OnTriggerEnter(Collider collider)
     {
-        if (GameObject.FindWithTag("MainCamera"))
+        if (collider.tag == "UFO")
         {
-            sounds.PlayOneShot(SoundToPlay);
+            sounds.clip = SoundToPlay;
+            sounds.loop = true;
+            sounds.Play();
         }
     }
     private void OnTriggerExit(Collider other)

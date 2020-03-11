@@ -14,7 +14,7 @@ public class AudioTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.tag == "MainCamera")
+        if (collider.tag == "UFO")
         {
             if (!alreadyPlayed)
             {
