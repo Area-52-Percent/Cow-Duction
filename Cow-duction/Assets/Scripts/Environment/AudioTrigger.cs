@@ -20,6 +20,7 @@ public class AudioTrigger : MonoBehaviour
             {
                 sounds.PlayOneShot(SoundToPlay);
                 alreadyPlayed = true;
+                Debug.Log("ive played");
             }
         }
     }
