@@ -476,7 +476,7 @@ public class SC_AlienUIManager : MonoBehaviour
     }
 
     // Set game state after intro sequence
-    private void SkipIntro()
+    public void SkipIntro()
     {
         controllerScreen.CrossFadeAlpha(0f, 0.5f, false);
         holoCow.SetActive(false);

@@ -113,6 +113,14 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""SkipScene"",
+                    ""type"": ""Button"",
+                    ""id"": ""2f672abd-3282-4e28-bdc9-35febe75519f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -247,6 +255,17 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""action"": ""ShootCow"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""238b97d3-d180-4d70-ba99-7b73aefa15d1"",
+                    ""path"": ""<XInputController>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""SkipScene"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -273,6 +292,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
         m_Player_Release = m_Player.FindAction("Release", throwIfNotFound: true);
         m_Player_PushPull = m_Player.FindAction("PushPull", throwIfNotFound: true);
         m_Player_ShootCow = m_Player.FindAction("ShootCow", throwIfNotFound: true);
+        m_Player_SkipScene = m_Player.FindAction("SkipScene", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -334,6 +354,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Release;
     private readonly InputAction m_Player_PushPull;
     private readonly InputAction m_Player_ShootCow;
+    private readonly InputAction m_Player_SkipScene;
     public struct PlayerActions
     {
         private @InputMaster m_Wrapper;
@@ -350,6 +371,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
         public InputAction @Release => m_Wrapper.m_Player_Release;
         public InputAction @PushPull => m_Wrapper.m_Player_PushPull;
         public InputAction @ShootCow => m_Wrapper.m_Player_ShootCow;
+        public InputAction @SkipScene => m_Wrapper.m_Player_SkipScene;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -395,6 +417,9 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 @ShootCow.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootCow;
                 @ShootCow.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootCow;
                 @ShootCow.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnShootCow;
+                @SkipScene.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSkipScene;
+                @SkipScene.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSkipScene;
+                @SkipScene.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSkipScene;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -435,6 +460,9 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 @ShootCow.started += instance.OnShootCow;
                 @ShootCow.performed += instance.OnShootCow;
                 @ShootCow.canceled += instance.OnShootCow;
+                @SkipScene.started += instance.OnSkipScene;
+                @SkipScene.performed += instance.OnSkipScene;
+                @SkipScene.canceled += instance.OnSkipScene;
             }
         }
     }
@@ -462,5 +490,6 @@ public class @InputMaster : IInputActionCollection, IDisposable
         void OnRelease(InputAction.CallbackContext context);
         void OnPushPull(InputAction.CallbackContext context);
         void OnShootCow(InputAction.CallbackContext context);
+        void OnSkipScene(InputAction.CallbackContext context);
     }
 }

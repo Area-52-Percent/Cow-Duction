@@ -37,6 +37,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public Controller controller;
     public SC_CowAbduction shooter;
     public SC_HudReticleFollowCursor cursor;
+    public SC_AlienUIManager UIManager;
 
     // Start is called before the first frame update
     void Start()
@@ -47,6 +48,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
         movementEnabled = true;
         shooter = gameObject.GetComponent<SC_CowAbduction>();
         cursor = gameObject.transform.parent.GetChild(1).GetChild(0).GetChild(4).GetComponent<SC_HudReticleFollowCursor>();
+        UIManager = gameObject.transform.parent.GetChild(1).GetComponent<SC_AlienUIManager>();
         MapControls();
     }
 
@@ -405,6 +407,12 @@ public class SC_SpaceshipMovement : MonoBehaviour
     {
         Debug.Log("shooting cow");
     }
+
+    private void OnSkipScene(InputValue inputValue)
+    {
+        Debug.Log("skipping scene");
+        UIManager.SkipIntro();
+    }
     #endregion
 
     #region Input Mapping
@@ -427,6 +435,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
             controller._OnRelease += OnRelease;
             controller._OnPushPull += OnPushPull;
             controller._OnCowShoot += OnCowShoot;
+            controller._OnSkipScene += OnSkipScene;
         }
     }
 
@@ -446,6 +455,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
             controller._OnRelease -= OnRelease;
             controller._OnPushPull -= OnPushPull;
             controller._OnCowShoot -= OnCowShoot;
+            controller._OnSkipScene -= OnSkipScene;
         }
     }
     #endregion

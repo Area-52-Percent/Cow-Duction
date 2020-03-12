@@ -100,6 +100,14 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "SkipScene",
+                    "type": "Button",
+                    "id": "2f672abd-3282-4e28-bdc9-35febe75519f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -232,6 +240,17 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "ShootCow",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "238b97d3-d180-4d70-ba99-7b73aefa15d1",
+                    "path": "<XInputController>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "SkipScene",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

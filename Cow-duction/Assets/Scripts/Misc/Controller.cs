@@ -22,6 +22,7 @@ public class Controller : MonoBehaviour
     public event InputEventHandler _OnRelease;
     public event InputEventHandler _OnPushPull;
     public event InputEventHandler _OnCowShoot;
+    public event InputEventHandler _OnSkipScene;
 
     private static int idCount = 0;
     private List<string> controllerNames;
@@ -137,6 +138,11 @@ public class Controller : MonoBehaviour
         {
             _OnCowShoot?.Invoke(inputValue);
         }
+    }
+
+    private void OnSkipScene(InputValue inputValue)
+    {
+        _OnSkipScene?.Invoke(inputValue);
     }
 }
 
