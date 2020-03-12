@@ -347,10 +347,46 @@ public class SC_SpaceshipMovement : MonoBehaviour
     private void OnTiltRight(InputValue inputValue)
     {
         Debug.Log("tilting right");
+        float rollInput = inputValue.Get<float>();
+        // Roll left and right
+        if (rollInput > 0.0f && (transform.localEulerAngles.z > 360.0f - maxRotation || transform.localEulerAngles.z < 90.0f))
+        {
+            _rb.AddRelativeTorque(Vector3.back * rollInput * rotationForce, ForceMode.Acceleration);
+        }
+        // Rotate z axis back upright
+        else
+        {
+            if (transform.localEulerAngles.z > maxRotation && transform.localEulerAngles.z < 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.back * autoRotationForce, ForceMode.Acceleration);
+            }
+            else if (transform.localEulerAngles.z < 360.0f - maxRotation && transform.localEulerAngles.z > 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.forward * autoRotationForce, ForceMode.Acceleration);
+            }
+        }
     }
     private void OnTiltLeft(InputValue inputValue)
     {
         Debug.Log("tilting left");
+        float rollInput = -1 * inputValue.Get<float>();
+        // Roll left and right
+        if (rollInput < 0.0f && (transform.localEulerAngles.z > 360.0f - maxRotation || transform.localEulerAngles.z < 90.0f))
+        {
+            _rb.AddRelativeTorque(Vector3.back * rollInput * rotationForce, ForceMode.Acceleration);
+        }
+        // Rotate z axis back upright
+        else
+        {
+            if (transform.localEulerAngles.z > maxRotation && transform.localEulerAngles.z < 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.back * autoRotationForce, ForceMode.Acceleration);
+            }
+            else if (transform.localEulerAngles.z < 360.0f - maxRotation && transform.localEulerAngles.z > 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.forward * autoRotationForce, ForceMode.Acceleration);
+            }
+        }
     }
     private void OnCloak(InputValue inputValue)
     {
