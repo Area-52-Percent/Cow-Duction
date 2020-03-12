@@ -14,6 +14,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using System.Collections;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(SC_SpaceshipMovement))]
 [RequireComponent(typeof(Rigidbody))]
@@ -30,7 +31,8 @@ public class SC_CowAbduction : MonoBehaviour
     private GameObject probeClone;
     private float captureLength;
     private bool grappling;
-    
+    private InputMaster controls;
+
     // Public variables
     public float grappleTime = 0.5f;
     public float grappleCooldown = 0.5f;
@@ -38,6 +40,7 @@ public class SC_CowAbduction : MonoBehaviour
     public int numberOfJoints = 3;
     public float captureSpeed = 5.0f;
     public float reticleAttractionForce = 3.0f;
+    public string player;
 
     // Serialized private variables
     [SerializeField] private GameObject reticle = null; // Set up in inspector
@@ -65,6 +68,39 @@ public class SC_CowAbduction : MonoBehaviour
     {
         spaceshipMovement = GetComponent<SC_SpaceshipMovement>();
         uiManager = GameObject.FindWithTag("UIManager").GetComponent<SC_AlienUIManager>();
+        controls = new InputMaster();
+        reticle.transform.position = new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0);
+    }
+
+    public void Shoot()
+    {
+        // Do not shoot ray if object is already attached
+        if (!attachedObject && !grappling && Camera.main)
+        {
+            // Convert reticle world coordinates to screen coordinates
+            Vector3 reticlePoint = RectTransformUtility.WorldToScreenPoint(null, reticle.GetComponent<RectTransform>().position);
+            Ray ray = Camera.main.ScreenPointToRay(reticlePoint);
+            RaycastHit hit;
+
+            // Ignore UFO layer and trigger colliders
+            int layerMask = ~(1 << gameObject.layer);
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
+            {
+                captureLength = Vector3.Distance(grappleOrigin.position, hit.transform.position);
+
+                StartCoroutine(ShootGrapple(hit));
+            }
+        }
+    }
+
+    private void OnEnable()
+    {
+        controls.Enable();
+    }
+
+    private void OnDisable()
+    {
+        controls.Disable();
     }
 
     // Start is called before the first frame update
@@ -405,7 +441,7 @@ public class SC_CowAbduction : MonoBehaviour
     }
 
     // Release the attached object
-    private void GrappleRelease()
+    public void GrappleRelease()
     {
         if (attachedObject)
         {

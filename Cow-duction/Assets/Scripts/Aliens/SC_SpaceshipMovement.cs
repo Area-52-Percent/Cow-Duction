@@ -7,6 +7,7 @@
  */
 
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody))]
 public class SC_SpaceshipMovement : MonoBehaviour
@@ -17,6 +18,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
     private float movementMultiplier = 1f;
     private bool movementEnabled;
     private bool grounded;
+    private float lift;
 
     // Public variables
     public float horizontalSpeed = 10.0f;
@@ -29,7 +31,14 @@ public class SC_SpaceshipMovement : MonoBehaviour
     public float autoRotationForce = 0.05f;
     public float maxRotation = 20.0f;
     public bool invertLook = false;
-    
+    public float horizontalInput;
+    public float verticalInput;
+    public int playerNumber;
+    public Controller controller;
+    public SC_CowAbduction shooter;
+    public SC_HudReticleFollowCursor cursor;
+    public SC_AlienUIManager UIManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -37,6 +46,10 @@ public class SC_SpaceshipMovement : MonoBehaviour
         _rb = GetComponent<Rigidbody>();
         Cursor.lockState = CursorLockMode.Confined;
         movementEnabled = true;
+        shooter = gameObject.GetComponent<SC_CowAbduction>();
+        cursor = gameObject.transform.parent.GetChild(1).GetChild(0).GetChild(4).GetComponent<SC_HudReticleFollowCursor>();
+        UIManager = gameObject.transform.parent.GetChild(1).GetComponent<SC_AlienUIManager>();
+        MapControls();
     }
 
     // Update is called once per frame
@@ -105,8 +118,7 @@ public class SC_SpaceshipMovement : MonoBehaviour
         }
 
         // Tilt forward and backward
-        if ((turnVerticalInput < 0.0f && (transform.localEulerAngles.x < maxRotation || transform.localEulerAngles.x > 270.0f)) || 
-            (turnVerticalInput > 0.0f && (transform.localEulerAngles.x > 360.0f - maxRotation || transform.localEulerAngles.x < 90.0f)))
+        if (Mathf.Abs(turnVerticalInput) > 0.0f)
         {
             _rb.AddRelativeTorque((invertLook ? Vector3.right : Vector3.left) * turnVerticalInput * rotationForce, ForceMode.Acceleration);
         }
@@ -174,6 +186,11 @@ public class SC_SpaceshipMovement : MonoBehaviour
         _rb.AddForce(Vector3.up * -Physics.gravity.y, ForceMode.Acceleration);
     }
 
+    private void OnDestroy()
+    {
+        UnMapControls();
+    }
+
     // Toggles invert look for camera up and down rotation
     public void ToggleInvertLook()
     {
@@ -213,9 +230,234 @@ public class SC_SpaceshipMovement : MonoBehaviour
     // Reset spaceship to starting position and enable movement
     public void ResetGame()
     {
-        _rb.MovePosition(new Vector3(65f, 40f, -70f));
+        _rb.MovePosition(Vector3.up * 20.0f);
         _rb.velocity = Vector3.zero;
         _rb.MoveRotation(Quaternion.identity);
         AllowMovement(true);
     }
+
+    #region Player Abilities
+    private void OnMovement(InputValue inputValue)
+    {
+        Vector3 horizontalForce = Vector3.zero;
+        float horizontalInput = inputValue.Get<Vector2>().x;
+        float verticalInput = inputValue.Get<Vector2>().y;
+        // Move left and right
+        if (Mathf.Abs(horizontalInput) > 0.0f)
+        {
+            horizontalForce = transform.right;
+            horizontalForce.y = 0;
+
+            if (movementEnabled)
+            {
+                _rb.AddForce(horizontalForce.normalized * horizontalInput * horizontalSpeed * movementMultiplier, ForceMode.Acceleration);
+
+                // Rotate towards the direction of motion
+                if ((horizontalInput < 0 && (transform.eulerAngles.z < maxRotation || transform.eulerAngles.z > 360.0f - maxRotation)) ||
+                    (horizontalInput > 0 && (transform.eulerAngles.z > 360.0f - maxRotation || transform.eulerAngles.z < maxRotation)))
+                {
+                    _rb.AddRelativeTorque(Vector3.back * horizontalInput * autoRotationForce, ForceMode.Acceleration);
+                }
+            }
+            else if (grounded)
+                _rb.AddForce(horizontalForce.normalized * horizontalInput * groundSpeed * movementMultiplier, ForceMode.Acceleration);
+        }
+
+        // Move forward and backward
+        if (Mathf.Abs(verticalInput) > 0.0f)
+        {
+            horizontalForce = transform.forward;
+            horizontalForce.y = 0;
+
+            if (movementEnabled)
+            {
+                _rb.AddForce(horizontalForce.normalized * verticalInput * horizontalSpeed * movementMultiplier, ForceMode.Acceleration);
+
+                // Rotate towards the direction of motion
+                if ((verticalInput > 0 && (transform.localEulerAngles.x < maxRotation || transform.localEulerAngles.x > 360.0f - maxRotation)) ||
+                    (verticalInput < 0 && (transform.localEulerAngles.x > 360.0f - maxRotation || transform.localEulerAngles.x < maxRotation)))
+                {
+                    _rb.AddRelativeTorque(Vector3.right * verticalInput * autoRotationForce, ForceMode.Acceleration);
+                }
+            }
+            else if (grounded)
+                _rb.AddForce(horizontalForce.normalized * verticalInput * groundSpeed * movementMultiplier, ForceMode.Acceleration);
+        }
+    }
+
+    private void OnShoot(InputValue inputValue)
+    {
+        Debug.Log("shooting");
+        shooter.Shoot();
+    }
+
+    private void OnAim(InputValue inputValue)
+    {
+        Debug.Log("aiming");
+        Vector2 coordinates = inputValue.Get<Vector2>();
+        cursor.Aim(coordinates);
+    }
+    private void OnTurn(InputValue inputValue)
+    {
+        float turnHorizontalInput = inputValue.Get<Vector2>().x;
+        float turnVerticalInput = inputValue.Get<Vector2>().y;
+        // Turn left and right
+        if (Mathf.Abs(turnHorizontalInput) > 0.0f)
+        {
+            _rb.AddRelativeTorque(Vector3.up * turnHorizontalInput * rotationForce, ForceMode.Acceleration);
+        }
+
+        // Tilt forward and backward
+        if (Mathf.Abs(turnVerticalInput) > 0.0f)
+        {
+            _rb.AddRelativeTorque((invertLook ? Vector3.right : Vector3.left) * turnVerticalInput * rotationForce, ForceMode.Acceleration);
+        }
+        // Rotate x axis back upright
+        else
+        {
+            if (transform.localEulerAngles.x > maxRotation && transform.localEulerAngles.x < 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.left * rotationForce, ForceMode.Acceleration);
+            }
+            else if (transform.localEulerAngles.x < 360.0f - maxRotation && transform.localEulerAngles.x > 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.right * rotationForce, ForceMode.Acceleration);
+            }
+        }
+    }
+    private void OnAscend(InputValue inputValue)
+    {
+        lift = inputValue.Get<float>();
+        Debug.Log(lift);
+        // Lift
+        if (transform.position.y < maxHeight)
+        {
+            _rb.AddForce(Vector3.up * lift * verticalSpeed * movementMultiplier, ForceMode.Acceleration);
+        }
+        Debug.Log("ascending");
+    }
+    private void OnDescend(InputValue inputValue)
+    {
+        lift = -1 * inputValue.Get<float>();
+        Debug.Log(lift);
+        if (transform.position.y > minHeight)
+        {
+            _rb.AddForce(Vector3.up * lift * verticalSpeed * movementMultiplier, ForceMode.Acceleration);
+        }
+        Debug.Log("descending");
+    }
+    private void OnTiltRight(InputValue inputValue)
+    {
+        Debug.Log("tilting right");
+        float rollInput = inputValue.Get<float>();
+        // Roll left and right
+        if (rollInput > 0.0f && (transform.localEulerAngles.z > 360.0f - maxRotation || transform.localEulerAngles.z < 90.0f))
+        {
+            _rb.AddRelativeTorque(Vector3.back * rollInput * rotationForce, ForceMode.Acceleration);
+        }
+        // Rotate z axis back upright
+        else
+        {
+            if (transform.localEulerAngles.z > maxRotation && transform.localEulerAngles.z < 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.back * autoRotationForce, ForceMode.Acceleration);
+            }
+            else if (transform.localEulerAngles.z < 360.0f - maxRotation && transform.localEulerAngles.z > 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.forward * autoRotationForce, ForceMode.Acceleration);
+            }
+        }
+    }
+    private void OnTiltLeft(InputValue inputValue)
+    {
+        Debug.Log("tilting left");
+        float rollInput = -1 * inputValue.Get<float>();
+        // Roll left and right
+        if (rollInput < 0.0f && (transform.localEulerAngles.z > 360.0f - maxRotation || transform.localEulerAngles.z < 90.0f))
+        {
+            _rb.AddRelativeTorque(Vector3.back * rollInput * rotationForce, ForceMode.Acceleration);
+        }
+        // Rotate z axis back upright
+        else
+        {
+            if (transform.localEulerAngles.z > maxRotation && transform.localEulerAngles.z < 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.back * autoRotationForce, ForceMode.Acceleration);
+            }
+            else if (transform.localEulerAngles.z < 360.0f - maxRotation && transform.localEulerAngles.z > 180.0f)
+            {
+                _rb.AddRelativeTorque(Vector3.forward * autoRotationForce, ForceMode.Acceleration);
+            }
+        }
+    }
+    private void OnCloak(InputValue inputValue)
+    {
+        Debug.Log("cloaking");
+    }
+    private void OnRelease(InputValue inputValue)
+    {
+        Debug.Log("releasing");
+        shooter.GrappleRelease();
+    }
+    private void OnPushPull(InputValue inputValue)
+    {
+        Debug.Log("pushing/pulling");
+    }
+    private void OnCowShoot(InputValue inputValue)
+    {
+        Debug.Log("shooting cow");
+    }
+
+    private void OnSkipScene(InputValue inputValue)
+    {
+        Debug.Log("skipping scene");
+        UIManager.SkipIntro();
+    }
+    #endregion
+
+    #region Input Mapping
+    //Mapping controls
+    private void MapControls()
+    {
+        controller = GameControllers.Instance.controllers.GetController(0);
+        controller.GetComponent<PlayerInput>().SwitchCurrentActionMap("Player");
+        if (controller != null)
+        {
+            controller._OnMovement += OnMovement;
+            controller._OnShoot += OnShoot;
+            controller._OnAim += OnAim;
+            controller._OnTurn += OnTurn;
+            controller._OnAscend += OnAscend;
+            controller._OnDescend += OnDescend;
+            controller._OnTiltRight += OnTiltRight;
+            controller._OnTiltLeft += OnTiltLeft;
+            controller._OnCloak += OnCloak;
+            controller._OnRelease += OnRelease;
+            controller._OnPushPull += OnPushPull;
+            controller._OnCowShoot += OnCowShoot;
+            controller._OnSkipScene += OnSkipScene;
+        }
+    }
+
+    private void UnMapControls()
+    {
+        if (controller != null)
+        {
+            controller._OnMovement -= OnMovement;
+            controller._OnShoot -= OnShoot;
+            controller._OnAim -= OnAim;
+            controller._OnTurn -= OnTurn;
+            controller._OnAscend -= OnAscend;
+            controller._OnDescend -= OnDescend;
+            controller._OnTiltRight -= OnTiltRight;
+            controller._OnTiltLeft -= OnTiltLeft;
+            controller._OnCloak -= OnCloak;
+            controller._OnRelease -= OnRelease;
+            controller._OnPushPull -= OnPushPull;
+            controller._OnCowShoot -= OnCowShoot;
+            controller._OnSkipScene -= OnSkipScene;
+        }
+    }
+    #endregion
+
 }
