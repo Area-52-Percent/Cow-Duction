@@ -20,9 +20,6 @@ GameObject:
   - component: {fileID: -1425196209200007091}
   - component: {fileID: 4928104880894512320}
   - component: {fileID: 1007227725829933003}
-  - component: {fileID: 8479454690429666347}
-  - component: {fileID: 5101101765401722780}
-  - component: {fileID: 7198973154820510760}
   - component: {fileID: 39537870840052441}
   - component: {fileID: 3964429000609473043}
   m_Layer: 13
@@ -339,78 +336,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d18993e221994b04be681a737f7741c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8479454690429666347
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 11462927149525122}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 689998c24950d324796e0a56ffb7bb78, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  crosshair: {fileID: 513156808240694633}
-  grappleOrigin: {fileID: 982272729762589960}
-  mainCam: {fileID: 1706197937580248518}
-  dehydratedCow: {fileID: 7147982868894547673, guid: af66a2eafbc19b44185c6b3c32e79125,
-    type: 3}
-  cow: {fileID: 3647719034498501467, guid: 7f4d5b6d021694fd2b105745efa4a8a7, type: 3}
-  ufo: {fileID: 11462927149525122}
-  shotSpeed: 500
-  randomFactor: 0.1
-  shootForce: 0
-  cows: []
---- !u!114 &5101101765401722780
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 11462927149525122}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6eda318b9af30ca418809ceb6fdbf51a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  crosshair: {fileID: 513156808240694633}
-  grappleOrigin: {fileID: 982272729762589960}
-  mainCam: {fileID: 1706197937580248518}
-  dehydratedCow: {fileID: 7147982868894547673, guid: af66a2eafbc19b44185c6b3c32e79125,
-    type: 3}
-  cow: {fileID: 3647719034498501467, guid: 7f4d5b6d021694fd2b105745efa4a8a7, type: 3}
-  ufo: {fileID: 11462927149525122}
-  shotSpeed: 500
-  randomFactor: 0.1
-  shootForce: 0
-  cows: []
---- !u!114 &7198973154820510760
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 11462927149525122}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d944ae84a93db194ba39b9f615b0be59, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  horizontalSpeed: 10
-  groundSpeed: 1
-  verticalSpeed: 10
-  maxHeight: 50
-  minHeight: 10
-  hoverHeight: 5
-  rotationForce: 0.25
-  autoRotationForce: 0.05
-  maxRotation: 20
-  invertLook: 0
 --- !u!114 &39537870840052441
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2621,6 +2546,12 @@ PrefabInstance:
       objectReference: {fileID: 11462927149525122}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b29e0f40524733438fe0a7e7f6f8d0e, type: 3}
+--- !u!20 &1271015595782122912 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 5476803785954008460, guid: 3b29e0f40524733438fe0a7e7f6f8d0e,
+    type: 3}
+  m_PrefabInstance: {fileID: 6746966143465861164}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1271015595782122913 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5476803785954008461, guid: 3b29e0f40524733438fe0a7e7f6f8d0e,
@@ -2630,12 +2561,6 @@ Transform:
 --- !u!1 &1271015595782122915 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5476803785954008463, guid: 3b29e0f40524733438fe0a7e7f6f8d0e,
-    type: 3}
-  m_PrefabInstance: {fileID: 6746966143465861164}
-  m_PrefabAsset: {fileID: 0}
---- !u!20 &1271015595782122912 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 5476803785954008460, guid: 3b29e0f40524733438fe0a7e7f6f8d0e,
     type: 3}
   m_PrefabInstance: {fileID: 6746966143465861164}
   m_PrefabAsset: {fileID: 0}

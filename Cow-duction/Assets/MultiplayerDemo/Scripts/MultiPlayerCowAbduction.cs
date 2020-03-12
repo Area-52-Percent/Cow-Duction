@@ -777,7 +777,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
 
         RpcRenderLine(null);
 
-        GetComponent<MultiPlayerCowShooter>().AddCow();
+        // GetComponent<MultiPlayerCowShooter>().AddCow();
 
         isSucking = false;
     }
