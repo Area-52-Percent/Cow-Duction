@@ -30,6 +30,9 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
     private RectTransform waypointIcon;
     private float captureLength;
     private bool grappling;
+    
+    public GameObject cowabungaIcon;
+    
 
     [Header("Parameters")]
     public int grappleJointCount = 5;
@@ -703,13 +706,25 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
 
     public IEnumerator SuckMilk(float suckTime, GameObject milkBottle)
     {
+        cowabungaIcon.SetActive(true);
         isSucking = true;
+        float curScale = 0f;
 
         float suckTimer = 0;
         int i = 0;
         Vector3 skinnyScale = Vector3.one - Vector3.right * .9f;
         while (suckTimer < suckTime)
         {
+            
+            if (suckTimer < suckTime/2){
+                curScale += .06f;
+                cowabungaIcon.GetComponent<RectTransform>().localScale = new Vector3(curScale, curScale, 1f);
+            }
+            else{
+                curScale -= .06f;
+                cowabungaIcon.GetComponent<RectTransform>().localScale = new Vector3(curScale, curScale, 1f);
+            }
+            
             suckTimer += Time.deltaTime;
             if (i % 45 == 0)
             {
@@ -718,6 +733,10 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             i++;
             yield return null;
         }
+
+        curScale = 0;
+
+        cowabungaIcon.SetActive(false);
 
         // Apply force for physical feedback
         spaceshipController.AddImpulseForce((Camera.main.transform.position - attachedObject.transform.position).normalized, Mathf.Clamp(attachedRigidbody.mass * 0.5f, 1f, 10f));

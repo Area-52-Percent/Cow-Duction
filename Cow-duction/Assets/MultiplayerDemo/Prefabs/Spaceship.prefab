@@ -297,6 +297,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
+  cowabungaIcon: {fileID: 3652991565031054735}
   grappleJointCount: 10
   grappleTime: 0.25
   grappleCooldown: 0.5
@@ -2217,6 +2218,31 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1225328149332272248, guid: c9a6690d7156aa842bfad112fa650349,
+        type: 3}
+      propertyPath: _rbUFO
+      value: 
+      objectReference: {fileID: 8264753683815632737}
+    - target: {fileID: 1225328149332272248, guid: c9a6690d7156aa842bfad112fa650349,
+        type: 3}
+      propertyPath: topDownCamera
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1225328149332272248, guid: c9a6690d7156aa842bfad112fa650349,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1599702162097638554, guid: c9a6690d7156aa842bfad112fa650349,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1166805279700817504, guid: c9a6690d7156aa842bfad112fa650349,
+        type: 3}
+      propertyPath: m_PreserveAspect
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1225328150586145576, guid: c9a6690d7156aa842bfad112fa650349,
         type: 3}
       propertyPath: m_IsActive
@@ -2233,27 +2259,18 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 1225328149332272248, guid: c9a6690d7156aa842bfad112fa650349,
-        type: 3}
-      propertyPath: _rbUFO
-      value: 
-      objectReference: {fileID: 8264753683815632737}
-    - target: {fileID: 1225328149332272248, guid: c9a6690d7156aa842bfad112fa650349,
-        type: 3}
-      propertyPath: topDownCamera
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1225328149332272248, guid: c9a6690d7156aa842bfad112fa650349,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1225328149332272248, guid: c9a6690d7156aa842bfad112fa650349, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c9a6690d7156aa842bfad112fa650349, type: 3}
 --- !u!224 &3855219445384426849 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 1225328149332272244, guid: c9a6690d7156aa842bfad112fa650349,
+    type: 3}
+  m_PrefabInstance: {fileID: 2630454976759828757}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3652991565031054735 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1599702162097638554, guid: c9a6690d7156aa842bfad112fa650349,
     type: 3}
   m_PrefabInstance: {fileID: 2630454976759828757}
   m_PrefabAsset: {fileID: 0}
