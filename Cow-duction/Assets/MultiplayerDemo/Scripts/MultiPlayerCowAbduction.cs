@@ -132,17 +132,20 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         }
         else if (Physics.Raycast(ray, out hit))
         {
-            if (hit.transform.tag == "Cow" || hit.transform.tag == "MilkBottle")
+            if (hit.distance < maxCaptureLength)
             {
-                spaceshipCanvas.SetReticleColor(Color.green);
-            }
-            else if (hit.transform.tag == "Farmer")
-            {
-                spaceshipCanvas.SetReticleColor(Color.red);
-            }
-            else if (spaceshipCanvas.GetReticleColor() != Color.white)
-            {
-                spaceshipCanvas.SetReticleColor(Color.white);
+                if (hit.transform.tag == "Cow" || hit.transform.tag == "MilkBottle")
+                {
+                    spaceshipCanvas.SetReticleColor(Color.green);
+                }
+                else if (hit.transform.tag == "Farmer")
+                {
+                    spaceshipCanvas.SetReticleColor(Color.red);
+                }
+                else if (spaceshipCanvas.GetReticleColor() != Color.white)
+                {
+                    spaceshipCanvas.SetReticleColor(Color.white);
+                }
             }
         }
         else if (spaceshipCanvas.GetReticleColor() != Color.white)
