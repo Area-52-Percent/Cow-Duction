@@ -97,7 +97,7 @@ LightmapSettings:
     m_ShowResolutionOverlay: 1
     m_ExportTrainingData: 0
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 0
+  m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -505,6 +505,12 @@ Transform:
   m_Father: {fileID: 1765145780}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &552201987 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3812235536238446083, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
+    type: 3}
+  m_PrefabInstance: {fileID: 7247412637635621154}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &619368982
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,12 +657,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 619368982}
   m_CullTransparentMesh: 0
---- !u!1 &552201987 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3812235536238446083, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
-    type: 3}
-  m_PrefabInstance: {fileID: 7247412637635621154}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &707756284
 GameObject:
   m_ObjectHideFlags: 0
@@ -2269,7 +2269,7 @@ PrefabInstance:
     - target: {fileID: 8536380504509156964, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3812235536511507146, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
         type: 3}
@@ -2339,21 +2339,6 @@ PrefabInstance:
       propertyPath: m_Text
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 8388299111609840349, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4466101331032829821, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -415.6
-      objectReference: {fileID: 0}
-    - target: {fileID: 4466101331032829821, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 257.5
-      objectReference: {fileID: 0}
     - target: {fileID: 4420306212113493386, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
         type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -2373,6 +2358,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 2.185044
+      objectReference: {fileID: 0}
+    - target: {fileID: 4466101331032829821, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -415.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4466101331032829821, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 257.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8388299111609840349, guid: 65f4c949bc3a44725a49cae9c4a0fee5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 65f4c949bc3a44725a49cae9c4a0fee5, type: 3}

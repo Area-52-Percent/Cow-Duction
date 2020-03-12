@@ -12,11 +12,12 @@ public class HighscoreTable : MonoBehaviour
     public GameObject playerInput;
     public List<Text> player1NameInput;
     public List<Text> player2NameInput;
+    public GameObject saveScoreButton;
     private int curScore;
 
     
 
-    private void Awake()
+    public void Setup()
     {
         //Find highscore list
         entryContainer = transform.Find("highscoreEntryContainer");
@@ -61,6 +62,8 @@ public class HighscoreTable : MonoBehaviour
         {
             CreateHighscoreEntryTransform(highscoreEntry, entryContainer, highscoreEntryTransformList);
         }
+
+        saveScoreButton.SetActive(true);
     }
     //creates the onscreen highscore list
     private void CreateHighscoreEntryTransform(HighscoreEntry highscoreEntry, Transform container, List<Transform> tranformList)
@@ -132,7 +135,7 @@ public class HighscoreTable : MonoBehaviour
         {
             CreateHighscoreEntryTransform(highscoreEntry, entryContainer, highscoreEntryTransformList);
         }
-        GameObject.Find("saveScoreButton").SetActive(false);
+        saveScoreButton.SetActive(false);
     }
 
     //Check for a new highscore
