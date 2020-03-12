@@ -34,6 +34,7 @@ public class FarmerTeleport : NetworkBehaviour
     public void Teleport1()
     {
         Vector3 pos = new Vector3(locations[0].x + Random.Range(-radius, radius), locations[0].y, locations[0].z + Random.Range(-radius, radius));
+        Teleport(pos);
     }
     public void Teleport2()
     {
