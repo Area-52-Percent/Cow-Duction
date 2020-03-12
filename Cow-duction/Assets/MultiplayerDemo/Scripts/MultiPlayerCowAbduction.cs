@@ -130,7 +130,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
                 }
             }
         }
-        else if (Physics.Raycast(ray, out hit, maxCaptureLength, layerMask, QueryTriggerInteraction.Ignore))
+        else if (Physics.Raycast(ray, out hit))
         {
             if (hit.transform.tag == "Cow" || hit.transform.tag == "MilkBottle")
             {
@@ -144,6 +144,10 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             {
                 spaceshipCanvas.SetReticleColor(Color.white);
             }
+        }
+        else if (spaceshipCanvas.GetReticleColor() != Color.white)
+        {
+            spaceshipCanvas.SetReticleColor(Color.white);
         }
 
         if (isReleasingGrapple)
