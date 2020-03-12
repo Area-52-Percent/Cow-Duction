@@ -430,7 +430,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             else if (hit.transform.tag == "MilkBottle")
             {
                 //shouldAttach = hit.transform.GetComponent<DestructionHandler>().RpcHitMilk(hit, MilkParticle, bulletHole);
-                shouldAttach = hit.transform.GetComponent<DestructionHandler>().RpcHitMilk(hit);
+                shouldAttach = hit.transform.GetComponent<DestructionHandler>().HitMilk(hit);
                 if (shouldAttach)
                 {
                     GameObject AttachedMilk = hit.transform.gameObject;

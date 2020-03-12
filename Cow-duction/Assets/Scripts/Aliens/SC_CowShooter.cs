@@ -47,7 +47,7 @@ public class SC_CowShooter : NetworkBehaviour
                     int layerMask = ~(1 << gameObject.layer);
                     if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask, QueryTriggerInteraction.Ignore))
                     {
-                        StartCoroutine(RpcShootCow(hit));
+                        StartCoroutine(ShootCow(hit));
                     }
                 }
                 Debug.Log(obtainedCows);
@@ -58,8 +58,7 @@ public class SC_CowShooter : NetworkBehaviour
         obtainedCows++;
     }
 
-    [ClientRpc]
-    private IEnumerator RpcShootCow(RaycastHit hit)
+    private IEnumerator ShootCow(RaycastHit hit)
     {
         Vector3 grappleHitPoint = hit.point;
 

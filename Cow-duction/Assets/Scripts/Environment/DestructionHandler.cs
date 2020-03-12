@@ -48,8 +48,7 @@ public class DestructionHandler : NetworkBehaviour
     //**New Object Method**
     //Use when you want to enact physics on the destroyed Object
 
-    [ClientRpc]
-    public bool RpcHitMilk(RaycastHit hit)
+    public bool HitMilk(RaycastHit hit)
     {
         if (isHit && isMilked)
         {
