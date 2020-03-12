@@ -165,6 +165,7 @@ GameObject:
   - component: {fileID: 4274562824283213443}
   - component: {fileID: 2952005283928460127}
   - component: {fileID: 888538984754101630}
+  - component: {fileID: 7680770736241740605}
   m_Layer: 0
   m_Name: LeavesSide1
   m_TagString: Untagged
@@ -231,6 +232,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!135 &7680770736241740605
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 878281266685474156}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.06
+  m_Center: {x: 0.0009186007, y: 0.0000064074993, z: -0.00004908815}
 --- !u!1 &1313666454178367621
 GameObject:
   m_ObjectHideFlags: 0
@@ -583,6 +597,7 @@ GameObject:
   - component: {fileID: 712720627689164992}
   - component: {fileID: 1435264539927373829}
   - component: {fileID: 6854709880330226827}
+  - component: {fileID: 3184507231241202730}
   m_Layer: 0
   m_Name: Trunk
   m_TagString: Untagged
@@ -653,6 +668,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!136 &3184507231241202730
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1927847525132259730}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.07718058
+  m_Height: 0.2587725
+  m_Direction: 1
+  m_Center: {x: 0.0030267015, y: -0.013778392, z: -0.002387926}
 --- !u!1 &2560686926245967679
 GameObject:
   m_ObjectHideFlags: 0
@@ -1835,6 +1864,7 @@ GameObject:
   - component: {fileID: 2647783532104399037}
   - component: {fileID: 5932503978281651919}
   - component: {fileID: 8592021562601828258}
+  - component: {fileID: 3790045979162196337}
   m_Layer: 0
   m_Name: LeavesMain
   m_TagString: Untagged
@@ -1901,6 +1931,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!135 &3790045979162196337
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6321366727737638708}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.115
+  m_Center: {x: 9.313226e-10, y: -0.03574789, z: 0.0011864379}
 --- !u!1 &6917976453186193549
 GameObject:
   m_ObjectHideFlags: 0
@@ -1912,6 +1955,7 @@ GameObject:
   - component: {fileID: 3674547613153735222}
   - component: {fileID: 2327836160118013266}
   - component: {fileID: 1716886402608675155}
+  - component: {fileID: 7481769332624265085}
   m_Layer: 0
   m_Name: LeavesSide2
   m_TagString: Untagged
@@ -1978,6 +2022,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!135 &7481769332624265085
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6917976453186193549}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.08
+  m_Center: {x: 0.000000067055225, y: 0, z: -0.000000007450581}
 --- !u!1 &7177250832112207618
 GameObject:
   m_ObjectHideFlags: 0
