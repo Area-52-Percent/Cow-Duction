@@ -148,7 +148,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 
         // Display speed and altitude
         speedText.text = _rbUFO.velocity.magnitude.ToString("F1");
-        altitudeText.text = _rbUFO.transform.position.y.ToString("F1");
+        altitudeText.text = (_rbUFO.transform.position.y -13f).ToString("F1");
 
         // Update ability cooldown
         if (cooldownActive && abilityCooldown < 100.0f)
@@ -671,7 +671,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
         score = 0;
         scoreText.text = score.ToString("D2");
         reticle.sprite = normalReticle;
-        fuel = 100.0f;
+        fuel = 35.0f;
         fuelMeter.value = fuel;
         abilityCooldown = 100.0f;
         cooldownMeter.value = abilityCooldown;
