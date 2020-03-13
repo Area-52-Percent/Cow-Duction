@@ -714,6 +714,7 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
         float suckTimer = 0;
         int i = 0;
         Vector3 skinnyScale = Vector3.one - Vector3.right * .9f;
+        Renderer milkBottleRenderer = milkBottle.GetComponentInChildren<Renderer>();
         while (suckTimer < suckTime)
         {
             
@@ -731,6 +732,12 @@ public class MultiPlayerCowAbduction : NetworkBehaviour
             {
                 GetComponentInChildren<MultiPlayerAlienUIManager>().IncreaseScore(4f);
             }
+
+            if (milkBottleRenderer != null)
+            {
+                milkBottleRenderer.material.SetColor("_BaseColor", Color.Lerp(milkBottleRenderer.material.GetColor("_BaseColor"), Color.black, Time.deltaTime));
+            }
+
             i++;
             yield return null;
         }
