@@ -69,7 +69,6 @@ public class SC_FarmerBrain : SC_CowBrain
         fireCooldown = fireRate;
         ammoCount = startingAmmo;
         wandering = true;
-        peaceful = true;
         Wander();
     }
 
