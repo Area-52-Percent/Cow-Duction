@@ -273,6 +273,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
 
         finalScoreText.text = ""; //score + "\n\nRating: " + rating;
         endScreen.SetActive(true);
+        endScreen.GetComponentInChildren<HighscoreTable>().Setup();
     }
 
     public void ExitToMainMenu()
