@@ -95,7 +95,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
             {
                 touch = Input.GetTouch(t);
 
-                if (touch.position.x < Screen.width / 2) // Moving
+                if (touch.position.x < Screen.width / 2 && touch.position.y < Screen.height / 2) // Moving
                 {
                     switch (touch.phase)
                     {

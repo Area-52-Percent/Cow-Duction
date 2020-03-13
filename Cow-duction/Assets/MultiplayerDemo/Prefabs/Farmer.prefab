@@ -1099,7 +1099,7 @@ MonoBehaviour:
     type: 3}
   gunSmoke: {fileID: 2124311554384994826}
   gunTip: {fileID: 620020040927901706}
-  moveSpeed: 8
+  moveSpeed: 15
   turnSensitivity: 20
   tiltSensitivity: 16
   touchSensitivity: 5
@@ -1705,31 +1705,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3594646119050410445}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: a15e226f1fcf24b65a5a177449cb00c7,
-        type: 3}
-      propertyPath: m_Name
-      value: farmer_v9_Animated
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: a15e226f1fcf24b65a5a177449cb00c7,
-        type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 1587227953572480661, guid: a15e226f1fcf24b65a5a177449cb00c7,
-        type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: -7943378556525867576, guid: a15e226f1fcf24b65a5a177449cb00c7,
-        type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 8007729270185526443, guid: a15e226f1fcf24b65a5a177449cb00c7,
-        type: 3}
-      propertyPath: m_Layer
-      value: 12
-      objectReference: {fileID: 0}
     - target: {fileID: -6057140222963153312, guid: a15e226f1fcf24b65a5a177449cb00c7,
         type: 3}
       propertyPath: m_Controller
@@ -1739,6 +1714,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ApplyRootMotion
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8007729270185526443, guid: a15e226f1fcf24b65a5a177449cb00c7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: -8840663024759608452, guid: a15e226f1fcf24b65a5a177449cb00c7,
         type: 3}
@@ -1799,6 +1779,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: a15e226f1fcf24b65a5a177449cb00c7,
+        type: 3}
+      propertyPath: m_Name
+      value: farmer_v9_Animated
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: a15e226f1fcf24b65a5a177449cb00c7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: -7943378556525867576, guid: a15e226f1fcf24b65a5a177449cb00c7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 1587227953572480661, guid: a15e226f1fcf24b65a5a177449cb00c7,
+        type: 3}
+      propertyPath: m_Layer
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 1348101720943421400, guid: a15e226f1fcf24b65a5a177449cb00c7,
         type: 3}
@@ -2690,16 +2690,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5917015313987045630}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
-        type: 3}
-      propertyPath: m_Name
-      value: Farmer_Hat
-      objectReference: {fileID: 0}
-    - target: {fileID: 3791376661586708882, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: b8e1a1ff345434bdf8749f6baa63e6de, type: 2}
     - target: {fileID: -4216859302048453862, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2755,6 +2745,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.48200002
       objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
+        type: 3}
+      propertyPath: m_Name
+      value: Farmer_Hat
+      objectReference: {fileID: 0}
+    - target: {fileID: 3791376661586708882, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b8e1a1ff345434bdf8749f6baa63e6de, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ce318e9ee59e4b44bdf3990b2372beb, type: 3}
 --- !u!1 &3222773144295395938 stripped
