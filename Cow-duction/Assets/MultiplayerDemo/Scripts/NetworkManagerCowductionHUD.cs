@@ -225,23 +225,22 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
         badgeB.SetActive(false);
         badgeQA.SetActive(false);
         badgeNQA.SetActive(false);
-        string rating = "";
 
-        if (score > 30)
+        if (score >= 60)
             badgeAA.SetActive(true);
-
-        else if (score > 20)
+        else if (score >= 40)
             badgeA.SetActive(true);
-        else if (score > 15)
+        else if (score >= 25)
             badgeB.SetActive(true);
-        else if (score > 10)
+        else if (score >= 10)
             badgeQA.SetActive(true);
-        else if (score > 5)
-            badgeNQA.SetActive(true);
         else
         {
             badgeNQA.SetActive(true);
+        }
 
+        if (badgeNQA.activeSelf)
+        {
             GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
             if (farmers.Length > 0)
             {
@@ -257,16 +256,9 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
 
             ufoAudioSource.PlayOneShot(loseAudio, 1f);
         }
-
-        switch (rating)
+        else
         {
-            case "SS":
-            case "S":
-            case "A":
-                ufoAudioSource.PlayOneShot(winAudio, 1f);
-                break;
-            default:
-                break;
+            ufoAudioSource.PlayOneShot(winAudio, 1f);
         }
 
         gamemanager.SetMusicVolume(0.1f);
