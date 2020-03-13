@@ -44,7 +44,7 @@ public class SC_FarmerBrain : SC_CowBrain
         m_Agent = GetComponent<NavMeshAgent>();
         m_Cam = GetComponentInChildren<Camera>();
         rbFpController = GetComponent<RigidbodyFirstPersonController>();
-        targetTransform = GameObject.Find("UFO").transform;
+        // targetTransform = GameObject.Find("UFO").transform;
         m_Animator = GetComponentInChildren<Animator>();
         m_AudioSource = GetComponent<AudioSource>();
         fields = GameObject.FindGameObjectsWithTag("Field");
@@ -63,6 +63,7 @@ public class SC_FarmerBrain : SC_CowBrain
     // Start is called before the first frame update
     void Start()
     {
+        targetTransform = GameObject.FindGameObjectWithTag("UFO").transform;
         lockedOn = false;
         seekingAmmo = false;
         fireCooldown = fireRate;

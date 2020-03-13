@@ -12,11 +12,12 @@ public class HighscoreTable : MonoBehaviour
     public GameObject playerInput;
     public List<Text> player1NameInput;
     public List<Text> player2NameInput;
+    public GameObject saveScoreButton;
     private int curScore;
 
     
 
-    private void Awake()
+    public void Setup()
     {
         //Find highscore list
         entryContainer = transform.Find("highscoreEntryContainer");
@@ -48,6 +49,7 @@ public class HighscoreTable : MonoBehaviour
             highscores = JsonUtility.FromJson<Highscores>(jsonString);
         }
         curScore = GameObject.Find("UI").GetComponent<MultiPlayerAlienUIManager>().GetScore();
+        Debug.Log("end =" + curScore);
         if (NewHighScore(curScore))
         {
             playerInput.SetActive(true);
@@ -60,6 +62,8 @@ public class HighscoreTable : MonoBehaviour
         {
             CreateHighscoreEntryTransform(highscoreEntry, entryContainer, highscoreEntryTransformList);
         }
+
+        saveScoreButton.SetActive(true);
     }
     //creates the onscreen highscore list
     private void CreateHighscoreEntryTransform(HighscoreEntry highscoreEntry, Transform container, List<Transform> tranformList)
@@ -116,6 +120,7 @@ public class HighscoreTable : MonoBehaviour
 
     public void SaveScore()
     {
+        Debug.Log("save" + curScore);
         AddHighscoreEntry(curScore,(player1NameInput[0].text + player1NameInput[1].text + player1NameInput[2].text ), (player2NameInput[0].text + player2NameInput[1].text + player2NameInput[2].text));
         highscoreEntryTransformList = new List<Transform>();
         Highscores highscores = new Highscores();
@@ -130,7 +135,7 @@ public class HighscoreTable : MonoBehaviour
         {
             CreateHighscoreEntryTransform(highscoreEntry, entryContainer, highscoreEntryTransformList);
         }
-        GameObject.Find("saveScoreButton").SetActive(false);
+        saveScoreButton.SetActive(false);
     }
 
     //Check for a new highscore

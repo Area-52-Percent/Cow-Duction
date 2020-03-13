@@ -43,7 +43,7 @@ public class SpaceshipCanvas : MonoBehaviour
 
     [Header("Ammo Effects")]
     public MultiPlayerSpaceshipController ufoMovement;
-    public GameObject fullscreenSplatter;
+    public Image fullscreenSplatter;
     public float effectCD = 2f;
     private bool effected = false;
 
@@ -58,6 +58,7 @@ public class SpaceshipCanvas : MonoBehaviour
 
     void Start()
     {
+        if (mainCamera == null) mainCamera = Camera.main;
         if (waypointIcon != null) waypointIconImage = waypointIcon.GetComponent<Image>();
     }
 
@@ -114,7 +115,7 @@ public class SpaceshipCanvas : MonoBehaviour
         // TODO
     }
 
-    public void IncreaseScore(int amount)
+    public void IncreaseScore(float amount)
     {
         // TODO
     }
@@ -150,7 +151,8 @@ public class SpaceshipCanvas : MonoBehaviour
     {
         StartCoroutine(ScreenSplatter(effectCD, .5f, pos));
         fuel -= amount;
-        fuelMeter.value = fuel;
+
+        if (fuelMeter != null) fuelMeter.value = fuel;
     }
     public IEnumerator CarrotEffect()
     {
@@ -165,9 +167,9 @@ public class SpaceshipCanvas : MonoBehaviour
     public IEnumerator PumpkinEffect()
     {
         effected = true;
-        fullscreenSplatter.SetActive(true);
+        fullscreenSplatter.gameObject.SetActive(true);
         yield return new WaitForSeconds(effectCD);
-        fullscreenSplatter.SetActive(false);
+        fullscreenSplatter.gameObject.SetActive(false);
         effected = false;
     }
 

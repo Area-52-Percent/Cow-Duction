@@ -17,6 +17,8 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 {
     // Private variables
     private MultiPlayerGameManager gameManager;
+    private MultiPlayerSpaceshipController spaceship;
+    private NetworkManagerCowductionHUD networkManagerHUD;
     private Camera mainCamera;
     public Animator shipAnim;
     private SC_HudReticleFollowCursor reticleFollowCursor;
@@ -72,8 +74,8 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     [SerializeField] private Text cooldownReadyText = null; // Set up in inspector
     [Space] // Screens
     [SerializeField] private GameObject gameplayScreen = null; // Set up in inspector
-    [SerializeField] private GameObject endScreen = null; // Set up in inspector
     [SerializeField] private GameObject helpScreen = null; // Set up in inspector
+    //[SerializeField] private GameObject endScreen = null; // Set up in inspector
     [SerializeField] private GameObject parameterScreen = null; // Set up in inspector
     [Space] // Intro
     [SerializeField] private GameObject holoCow = null; // Intro cow hologram
@@ -102,14 +104,15 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     // Awake is called after all objects are initialized
     void Awake()
     {
+        networkManagerHUD = GameObject.FindWithTag("NetworkManager").GetComponent<NetworkManagerCowductionHUD>();
         gameManager = GameObject.FindWithTag("GameManager").GetComponent<MultiPlayerGameManager>();
+        spaceship = GameObject.FindWithTag("UFO").GetComponent<MultiPlayerSpaceshipController>();
         gameManager.StartListening();
         mainCamera = Camera.main;
         ufoMesh = _rbUFO.GetComponentsInChildren<MeshRenderer>();
         ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
         transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
         reticleFollowCursor = reticle.GetComponent<SC_HudReticleFollowCursor>();
-        
     }
 
     // Start is called before the first frame update
@@ -145,7 +148,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 
         // Display speed and altitude
         speedText.text = _rbUFO.velocity.magnitude.ToString("F1");
-        altitudeText.text = _rbUFO.transform.position.y.ToString("F1");
+        altitudeText.text = (_rbUFO.transform.position.y -13f).ToString("F1");
 
         // Update ability cooldown
         if (cooldownActive && abilityCooldown < 100.0f)
@@ -182,10 +185,12 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 
                 fuel -= Time.deltaTime * fuelDepletionRate;
                 fuelMeterFill.color = Color.Lerp(fuelDepletedColor, fuelStartColor, fuel / 100f);
+                spaceship.limitHeight(70f);
                 fuelMeter.value = fuel;
             }
             else
             {
+                spaceship.limitHeight(20f);
                 fuel = 0.0f;
                 fuelWarnText.text = "OUT";
                 //_rbUFO.GetComponent<MultiPlayerSpaceshipController>().AllowMovement(false);
@@ -197,7 +202,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
                 int minutes = Mathf.FloorToInt(timeRemaining / 60.0f);
                 int seconds = Mathf.FloorToInt(timeRemaining % 60.0f);
                 timeText.text = minutes + ":" + seconds.ToString("D2");
-                Debug.Log("Gametime: " + minutes + ":" + seconds.ToString("D2"));
+                //Debug.Log("Gametime: " + minutes + ":" + seconds.ToString("D2"));
 
                 if (minutes < 1 && seconds <= 30)
                 {
@@ -232,11 +237,11 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 
                 timeRemaining -= Time.unscaledDeltaTime;
             }
-            else if (!endScreen.activeSelf)
+            else if (!networkManagerHUD.endScreen.activeSelf)
             {
                 timeRemaining = 0.0f;
                 timeText.text = "0:00";
-                DisplayEndScreen();
+                networkManagerHUD.DisplayEndScreen(score, ufoAudioSource, loseAudio, winAudio);
             }
         }
         else
@@ -263,8 +268,10 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     }
 
     // Animate milk sliding effect
-    private IEnumerator AnimateIncreaseScore()
+    public IEnumerator AnimateIncreaseScore()
     {
+        if (milkSlide.value > 0) milkSlide.value = 0;
+
         milkSlide.direction = Slider.Direction.TopToBottom;
         while (milkSlide.value < 1.0f)
         {
@@ -292,7 +299,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     }
 
     // Increase score and fuel
-    public void IncreaseScore(float milk, GameObject cow)
+    public void IncreaseScore(float milk) //, GameObject cow
     {
         StartCoroutine(AnimateIncreaseScore());
         int cowScore = 1;
@@ -349,7 +356,8 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
         ufoAudioSource.PlayOneShot(activateAbility, 0.5f);
 
         // Fade out HUD 
-        topDownCamera.cullingMask = (1 << LayerMask.NameToLayer("Radar"));
+        // topDownCamera.cullingMask = (1 << LayerMask.NameToLayer("Radar"));
+        topDownCamera.depth = 0;
         hudDisplay.CrossFadeAlpha(cloakedOpacity, abilityActiveTime / 10f, false);
         scoreText.CrossFadeAlpha(cloakedOpacity, abilityActiveTime / 10f, false);
         speedText.CrossFadeAlpha(cloakedOpacity, abilityActiveTime / 10f, false);
@@ -367,7 +375,8 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
         ufoAudioSource.PlayOneShot(activateAbility, 0.3f);
 
         // Fade in HUD elements
-        topDownCamera.cullingMask = ~(1 << LayerMask.NameToLayer("Cow"));
+        // topDownCamera.cullingMask = ~(1 << LayerMask.NameToLayer("Cow"));
+        topDownCamera.depth = 1;
         hudDisplay.CrossFadeAlpha(1f, abilityActiveTime / 10f, false);
         scoreText.CrossFadeAlpha(1f, abilityActiveTime / 10f, false);
         speedText.CrossFadeAlpha(1f, abilityActiveTime / 10f, false);
@@ -538,53 +547,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     // Show the endscreen (TO-DO: Replace hard-coded values)
     public void DisplayEndScreen()
     {
-        string rating = "";
-
-        if (score > 25)
-            rating = "SS";
-        else if (score > 20)
-            rating = "S";
-        else if (score > 17)
-            rating = "A";
-        else if (score > 13)
-            rating = "B";
-        else if (score > 7)
-            rating = "C";
-        else
-        {
-            rating = "D";
-
-            GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
-            if (farmers.Length > 0)
-            {
-                foreach (GameObject farmer in farmers)
-                {
-                    Animator farmerAnimator = farmer.GetComponentInChildren<Animator>();
-                    if (farmerAnimator)
-                    {
-                        farmerAnimator.SetBool("celebrate", true);
-                    }
-                }
-            }
-
-            ufoAudioSource.PlayOneShot(loseAudio, 1f);
-        }
-
-        switch (rating)
-        {
-            case "SS":
-            case "S":
-            case "A":
-                ufoAudioSource.PlayOneShot(winAudio, 1f);
-                break;
-            default:
-                break;
-        }
-
-        //gameManager.SetMusicVolume(0.1f);
-
-        finalScoreText.text = score + "\n\nRating: " + rating;
-        endScreen.SetActive(true);
+        networkManagerHUD.DisplayEndScreen(score, ufoAudioSource, loseAudio, winAudio);
     }
 
     // Toggle the help screen
@@ -708,7 +671,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
         score = 0;
         scoreText.text = score.ToString("D2");
         reticle.sprite = normalReticle;
-        fuel = 100.0f;
+        fuel = 35.0f;
         fuelMeter.value = fuel;
         abilityCooldown = 100.0f;
         cooldownMeter.value = abilityCooldown;
@@ -721,7 +684,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
             cropSplatter.gameObject.SetActive(false);
 
         // Deactivate non-gameplay menus
-        endScreen.SetActive(false);
+        networkManagerHUD.endScreen.SetActive(false);
         parameterScreen.SetActive(false);
         helpScreen.SetActive(false);
 

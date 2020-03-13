@@ -15,6 +15,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public List<GameObject> projectiles;
     public int index = 0;
     public GameObject projectile;
+    public ParticleSystem gunSmoke;
     public Transform gunTip;
 
     [Header("Parameters")]
@@ -196,12 +197,25 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         transform.position = location;
         characterController.enabled = true;
     }
+    [ClientRpc]
+    public void RpcDoJump(int JumpPoint , GameObject curfarmer, int curJump)
+    {
+        this.gameObject.GetComponent<JumpPoint>().RpcJumpAroundFarmer(JumpPoint, curfarmer, curJump);
+    }
+
+    [ClientRpc]
+    public void RpcPlayParticle()
+    {
+        gunSmoke.Play();
+    }
+
     [Command]
     public void CmdSwapAmmo()
     {
         index = (index + 1) % projectiles.Count;
         projectile = projectiles[index];
     }
+	
     [Command]
     public void CmdFireProjectile()
     {
@@ -220,6 +234,9 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         else if (projectileClone.GetComponent<FarmerProjectile>())
             projectileClone.GetComponent<FarmerProjectile>().owner = gameObject;
         NetworkServer.Spawn(projectileClone);
+
+        gunSmoke.Play();
+        RpcPlayParticle();
     }
     // Lock or unlock the cursor
     private void LockCursor(bool lockCursor)

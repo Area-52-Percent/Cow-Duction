@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 4842749544584036205}
   - component: {fileID: 4842749544584036204}
-  - component: {fileID: 4842749544584036207}
+  - component: {fileID: 7844715809635036615}
   - component: {fileID: 5195421700535696559}
   - component: {fileID: 6102030911703174698}
-  - component: {fileID: 2061912447915305973}
+  - component: {fileID: -648696725267278124}
   m_Layer: 15
   m_Name: Projectile Pumpkin
   m_TagString: Untagged
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4842749544584036202}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 58.385162, y: 4.93, z: 122.66}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4620128584479908729}
@@ -52,8 +52,8 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!136 &4842749544584036207
-CapsuleCollider:
+--- !u!135 &7844715809635036615
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -62,10 +62,9 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.5
-  m_Height: 2
-  m_Direction: 2
-  m_Center: {x: 0, y: 0, z: 0}
+  serializedVersion: 2
+  m_Radius: 0.6
+  m_Center: {x: 0, y: 0.05, z: 0}
 --- !u!114 &5195421700535696559
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -78,9 +77,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 3321207415
+  sceneId: 0
   serverOnly: 0
-  m_AssetId: 
+  m_AssetId: 1f653e6ceabc4004a9c4cfc88ebbcb07
 --- !u!114 &6102030911703174698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -100,7 +99,7 @@ MonoBehaviour:
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
   compressRotation: 1
---- !u!114 &2061912447915305973
+--- !u!114 &-648696725267278124
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,15 +108,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 4842749544584036202}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30a93b645b4dc2940af0fd5206c4ccaa, type: 3}
+  m_Script: {fileID: 11500000, guid: 6962b7dd9e62d034c88d2033663190b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
   destroyAfter: 5
   rigidBody: {fileID: 4842749544584036204}
-  hitForce: 500
-  speedForce: 100
+  gunSmoke: {fileID: 0}
+  hitForce: 200
+  speedForce: 1000
   owner: {fileID: 0}
   milkLeak: {fileID: 3548555650585113165, guid: fae10533dbb5e462784fe99a2bbed39d,
     type: 3}
@@ -138,7 +138,7 @@ PrefabInstance:
     - target: {fileID: 887542850751032177, guid: 2c1fbfcd361eef74e9e2d0732c354749,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.23
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 887542850751032177, guid: 2c1fbfcd361eef74e9e2d0732c354749,
         type: 3}
@@ -158,12 +158,12 @@ PrefabInstance:
     - target: {fileID: 887542850751032177, guid: 2c1fbfcd361eef74e9e2d0732c354749,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 887542850751032177, guid: 2c1fbfcd361eef74e9e2d0732c354749,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 887542850751032177, guid: 2c1fbfcd361eef74e9e2d0732c354749,
         type: 3}
@@ -190,6 +190,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2826839050943191101, guid: 2c1fbfcd361eef74e9e2d0732c354749,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b5995be4afe28ff438ad1a6498c1245f, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c1fbfcd361eef74e9e2d0732c354749, type: 3}
 --- !u!4 &4620128584479908729 stripped

@@ -12,6 +12,7 @@ using Mirror;
 public class NetworkManagerCowductionHUD : MonoBehaviour
 {
     NetworkManagerCowduction manager;
+    MultiPlayerGameManager gamemanager;
 
     /// <summary>
     /// Whether to show the default control HUD at runtime.
@@ -24,13 +25,20 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
     public InputField networkAddressField;
     public GameObject pauseMenu;
 
+    [SerializeField] public GameObject endScreen = null; // Set up in inspector
+    [SerializeField] private AudioClip loseAudio = null; // Set up in inspector
+    [SerializeField] private AudioClip winAudio = null; // Set up in inspector
+    [SerializeField] private Text finalScoreText = null; // Set up in inspector
+
     private float deltaTime = 0f;
 
     void Awake()
     {
         manager = GetComponent<NetworkManagerCowduction>();
+        gamemanager = GameObject.Find("GameManager").GetComponent<MultiPlayerGameManager>();
         mainMenu.SetActive(true);
         pauseMenu.SetActive(false);
+        endScreen.SetActive(false);
 
         networkAddressField.text = "localhost";
     }
@@ -46,7 +54,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
             Rect rect = new Rect(0, 0, w, h * 4 / 100);
             style.alignment = TextAnchor.UpperLeft;
             style.fontSize = h * 4 / 100;
-            style.normal.textColor = new Color (0.0f, 0.0f, 0.5f, 1.0f);
+            style.normal.textColor = new Color (0.0f, 1.0f, 0.5f, 1.0f);
             float msec = deltaTime * 1000.0f;
             float fps = 1.0f / deltaTime;
             string text = string.Format("{0:0.0} ms ({1:0.} fps)", msec, fps);
@@ -155,6 +163,10 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
                 {
                     pauseMenu.SetActive(false);
                 }
+                if (endScreen.activeSelf)
+                {
+                    endScreen.SetActive(false);
+                }
             }
         }
         if (Input.GetButtonDown("Cancel") && !Input.GetKey("left shift"))
@@ -166,6 +178,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
     public void PlayAsSpaceShip()
     {
         manager.StartHost();
+        gamemanager.startMusic();
         mainMenu.SetActive(false);
     }
 
@@ -173,6 +186,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
     {
         manager.networkAddress = networkAddressField.text;
         manager.StartClient();
+        gamemanager.startMusic();
         mainMenu.SetActive(false);
     }
 
@@ -183,12 +197,70 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
         if (pauseMenu.activeSelf)
         {
             pauseMenu.SetActive(false);
+            gamemanager.SetMusicVolume(.5f);
         }
 
         else
         {
             pauseMenu.SetActive(true);
+            gamemanager.SetMusicVolume(.1f);
         }
+    }
+
+    public void ToggleFpsCounter()
+    {
+        showFPS = !showFPS;
+    }
+
+    public void DisplayEndScreen(int score, AudioSource ufoAudioSource, AudioClip loseAudio, AudioClip winAudio)
+    {
+        string rating = "";
+
+        if (score > 25)
+            rating = "SS";
+        else if (score > 20)
+            rating = "S";
+        else if (score > 17)
+            rating = "A";
+        else if (score > 13)
+            rating = "B";
+        else if (score > 7)
+            rating = "C";
+        else
+        {
+            rating = "D";
+
+            GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
+            if (farmers.Length > 0)
+            {
+                foreach (GameObject farmer in farmers)
+                {
+                    Animator farmerAnimator = farmer.GetComponentInChildren<Animator>();
+                    if (farmerAnimator)
+                    {
+                        farmerAnimator.SetBool("celebrate", true);
+                    }
+                }
+            }
+
+            ufoAudioSource.PlayOneShot(loseAudio, 1f);
+        }
+
+        switch (rating)
+        {
+            case "SS":
+            case "S":
+            case "A":
+                ufoAudioSource.PlayOneShot(winAudio, 1f);
+                break;
+            default:
+                break;
+        }
+
+        gamemanager.SetMusicVolume(0.1f);
+
+        finalScoreText.text = score + "\n\nRating: " + rating;
+        endScreen.SetActive(true);
     }
 
     public void ExitToMainMenu()
@@ -198,6 +270,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
             manager.StopHost();
         }
         pauseMenu.SetActive(false);
+        gamemanager.stopMusic();
     }
 
     public void ExitGame()

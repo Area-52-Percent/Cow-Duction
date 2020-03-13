@@ -13,6 +13,7 @@ using UnityEngine.SceneManagement;
 
 public class MultiPlayerGameManager : MonoBehaviour
 {
+    public static MultiPlayerGameManager instance;
     private GameObject ufo;
     [SerializeField] private GameObject ufoStartLocation;
     //[SerializeField] private Camera startCamera;
@@ -42,13 +43,21 @@ public class MultiPlayerGameManager : MonoBehaviour
         musicAudioSource.volume = volume;
     }
 
-    // Awake is called after all objects are initialized
+    void Awake()
+    {
+        // Only allow one instance of GameManager
+        if (instance == null)
+            instance = this;
+        else if (instance != this)
+            Destroy(this);
+    }
+
     void Start()
     {
         ufoStartLocation = GameObject.Find("SpaceshipSpawn");
         //uiManager = GameObject.Find("UI").GetComponent<MultiPlayerAlienUIManager>();
         musicAudioSource = GetComponent<AudioSource>();
-        SetMusicVolume(0.5f);
+        SetMusicVolume(.25f);
 
         //mainCamera = Camera.main;
 
@@ -109,8 +118,8 @@ public class MultiPlayerGameManager : MonoBehaviour
 
         yield return null;
 
-        musicAudioSource.clip = gameplayMusic;
-        musicAudioSource.Play();
+        //musicAudioSource.clip = gameplayMusic;
+        //musicAudioSource.Play();
     }
 
     /*
@@ -128,9 +137,22 @@ public class MultiPlayerGameManager : MonoBehaviour
 
     */
 
+    public void stopMusic()
+    {
+        SetMusicVolume(.25f);
+        musicAudioSource.Stop();
+    }
+
+    public void startMusic()
+    {
+        musicAudioSource.clip = gameplayMusic;
+        musicAudioSource.Play();
+    }
+
     // Load the active scene
     public IEnumerator ResetGame()
     {
+        musicAudioSource.Stop();
         gameStarted = false;
 
         AsyncOperation asyncSceneLoad = SceneManager.LoadSceneAsync(SceneManager.GetActiveScene().buildIndex);
@@ -148,7 +170,7 @@ public class MultiPlayerGameManager : MonoBehaviour
         //MultiPlayerSpaceshipController ufoSM = ufo.GetComponent<MultiPlayerSpaceshipController>();
         //ufoSM.ResetGame();
 
-        SetMusicVolume(0.5f);
+        SetMusicVolume(.25f);
     }
 
     // Reset scene without re-finding components attached to dont destroy objects

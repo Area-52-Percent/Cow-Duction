@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 329826564841048196}
   - component: {fileID: 8001348841474963513}
   - component: {fileID: 8625699832546249661}
+  - component: {fileID: 2576309394216259547}
   m_Layer: 0
   m_Name: Billboard1_Shaft
   m_TagString: Untagged
   m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_NavMeshLayer: 1
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &329826564841048196
 Transform:
@@ -57,7 +58,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1bad8c579a44c7240aa39b08d8c5f2f5, type: 2}
+  - {fileID: 2100000, guid: 8e8bcd9c03f6af44ca078a7f4556d766, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -77,6 +78,20 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!136 &2576309394216259547
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 301584301567030596}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 2.016397
+  m_Height: 11.813682
+  m_Direction: 1
+  m_Center: {x: -0.012583494, y: 5.702502, z: -0.29826862}
 --- !u!1 &623090623115890128
 GameObject:
   m_ObjectHideFlags: 0
@@ -134,7 +149,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1bad8c579a44c7240aa39b08d8c5f2f5, type: 2}
+  - {fileID: 2100000, guid: 8e8bcd9c03f6af44ca078a7f4556d766, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -202,6 +217,7 @@ GameObject:
   - component: {fileID: 1889241876335236024}
   - component: {fileID: 5478464038003900980}
   - component: {fileID: 3849671441708545986}
+  - component: {fileID: 6237166997115835125}
   m_Layer: 0
   m_Name: Billboard1_Floor
   m_TagString: Untagged
@@ -248,7 +264,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1bad8c579a44c7240aa39b08d8c5f2f5, type: 2}
+  - {fileID: 2100000, guid: bc98cfc9f8d9a91479287d77a36704b7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -268,6 +284,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &6237166997115835125
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2435189063193966983}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 22.069695, y: 0.41038704, z: 5.796811}
+  m_Center: {x: -0.06389856, y: 11.545132, z: -0.21847725}
 --- !u!1 &2515741811466247596
 GameObject:
   m_ObjectHideFlags: 0
@@ -326,7 +355,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3f755d06cb1bcf7409c2850f558fbdcb, type: 2}
+  - {fileID: 2100000, guid: bc98cfc9f8d9a91479287d77a36704b7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -418,7 +447,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 3f755d06cb1bcf7409c2850f558fbdcb, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -509,7 +538,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1bad8c579a44c7240aa39b08d8c5f2f5, type: 2}
+  - {fileID: 2100000, guid: bc98cfc9f8d9a91479287d77a36704b7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -540,6 +569,7 @@ GameObject:
   - component: {fileID: 2594287320371880232}
   - component: {fileID: 7122204476857345601}
   - component: {fileID: 2692012508112676078}
+  - component: {fileID: 2386641564645639607}
   m_Layer: 0
   m_Name: Board_Billboard1
   m_TagString: Untagged
@@ -586,7 +616,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 1bad8c579a44c7240aa39b08d8c5f2f5, type: 2}
+  - {fileID: 2100000, guid: bc98cfc9f8d9a91479287d77a36704b7, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -606,3 +636,16 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!65 &2386641564645639607
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5997852117645081766}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 24.616276, y: 12.950497, z: 1.5485379}
+  m_Center: {x: -0.25737, y: 18.188799, z: -0.21346605}

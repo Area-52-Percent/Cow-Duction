@@ -5,12 +5,23 @@ public class WaypointSystem : MonoBehaviour
 {
     [HideInInspector]
     public List<Vector3> waypoints;
+    public WaypointFollower follower;
     public enum DrawMode {Never, Selected, Always};
     public DrawMode drawMode = DrawMode.Selected;
+
+    private void OnValidate()
+    {
+        if (follower == null) follower = GetComponentInChildren<WaypointFollower>();
+    }
 
     private void Awake()
     {
         InitializeWaypoints();
+    }
+
+    private void Start()
+    {
+        follower.enabled = false;
     }
 
     private void InitializeWaypoints()
@@ -20,6 +31,14 @@ public class WaypointSystem : MonoBehaviour
         foreach(Transform child in transform)
         {
             waypoints.Add(child.position);
+        }
+    }
+
+    private void OnTriggerEnter(Collider collider)
+    {
+        if (collider.tag == "UFO")
+        {
+            if (!follower.enabled) follower.enabled = true;
         }
     }
 

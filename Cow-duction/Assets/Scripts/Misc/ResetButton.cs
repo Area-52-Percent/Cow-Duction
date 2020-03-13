@@ -4,23 +4,21 @@
 */
 
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class ResetButton : MonoBehaviour
 {
-    [SerializeField] private GameManager gameManager;
-    
-    // Awake is called after all objects are initialized
-    void Awake()
+    private MultiPlayerGameManager gameManager;
+
+    void Start()
     {
-        gameManager = GameObject.FindWithTag("GameManager").GetComponent<GameManager>();
+        gameManager = MultiPlayerGameManager.instance;
     }
 
     // Call reset game from game manager
     public void ResetGame()
     {
-        if (gameManager.GetGameStarted())
+        print("Reset");
+        // if (gameManager.GetGameStarted())
             StartCoroutine(gameManager.ResetGame());
-        // SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
 }

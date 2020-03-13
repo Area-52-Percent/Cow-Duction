@@ -47,6 +47,7 @@ public class CornRotate : MonoBehaviour
                         tr.localEulerAngles = new Vector3(90f, tr.localEulerAngles.y, tr.localEulerAngles.z);
                     }
                 }
+                break;
             }
         }
     }

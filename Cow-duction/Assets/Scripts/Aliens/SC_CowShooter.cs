@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using Mirror;
 
 [RequireComponent(typeof(SC_SpaceshipMovement))]
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(Collider))]
-public class SC_CowShooter : MonoBehaviour
+public class SC_CowShooter : NetworkBehaviour
 {
     private SC_AlienUIManager uiManager;
     private SC_SpaceshipMovement spaceshipMovement;
