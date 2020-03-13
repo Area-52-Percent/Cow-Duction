@@ -113,7 +113,6 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
         ufoAudioSource = _rbUFO.GetComponent<AudioSource>();
         transformWrapper = _rbUFO.GetComponent<TransformWrapper>();
         reticleFollowCursor = reticle.GetComponent<SC_HudReticleFollowCursor>();
-        
     }
 
     // Start is called before the first frame update
@@ -149,7 +148,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 
         // Display speed and altitude
         speedText.text = _rbUFO.velocity.magnitude.ToString("F1");
-        altitudeText.text = _rbUFO.transform.position.y.ToString("F1");
+        altitudeText.text = (_rbUFO.transform.position.y -13f).ToString("F1");
 
         // Update ability cooldown
         if (cooldownActive && abilityCooldown < 100.0f)
@@ -186,7 +185,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
 
                 fuel -= Time.deltaTime * fuelDepletionRate;
                 fuelMeterFill.color = Color.Lerp(fuelDepletedColor, fuelStartColor, fuel / 100f);
-                spaceship.limitHeight(50f);
+                spaceship.limitHeight(70f);
                 fuelMeter.value = fuel;
             }
             else
@@ -203,7 +202,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
                 int minutes = Mathf.FloorToInt(timeRemaining / 60.0f);
                 int seconds = Mathf.FloorToInt(timeRemaining % 60.0f);
                 timeText.text = minutes + ":" + seconds.ToString("D2");
-                Debug.Log("Gametime: " + minutes + ":" + seconds.ToString("D2"));
+                //Debug.Log("Gametime: " + minutes + ":" + seconds.ToString("D2"));
 
                 if (minutes < 1 && seconds <= 30)
                 {
@@ -269,8 +268,10 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     }
 
     // Animate milk sliding effect
-    private IEnumerator AnimateIncreaseScore()
+    public IEnumerator AnimateIncreaseScore()
     {
+        if (milkSlide.value > 0) milkSlide.value = 0;
+
         milkSlide.direction = Slider.Direction.TopToBottom;
         while (milkSlide.value < 1.0f)
         {
@@ -298,7 +299,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
     }
 
     // Increase score and fuel
-    public void IncreaseScore(float milk, GameObject cow)
+    public void IncreaseScore(float milk) //, GameObject cow
     {
         StartCoroutine(AnimateIncreaseScore());
         int cowScore = 1;
@@ -355,7 +356,8 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
         ufoAudioSource.PlayOneShot(activateAbility, 0.5f);
 
         // Fade out HUD 
-        topDownCamera.cullingMask = (1 << LayerMask.NameToLayer("Radar"));
+        // topDownCamera.cullingMask = (1 << LayerMask.NameToLayer("Radar"));
+        topDownCamera.depth = 0;
         hudDisplay.CrossFadeAlpha(cloakedOpacity, abilityActiveTime / 10f, false);
         scoreText.CrossFadeAlpha(cloakedOpacity, abilityActiveTime / 10f, false);
         speedText.CrossFadeAlpha(cloakedOpacity, abilityActiveTime / 10f, false);
@@ -373,7 +375,8 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
         ufoAudioSource.PlayOneShot(activateAbility, 0.3f);
 
         // Fade in HUD elements
-        topDownCamera.cullingMask = ~(1 << LayerMask.NameToLayer("Cow"));
+        // topDownCamera.cullingMask = ~(1 << LayerMask.NameToLayer("Cow"));
+        topDownCamera.depth = 1;
         hudDisplay.CrossFadeAlpha(1f, abilityActiveTime / 10f, false);
         scoreText.CrossFadeAlpha(1f, abilityActiveTime / 10f, false);
         speedText.CrossFadeAlpha(1f, abilityActiveTime / 10f, false);
@@ -668,7 +671,7 @@ public class MultiPlayerAlienUIManager : MonoBehaviour
         score = 0;
         scoreText.text = score.ToString("D2");
         reticle.sprite = normalReticle;
-        fuel = 100.0f;
+        fuel = 35.0f;
         fuelMeter.value = fuel;
         abilityCooldown = 100.0f;
         cooldownMeter.value = abilityCooldown;

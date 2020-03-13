@@ -100,9 +100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneId: 0
+  sceneId: 1259557215
   serverOnly: 0
-  m_AssetId: 3dc525ffe00e0486e95a673a4825c774
+  m_AssetId: 
 --- !u!114 &-8091217674682330753
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,7 +160,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: dd4141b9b87034b34b09ed67110fc272, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.1
   m_Pitch: 0.31
   Loop: 0
   Mute: 0
@@ -251,6 +251,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4867629772996673694}
     m_Modifications:
+    - target: {fileID: 7328981208343111244, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
+        type: 3}
+      propertyPath: m_Name
+      value: Radar Point
+      objectReference: {fileID: 0}
+    - target: {fileID: 7328981208343111244, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2287445515127965985, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -320,16 +330,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7328981208343111244, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
-        type: 3}
-      propertyPath: m_Name
-      value: Radar Point
-      objectReference: {fileID: 0}
-    - target: {fileID: 7328981208343111244, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4816962409528105713, guid: 6ec6ebe6dee2a40a591982d0ec0ecf3d,
         type: 3}
@@ -351,6 +351,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4867629772996673694}
     m_Modifications:
+    - target: {fileID: -927199367670048503, guid: 5454526abd4844622bf5fe52fc3cbed6,
+        type: 3}
+      propertyPath: m_Name
+      value: Cow_GameExport
+      objectReference: {fileID: 0}
     - target: {fileID: -4216859302048453862, guid: 5454526abd4844622bf5fe52fc3cbed6,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -420,11 +425,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 5454526abd4844622bf5fe52fc3cbed6,
-        type: 3}
-      propertyPath: m_Name
-      value: Cow_GameExport
       objectReference: {fileID: 0}
     - target: {fileID: -6057140222963153312, guid: 5454526abd4844622bf5fe52fc3cbed6,
         type: 3}

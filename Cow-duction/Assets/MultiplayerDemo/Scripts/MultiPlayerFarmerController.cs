@@ -78,6 +78,11 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         {
             CmdSwapAmmo();
         }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            //LockCursor(!isCursorLocked);
+            gameObject.GetComponent<FarmerTeleport>().OpenMenu();
+        }
         if (!isLocalPlayer) return;
 
         int touchCount = Input.touchCount;
@@ -137,7 +142,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
             tilt += (invertY ? mouseY : -mouseY) * tiltSensitivity * Time.deltaTime;
 
             if (Input.GetButtonDown("Fire1"))
-            {
+            {             
                 CmdFireProjectile();
             }
         }
@@ -181,12 +186,17 @@ public class MultiPlayerFarmerController : NetworkBehaviour
             characterController.Move(direction * Time.fixedDeltaTime);
         else
             characterController.SimpleMove(direction);
-
         isGrounded = characterController.isGrounded;
         velocity = characterController.velocity;
         animator.SetFloat("speed", velocity.magnitude);
     }
 
+    public void MoveFarmer(Vector3 location)
+    {
+        characterController.enabled = false;
+        transform.position = location;
+        characterController.enabled = true;
+    }
     [ClientRpc]
     public void RpcDoJump(int JumpPoint , GameObject curfarmer, int curJump)
     {
@@ -205,7 +215,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         index = (index + 1) % projectiles.Count;
         projectile = projectiles[index];
     }
-
+	
     [Command]
     public void CmdFireProjectile()
     {
@@ -228,17 +238,18 @@ public class MultiPlayerFarmerController : NetworkBehaviour
         gunSmoke.Play();
         RpcPlayParticle();
     }
-
     // Lock or unlock the cursor
     private void LockCursor(bool lockCursor)
     {
         if (lockCursor)
         {
+            Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             isCursorLocked = true;
         }
         else
         {
+            Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             isCursorLocked = false;
         }

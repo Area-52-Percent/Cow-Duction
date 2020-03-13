@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using Mirror;
 
 // Copy of Projectile.cs from Mirror.Examples.Tanks
