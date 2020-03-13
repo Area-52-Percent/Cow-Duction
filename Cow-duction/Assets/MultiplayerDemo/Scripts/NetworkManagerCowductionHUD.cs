@@ -24,6 +24,12 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
     public GameObject mainMenu;
     public InputField networkAddressField;
     public GameObject pauseMenu;
+    public GameObject badgeAA;
+    public GameObject badgeA;
+    public GameObject badgeB;
+    public GameObject badgeC;
+    public GameObject badgeQA;
+    public GameObject badgeNQA;
 
     [SerializeField] public GameObject endScreen = null; // Set up in inspector
     [SerializeField] private AudioClip loseAudio = null; // Set up in inspector
@@ -214,21 +220,27 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
 
     public void DisplayEndScreen(int score, AudioSource ufoAudioSource, AudioClip loseAudio, AudioClip winAudio)
     {
+        badgeAA.SetActive(false);
+        badgeA.SetActive(false);
+        badgeB.SetActive(false);
+        badgeQA.SetActive(false);
+        badgeNQA.SetActive(false);
         string rating = "";
 
-        if (score > 25)
-            rating = "SS";
+        if (score > 30)
+            badgeAA.SetActive(true);
+
         else if (score > 20)
-            rating = "S";
-        else if (score > 17)
-            rating = "A";
-        else if (score > 13)
-            rating = "B";
-        else if (score > 7)
-            rating = "C";
+            badgeA.SetActive(true);
+        else if (score > 15)
+            badgeB.SetActive(true);
+        else if (score > 10)
+            badgeQA.SetActive(true);
+        else if (score > 5)
+            badgeNQA.SetActive(true);
         else
         {
-            rating = "D";
+            badgeNQA.SetActive(true);
 
             GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
             if (farmers.Length > 0)
@@ -259,7 +271,7 @@ public class NetworkManagerCowductionHUD : MonoBehaviour
 
         gamemanager.SetMusicVolume(0.1f);
 
-        finalScoreText.text = score + "\n\nRating: " + rating;
+        finalScoreText.text = ""; //score + "\n\nRating: " + rating;
         endScreen.SetActive(true);
     }
 
