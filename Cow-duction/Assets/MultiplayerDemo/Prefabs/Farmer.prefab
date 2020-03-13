@@ -1154,7 +1154,10 @@ MonoBehaviour:
   syncInterval: 0.1
   Map: {fileID: 6844279988309609891}
   radius: 3
-  Buttons: []
+  Buttons:
+  - {fileID: 1774330404710610440}
+  - {fileID: 8041088277138480638}
+  - {fileID: 1217340264017381339}
 --- !u!1 &5519817743823275025
 GameObject:
   m_ObjectHideFlags: 0
@@ -2687,6 +2690,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5917015313987045630}
     m_Modifications:
+    - target: {fileID: -927199367670048503, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
+        type: 3}
+      propertyPath: m_Name
+      value: Farmer_Hat
+      objectReference: {fileID: 0}
+    - target: {fileID: 3791376661586708882, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b8e1a1ff345434bdf8749f6baa63e6de, type: 2}
     - target: {fileID: -4216859302048453862, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2742,16 +2755,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -0.48200002
       objectReference: {fileID: 0}
-    - target: {fileID: -927199367670048503, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
-        type: 3}
-      propertyPath: m_Name
-      value: Farmer_Hat
-      objectReference: {fileID: 0}
-    - target: {fileID: 3791376661586708882, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
-        type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: b8e1a1ff345434bdf8749f6baa63e6de, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ce318e9ee59e4b44bdf3990b2372beb, type: 3}
 --- !u!1 &3222773144295395938 stripped
