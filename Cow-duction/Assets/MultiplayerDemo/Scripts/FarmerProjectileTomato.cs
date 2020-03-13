@@ -9,6 +9,7 @@ public class FarmerProjectileTomato : FarmerProjectile
     [ServerCallback]
     void OnTriggerEnter(Collider co)
     {
+        if (co.isTrigger) return;
         if (co.gameObject.GetComponent<MultiPlayerSpaceshipController>())
         {
             co.gameObject.GetComponent<MultiPlayerSpaceshipController>().AddImpulseForce(rigidBody.velocity.normalized, hitForce * rigidBody.mass);

@@ -51,7 +51,7 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 1
+  m_CollisionDetection: 2
 --- !u!135 &7486449536578388154
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -115,7 +115,6 @@ MonoBehaviour:
   syncInterval: 0.1
   destroyAfter: 5
   rigidBody: {fileID: 5336471833384703354}
-  gunSmoke: {fileID: 0}
   hitForce: 50
   speedForce: 1000
   owner: {fileID: 0}
@@ -130,11 +129,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5336471833384703355}
     m_Modifications:
-    - target: {fileID: 3474473591120751240, guid: 5012c0058a90c374391127e3e20d522e,
-        type: 3}
-      propertyPath: m_Name
-      value: Tomato_obj
-      objectReference: {fileID: 0}
     - target: {fileID: 462910383236880539, guid: 5012c0058a90c374391127e3e20d522e,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -204,6 +198,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3474473591120751240, guid: 5012c0058a90c374391127e3e20d522e,
+        type: 3}
+      propertyPath: m_Name
+      value: Tomato_obj
       objectReference: {fileID: 0}
     - target: {fileID: 7837483798554183874, guid: 5012c0058a90c374391127e3e20d522e,
         type: 3}
