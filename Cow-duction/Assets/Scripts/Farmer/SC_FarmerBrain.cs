@@ -20,6 +20,7 @@ public class SC_FarmerBrain : SC_CowBrain
     private bool lockedOn;
     private bool seekingAmmo;
     public bool peaceful;
+    public ParticleSystem GunSmoke;
     
 
     // Serialized private variables
@@ -43,7 +44,7 @@ public class SC_FarmerBrain : SC_CowBrain
         m_Agent = GetComponent<NavMeshAgent>();
         m_Cam = GetComponentInChildren<Camera>();
         rbFpController = GetComponent<RigidbodyFirstPersonController>();
-        targetTransform = GameObject.Find("UFO").transform;
+        // targetTransform = GameObject.Find("UFO").transform;
         m_Animator = GetComponentInChildren<Animator>();
         m_AudioSource = GetComponent<AudioSource>();
         fields = GameObject.FindGameObjectsWithTag("Field");
@@ -62,12 +63,12 @@ public class SC_FarmerBrain : SC_CowBrain
     // Start is called before the first frame update
     void Start()
     {
+        targetTransform = GameObject.FindGameObjectWithTag("UFO").transform;
         lockedOn = false;
         seekingAmmo = false;
         fireCooldown = fireRate;
         ammoCount = startingAmmo;
         wandering = true;
-        peaceful = true;
         Wander();
     }
 
@@ -191,6 +192,7 @@ public class SC_FarmerBrain : SC_CowBrain
     private void FireWeapon()
     {
         GameObject projectileClone = Instantiate(projectile, gunShotOrigin);
+        GunSmoke.Play();
         projectileClone.transform.parent = null;
         projectileClone.GetComponent<Rigidbody>().AddForce(gunShotOrigin.forward * projectileSpeed, ForceMode.Impulse);
 

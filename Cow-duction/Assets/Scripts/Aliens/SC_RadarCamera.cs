@@ -12,7 +12,7 @@ using UnityEngine;
 public class SC_RadarCamera : MonoBehaviour
 {
     // Private variables
-    private GameObject followObject;
+    public GameObject followObject;
     private Camera m_Camera;
 
     // Serialized private variables
@@ -22,7 +22,7 @@ public class SC_RadarCamera : MonoBehaviour
     // Awake is called after all objects are initialized
     void Awake()
     {
-        followObject = GameObject.Find("UFO");
+        // followObject = GameObject.Find("UFO");
         m_Camera = GetComponent<Camera>();
     }
 

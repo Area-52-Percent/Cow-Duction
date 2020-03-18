@@ -4605,12 +4605,13 @@ MonoBehaviour:
   milk: 10
   cowType: 
   peaceful: 0
+  GunSmoke: {fileID: 8126677421909752746}
   gunShotOrigin: {fileID: 7973970648433542027}
-  projectile: {fileID: 4683752739078331823, guid: 056b47b2813fa4f82b6ca27c7fcbfadf,
+  projectile: {fileID: 5336471833384703356, guid: ac61cf315a270426cb923db51a43e328,
     type: 3}
   shotgunPump: {fileID: 8300000, guid: 7118fd2d23c9f43dd90249535b923d9b, type: 3}
   shotgunShot: {fileID: 8300000, guid: 93a624bcf30374c49897347f7078a064, type: 3}
-  lockOnDistance: 50
+  lockOnDistance: 70
   lockOnSpeed: 5
   aimSpeed: 2
   projectileSpeed: 80
@@ -5444,11 +5445,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3436731603581570788}
     m_Modifications:
-    - target: {fileID: 1903878953795380616, guid: 26e94cef8fb424f5ba8ce805732ed5b1,
-        type: 3}
-      propertyPath: m_Name
-      value: Farmer Gun
-      objectReference: {fileID: 0}
     - target: {fileID: 3166827771623208505, guid: 26e94cef8fb424f5ba8ce805732ed5b1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5504,6 +5500,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -95.04901
       objectReference: {fileID: 0}
+    - target: {fileID: 1903878953795380616, guid: 26e94cef8fb424f5ba8ce805732ed5b1,
+        type: 3}
+      propertyPath: m_Name
+      value: Farmer Gun
+      objectReference: {fileID: 0}
     - target: {fileID: 3563544273088110159, guid: 26e94cef8fb424f5ba8ce805732ed5b1,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5532,6 +5533,12 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5385712376113638287}
   m_PrefabAsset: {fileID: 0}
+--- !u!198 &8126677421909752746 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 4213723084637835301, guid: 26e94cef8fb424f5ba8ce805732ed5b1,
+    type: 3}
+  m_PrefabInstance: {fileID: 5385712376113638287}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8480261936749666993
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5539,11 +5546,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5725052138915875787}
     m_Modifications:
-    - target: {fileID: -927199367670048503, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
+    - target: {fileID: 3791376661586708882, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
         type: 3}
-      propertyPath: m_Name
-      value: Farmer_Hat
-      objectReference: {fileID: 0}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: b8e1a1ff345434bdf8749f6baa63e6de, type: 2}
     - target: {fileID: -4216859302048453862, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -5599,11 +5606,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: -2.546
       objectReference: {fileID: 0}
-    - target: {fileID: 3791376661586708882, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
+    - target: {fileID: -927199367670048503, guid: 3ce318e9ee59e4b44bdf3990b2372beb,
         type: 3}
-      propertyPath: m_Materials.Array.data[0]
-      value: 
-      objectReference: {fileID: 2100000, guid: b8e1a1ff345434bdf8749f6baa63e6de, type: 2}
+      propertyPath: m_Name
+      value: Farmer_Hat
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3ce318e9ee59e4b44bdf3990b2372beb, type: 3}
 --- !u!4 &3518795115347003819 stripped

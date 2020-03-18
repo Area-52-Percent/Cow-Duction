@@ -7,14 +7,23 @@ public class CornRotate : MonoBehaviour
     public bool canDie = true;
     public bool animate = true;
 
+    private Renderer[] renderers;
+
+    private void Awake()
+    {
+        renderers = GetComponentsInChildren<Renderer>();
+    }
+
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         RandomizeRotation(transform, true);
     }
 
-    void RandomizeRotation(Transform tr, bool up)
+    public void RandomizeRotation(Transform tr, bool up)
     {
+        if (transform.childCount < 1) return;
+
         foreach (Transform child in tr)
         {
             if (child.GetComponent<MeshRenderer>() == null)
@@ -29,39 +38,36 @@ public class CornRotate : MonoBehaviour
                 }
                 else
                 {
-                    StartCoroutine(SetRotation(tr, new Vector3(90f, tr.localEulerAngles.y, tr.localEulerAngles.z)));
+                    if (animate)
+                    {
+                        StartCoroutine(AnimateRotation(tr, new Vector3(90f, tr.localEulerAngles.y, tr.localEulerAngles.z)));
+                    }
+                    else
+                    {
+                        tr.localEulerAngles = new Vector3(90f, tr.localEulerAngles.y, tr.localEulerAngles.z);
+                    }
                 }
+                break;
             }
         }
     }
 
-    IEnumerator SetRotation(Transform tr, Vector3 angles)
+    private IEnumerator AnimateRotation(Transform tr, Vector3 angles)
     {
-        if (animate)
+        while (tr.localEulerAngles != angles)
         {
-            while (tr.localEulerAngles != angles)
-            {
-                tr.localEulerAngles = Vector3.Lerp(tr.localEulerAngles, angles, Time.deltaTime);
-                yield return new WaitForEndOfFrame();
-            }
-        }
-        else
-        {
-            tr.localEulerAngles = new Vector3(90f, tr.localEulerAngles.y, tr.localEulerAngles.z);
+            tr.localEulerAngles = Vector3.Lerp(tr.localEulerAngles, angles, Time.deltaTime);
+            yield return new WaitForEndOfFrame();
         }
     }
 
-    IEnumerator SetColor(Color color)
+    public void SetColor(Color color)
     {
-        foreach (Renderer renderer in GetComponentsInChildren<Renderer>())
+        foreach (Renderer renderer in renderers)
         {
             if (animate)
             {
-                while (renderer.material.GetColor("_BaseColor") != color)
-                {
-                    renderer.material.SetColor("_BaseColor", Color.Lerp(renderer.material.GetColor("_BaseColor"), color, Time.deltaTime));
-                    yield return new WaitForEndOfFrame();
-                }
+                StartCoroutine(AnimateColor(renderer, color));
             }
             else
             {
@@ -70,7 +76,16 @@ public class CornRotate : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter(Collider collider)
+    private IEnumerator AnimateColor(Renderer renderer, Color color)
+    {
+        while (!renderer.material.GetColor("_BaseColor").Equals(color))
+        {
+            renderer.material.SetColor("_BaseColor", Color.Lerp(renderer.material.GetColor("_BaseColor"), color, Time.deltaTime));
+            yield return new WaitForEndOfFrame();
+        }
+    }
+
+    private void OnTriggerEnter(Collider collider)
     {
         if (canDie)
         {
@@ -78,10 +93,10 @@ public class CornRotate : MonoBehaviour
         }
     }
 
-    void KnockDown()
+    public void KnockDown()
     {
         RandomizeRotation(transform, false);
-        StartCoroutine(SetColor(deadColor));
+        SetColor(deadColor);
         canDie = false;
     }
 }

@@ -8,7 +8,8 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
     private const float MAXANGLE = 360;
 
     [Header("Parameters")]
-    public float maxHeight = 50f;
+    public float minHeight = 2f;
+    public float maxHeight = 70f;
     public float moveSpeed = 30f;
     public float movementMultiplier = 1f;
     public float rotateSpeed = 30f; // In degrees per second
@@ -50,6 +51,62 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
         pitch = Input.GetAxis("TurnVertical");
         roll = Input.GetAxis("Roll");
         lift = Input.GetAxis("Lift");
+
+        if (Input.GetKeyDown("1") && Input.GetKey("left shift"))
+        {
+            this.gameObject.GetComponent<JumpPoint>().RpcJumpAroundSpaceship(1);
+            GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
+            int currentfarmer = 0;
+            for (int i = 0; i < GameObject.FindGameObjectsWithTag("Farmer").Length; i ++)
+            {
+                Debug.Log("Farmer name = " + farmers[i].gameObject.name);
+                if (farmers[i].gameObject.name != "Bull(Clone)")
+                {
+                    currentfarmer++;
+                    farmers[i].GetComponent<MultiPlayerFarmerController>().RpcDoJump(1, farmers[i], currentfarmer);
+                }
+            }
+            //StartCoroutine(AnimateIncreaseScore());
+            //score += 1;
+            //scoreText.text = score.ToString("D2");
+        }
+
+        if (Input.GetKeyDown("2") && Input.GetKey("left shift"))
+        {
+            this.gameObject.GetComponent<JumpPoint>().RpcJumpAroundSpaceship(2);
+            GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
+            int currentfarmer = 0;
+            for (int i = 0; i < GameObject.FindGameObjectsWithTag("Farmer").Length; i++)
+            {
+                if (farmers[i].gameObject.name != "Bull(Clone)")
+                {
+                    currentfarmer++;
+                    farmers[i].GetComponent<MultiPlayerFarmerController>().RpcDoJump(2, farmers[i], currentfarmer);
+                }
+            }
+            //StartCoroutine(AnimateIncreaseScore());
+            //score += 2;
+            //scoreText.text = score.ToString("D2");
+
+        }
+
+        if (Input.GetKeyDown("3") && Input.GetKey("left shift"))
+        {
+            this.gameObject.GetComponent<JumpPoint>().RpcJumpAroundSpaceship(3);
+            GameObject[] farmers = GameObject.FindGameObjectsWithTag("Farmer");
+            int currentfarmer = 0;
+            for (int i = 0; i < GameObject.FindGameObjectsWithTag("Farmer").Length; i++)
+            {
+                if (farmers[i].gameObject.name != "Bull(Clone)")
+                {
+                    currentfarmer++;
+                    farmers[i].GetComponent<MultiPlayerFarmerController>().RpcDoJump(3, farmers[i], currentfarmer);
+                }
+            }
+            //StartCoroutine(AnimateIncreaseScore());
+            //score += 3;
+            //scoreText.text = score.ToString("D2");
+        }
     }
 
     // FixedUpdate is called in fixed time intervals
@@ -75,10 +132,15 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
         }
         if (Mathf.Abs(lift) > 0f)
         {
-            if (!(lift > 0 && transform.position.y >= maxHeight))
-            {
-                Move(transform.up * lift);
-            }
+            Move(transform.up * lift);
+        }
+        if (transform.position.y > maxHeight)
+        {
+            Move(Vector3.down);
+        }
+        else if (transform.position.y < minHeight)
+        {
+            Move(Vector3.up);
         }
 
         // Rotational movement
@@ -128,6 +190,11 @@ public class MultiPlayerSpaceshipController : NetworkBehaviour
     public void SetMovementMultiplier(float multiplier = 1f)
     {
         movementMultiplier = multiplier;
+    }
+
+    public void limitHeight(float height)
+    {
+        maxHeight = height;
     }
 
     // Clamp the transform rotation by applying a relative torque on the rigidbody

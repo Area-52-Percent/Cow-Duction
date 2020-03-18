@@ -5,22 +5,23 @@ using UnityEngine.UI;
 
 public class HighscoreTable : MonoBehaviour
 {
-    private Transform entryContainer;
-    private Transform entryTemplate;
+    public Transform entryContainer;
+    public Transform entryTemplate;
     private List<HighscoreEntry> highscoreEntryList;
     private List<Transform> highscoreEntryTransformList;
     public GameObject playerInput;
     public List<Text> player1NameInput;
     public List<Text> player2NameInput;
+    public GameObject nameEnterPanel;
     private int curScore;
 
     
 
-    private void Awake()
+    public void Setup()
     {
         //Find highscore list
-        entryContainer = transform.Find("highscoreEntryContainer");
-        entryTemplate = entryContainer.Find("highscoreEntryTemplate");
+        // entryContainer = transform.Find("highscoreEntryContainer");
+        // entryTemplate = entryContainer.Find("highscoreEntryTemplate");
         Highscores highscores = new Highscores();
         //create new default highscore list
         if (!PlayerPrefs.HasKey("highscoreTable"))
@@ -47,10 +48,13 @@ public class HighscoreTable : MonoBehaviour
             string jsonString = PlayerPrefs.GetString("highscoreTable");
             highscores = JsonUtility.FromJson<Highscores>(jsonString);
         }
-        curScore = GameObject.Find("UI").GetComponent<SC_AlienUIManager>().GetScore();
+        // curScore = GameObject.Find("UI").GetComponent<MultiPlayerAlienUIManager>().GetScore();
+        curScore = GameObject.FindWithTag("UFO").GetComponentInChildren<MultiPlayerAlienUIManager>().GetScore();
+        Debug.Log("end =" + curScore);
         if (NewHighScore(curScore))
         {
             playerInput.SetActive(true);
+            nameEnterPanel.SetActive(true);
         }
         entryTemplate.gameObject.SetActive(false);
 
@@ -116,6 +120,7 @@ public class HighscoreTable : MonoBehaviour
 
     public void SaveScore()
     {
+        Debug.Log("save" + curScore);
         AddHighscoreEntry(curScore,(player1NameInput[0].text + player1NameInput[1].text + player1NameInput[2].text ), (player2NameInput[0].text + player2NameInput[1].text + player2NameInput[2].text));
         highscoreEntryTransformList = new List<Transform>();
         Highscores highscores = new Highscores();
@@ -130,7 +135,7 @@ public class HighscoreTable : MonoBehaviour
         {
             CreateHighscoreEntryTransform(highscoreEntry, entryContainer, highscoreEntryTransformList);
         }
-        GameObject.Find("saveScoreButton").SetActive(false);
+        nameEnterPanel.SetActive(false);
     }
 
     //Check for a new highscore

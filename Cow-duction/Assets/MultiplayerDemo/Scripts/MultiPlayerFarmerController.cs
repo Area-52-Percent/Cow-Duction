@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using Mirror;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(CharacterController))]
 [RequireComponent(typeof(NetworkTransform))]
@@ -11,7 +12,11 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public Transform cameraTransform;
     [Tooltip("The transform of the farmer's gun")]
     public Transform gunTransform;
+    public List<GameObject> projectiles;
+    public int index = 0;
     public GameObject projectile;
+    public ParticleSystem gunSmoke;
+    public Transform gunTip;
 
     [Header("Parameters")]
     public float moveSpeed = 8f;
@@ -19,6 +24,8 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     public float tiltSensitivity = 16f;
     public float touchSensitivity = 5f;
     public bool invertY = false;
+    public int pellets = 5;
+    public float spread = .5f;
 
     [Header("Touch Diagnostics")]
     public float touchX = 0f;
@@ -67,6 +74,15 @@ public class MultiPlayerFarmerController : NetworkBehaviour
     // Update is called once per frame
     private void Update()
     {
+        if(Input.GetKeyDown(KeyCode.L))
+        {
+            CmdSwapAmmo();
+        }
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            //LockCursor(!isCursorLocked);
+            gameObject.GetComponent<FarmerTeleport>().OpenMenu();
+        }
         if (!isLocalPlayer) return;
 
         int touchCount = Input.touchCount;
@@ -79,7 +95,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
             {
                 touch = Input.GetTouch(t);
 
-                if (touch.position.x < Screen.width / 2) // Moving
+                if (touch.position.x < Screen.width / 2 && touch.position.y < Screen.height / 2) // Moving
                 {
                     switch (touch.phase)
                     {
@@ -126,7 +142,7 @@ public class MultiPlayerFarmerController : NetworkBehaviour
             tilt += (invertY ? mouseY : -mouseY) * tiltSensitivity * Time.deltaTime;
 
             if (Input.GetButtonDown("Fire1"))
-            {
+            {             
                 CmdFireProjectile();
             }
         }
@@ -170,29 +186,70 @@ public class MultiPlayerFarmerController : NetworkBehaviour
             characterController.Move(direction * Time.fixedDeltaTime);
         else
             characterController.SimpleMove(direction);
-
         isGrounded = characterController.isGrounded;
         velocity = characterController.velocity;
         animator.SetFloat("speed", velocity.magnitude);
     }
 
+    public void MoveFarmer(Vector3 location)
+    {
+        characterController.enabled = false;
+        transform.position = location;
+        characterController.enabled = true;
+    }
+    [ClientRpc]
+    public void RpcDoJump(int JumpPoint , GameObject curfarmer, int curJump)
+    {
+        this.gameObject.GetComponent<JumpPoint>().RpcJumpAroundFarmer(JumpPoint, curfarmer, curJump);
+    }
+
+    [ClientRpc]
+    public void RpcPlayParticle()
+    {
+        gunSmoke.Play();
+    }
+
+    [Command]
+    public void CmdSwapAmmo()
+    {
+        index = (index + 1) % projectiles.Count;
+        projectile = projectiles[index];
+    }
+	
     [Command]
     public void CmdFireProjectile()
     {
-        GameObject projectileClone = Instantiate(projectile, cameraTransform.position + cameraTransform.forward, cameraTransform.rotation);
+        GameObject projectileClone = Instantiate(projectile, gunTip.position + gunTip.forward, gunTip.rotation);
+        if (projectileClone.GetComponent<FarmerProjectileCorn>())
+        {
+            projectileClone.GetComponent<FarmerProjectileCorn>().owner = gameObject;
+            for (int i = 1; i < 5; i++)
+            {
+                Vector3 pos = new Vector3(gunTip.position.x + Random.Range(-spread, spread), gunTip.position.y + Random.Range(-spread, spread), gunTip.position.z + Random.Range(-spread, spread)) + gunTip.forward;
+                GameObject pelletClone = Instantiate(projectile, pos, gunTip.rotation);
+                pelletClone.GetComponent<FarmerProjectileCorn>().owner = gameObject;
+                NetworkServer.Spawn(pelletClone);
+            }
+        }
+        else if (projectileClone.GetComponent<FarmerProjectile>())
+            projectileClone.GetComponent<FarmerProjectile>().owner = gameObject;
         NetworkServer.Spawn(projectileClone);
-    }
 
+        gunSmoke.Play();
+        RpcPlayParticle();
+    }
     // Lock or unlock the cursor
     private void LockCursor(bool lockCursor)
     {
         if (lockCursor)
         {
+            Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
             isCursorLocked = true;
         }
         else
         {
+            Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
             isCursorLocked = false;
         }

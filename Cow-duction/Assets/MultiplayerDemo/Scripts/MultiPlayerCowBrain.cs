@@ -18,6 +18,7 @@ public class MultiPlayerCowBrain : NetworkBehaviour
     protected Vector3 currentDestination; // Keeps track of destination while agent disabled
     protected float wanderTime = 0f;
     protected bool wandering = false;
+    private bool followingWaypoints = false;
     private bool seekingFood = true;
     private bool recovering = false;
     private float mooTimer = 0f;
@@ -54,6 +55,7 @@ public class MultiPlayerCowBrain : NetworkBehaviour
         fields = GameObject.FindGameObjectsWithTag("Field");
 
         timeBetweenMoos = Random.Range(minTimeBetweenMoos, maxTimeBetweenMoos);
+        followingWaypoints = GetComponent<WaypointFollower>();
 
         Wander();
     }
@@ -70,6 +72,14 @@ public class MultiPlayerCowBrain : NetworkBehaviour
         {
             mooTimer += Time.deltaTime;
         }
+
+        // Set animator speed parameter for walking animation
+        if (m_Animator)
+            m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
+
+        if (!NetworkServer.active) return;
+
+        if (followingWaypoints) return;
 
         // Wander for set amount of time or until reaching destination
         if (m_Agent.enabled && m_Agent.isOnNavMesh)
@@ -98,10 +108,6 @@ public class MultiPlayerCowBrain : NetworkBehaviour
                 StartCoroutine(Recover());
             }
         }
-
-        // Set animator speed parameter for walking animation
-        if (m_Animator)
-            m_Animator.SetFloat("speed", m_Agent.velocity.magnitude);
     }
 
     // Satisfy hunger on contact with field
